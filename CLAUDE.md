@@ -40,7 +40,7 @@ Keep this table up to date. The API runs its TypeScript directly on Node 24 (typ
 | Typecheck | `npm run typecheck` |
 | Unit + component tests | `npm test` (coverage: `npm test -- --coverage`) |
 | E2E | `npm run build` then `npm run test:e2e` (first time: `npx -w @nutrigo/web playwright install chromium`) |
-| DB migration | `npm run db:generate` then `npm run db:migrate` (from #17) |
+| DB migration | `npm run db:generate` then `npm run db:migrate` (the API also migrates at boot) |
 | Local prod-like run | `docker compose up --build` (from #18) |
 
 Before saying a task is done, run lint, typecheck and tests. Say so if any of them fail.
