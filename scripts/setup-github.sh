@@ -36,12 +36,12 @@ label "P2"                   "fbca04" "Could"
 echo "==> Milestones (one per sprint = one release)"
 goals=(
   "Foundations: monorepo, CI/CD, Docker, tokens, atoms in /playground -> v0.1.0"
-  "Recipes & ingredients -> v0.2.0"
+  "Recipes & ingredients, Settings (locale) -> v0.2.0"
   "Weekly meal plan -> v0.3.0"
-  "Nutrition tracking, targets, charts, OFF/USDA import -> v0.4.0"
+  "Nutrition tracking, targets, charts, CIQUAL + OFF import, Settings (sources) -> v0.4.0"
   "Shopping list, offline PWA -> v0.5.0"
-  "Claude-assisted planning, hardening -> v1.0.0 (local)"
-  "Production on Railway: volume, edge protection, off-site backups -> v1.1.0"
+  "AI-assisted planning (Claude/Mistral/DeepSeek, spend cap), hardening -> v1.0.0 (local)"
+  "Production on Railway: volume, Cloudflare Access, off-site backups -> v1.1.0"
 )
 existing=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq '.[].title')
 for i in "${!goals[@]}"; do
