@@ -22,8 +22,8 @@ erDiagram
         integer id PK
         text name "UNIQUE"
         text category "grains|veggies|protein|fruits|dairy|others"
-        text source "manual|off|usda|ai_estimate"
-        text external_id "nullable, OFF/USDA id"
+        text source "manual|off|ciqual|ai_estimate"
+        text external_id "nullable, OFF barcode or CIQUAL alim_code"
         text image_url "nullable, from OFF import"
         text image_path "nullable, local cached copy"
         real kcal_100g
@@ -103,6 +103,23 @@ erDiagram
         real protein_g
         real fat_g
     }
+    SETTINGS {
+        integer id PK "always 1 (single user)"
+        text locale "fr-FR|en-IE, default fr-FR"
+        text nutrition_sources "JSON ordered list, default [ciqual, off]"
+        text ai_provider "anthropic|mistral|deepseek"
+        text ai_model "nullable, provider default"
+        integer ai_monthly_cap_cents "nullable = no cap"
+    }
+    AI_USAGE {
+        integer id PK
+        text at "ISO timestamp"
+        text provider
+        text model
+        integer input_tokens
+        integer output_tokens
+        integer cost_micro_eur "estimate frozen at call time"
+    }
     SHOPPING_LIST {
         integer id PK
         text iso_week FK "UNIQUE"
@@ -138,6 +155,9 @@ erDiagram
 | `shopping_item.est_cost_cents` is frozen at generation | Later price edits don't rewrite past weeks' estimates |
 | Titled steps and tools in their own tables | They are ordered lists (the design shows numbered items); positions let you reorder them |
 | `targets` is a single-row table with `CHECK (id = 1)` | The simplest way to store settings |
+| `settings` is also a single-row table, stored in the DB rather than in the browser | The laptop and phone share one locale, source order and AI choice (SPEC-008). API keys are **not** stored here; they stay in env (ADR-0010) |
+| `ai_usage.cost_micro_eur` in integer millionths of a euro | One AI call often costs less than a cent. It's still integer money, and the estimate is frozen so price-table updates don't rewrite past months (SPEC-008 Q-F) |
+| `ingredient.source` has `ciqual`, not `usda` | USDA dropped; CIQUAL bundled (ADR-0011). The `ciqual_food` seed table is added when SPEC-004 is revised |
 | Dates are ISO text; weeks are ISO (Monday start) | SQLite has no date type; ISO strings sort correctly |
 | `ON DELETE RESTRICT` from recipe_ingredient to ingredient | You can't delete an ingredient that a recipe uses (the API returns 409) |
 | `ON DELETE CASCADE` from recipe to its ingredients, steps, tools and tags | Their rows have no meaning without the recipe |

@@ -90,7 +90,7 @@ stateDiagram-v2
 
 | Width | Navigation | Source |
 |---|---|---|
-| < 1200 px | Bottom tab bar, 5 items: **Today** (`/`) · **Recipes** (`/recipes`) · **Plan** (`/plan/:week`) · **Groceries** (`/groceries/:week`) · **Targets** (`/targets`) | Dashboard Mobile (items adapted to scope; PRD Q7) |
+| < 1200 px | Bottom tab bar, 5 items: **Today** (`/`) · **Recipes** (`/recipes`) · **Plan** (`/plan/:week`) · **Groceries** (`/groceries/:week`) · **Targets** (`/targets`) | Dashboard Mobile (items adapted to scope; approved, PRD Q7) |
 | ≥ 1200 px | 252 px sidebar with the same 5 destinations; ≥ 1440 px adds a 340 px aside where the design has one | Dashboard, Meal Plan |
 
 ## 7. Styling

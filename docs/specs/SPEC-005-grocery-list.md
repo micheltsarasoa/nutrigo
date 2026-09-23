@@ -89,7 +89,7 @@ The `shopping_list` and `shopping_item` tables and the ingredient price fields a
 | `estimateCost(qty, ingredient)` | `ceil(qtyInPackUnit ÷ packQty) × priceCents`; null when there's no price | 180 g at €1.20/500 g → 120 cents |
 | `regenerate(old, fresh)` | Keep ticks, actual prices and manual items; update quantities; flag orphans | AC-5 |
 | `resolveConflict(stored, incoming)` | last-write-wins on `updated_at` per item | AC-8 |
-| `formatEUR(cents, locale)` | locale from PRD Q9 | 5740 → "€57.40" or "57,40 €" |
+| `formatEUR(cents, locale)` | locale from Settings, `fr-FR` by default (PRD §5.9, SPEC-008) | 5740 → "57,40 €" (fr-FR) or "€57.40" (en-IE) |
 
 ## 8. Out of scope
 Multiple stores, price history per store, barcode scanning, sharing the list, and aisle ordering beyond category.

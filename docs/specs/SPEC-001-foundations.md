@@ -5,7 +5,7 @@
 | Status | Draft |
 | Sprint | S0 → v0.1.0 |
 | PRD refs | G4, NFRs |
-| Design | Claude Design → "Design System" page (to be exported to `design/source/`) |
+| Design | Claude Design → "Design System" page, exported to `design/source/Design System.dc.html` |
 
 ## 1. Summary
 Set up everything the feature sprints depend on: the monorepo skeleton, CI/CD, local Docker, SQLite with migrations, the design tokens, the `/playground` route and the first approved atoms. No user-facing feature ships in v0.1.0.
@@ -78,4 +78,5 @@ Any domain feature, backups (S1) and the Railway deployment (S6, after v1.0.0).
 ## 9. Open questions
 - ~~Q1: dark theme?~~ **No**: the design is light-only (resolved 2026-09-23).
 - ~~Q2: icon set?~~ **Custom inline SVGs**, 24 grid, 1.9–2 px round strokes (resolved).
-- Q3: How will the phone reach the local app over HTTPS: Tailscale, mkcert or Cloudflare Tunnel? This is needed for AC-8 (PWA install); see ADR-0004.
+- ~~Q3: How will the phone reach the local app over HTTPS: Tailscale, mkcert or Cloudflare Tunnel?~~ **Tailscale** (`tailscale serve`) on the laptop and phone; AC-8 is tested from the tailnet URL (ADR-0009, resolved 2026-09-23).
+- ~~Q7 (PRD): the tab bar items?~~ **Today · Recipes · Plan · Groceries · Targets**, as proposed (resolved 2026-09-23).

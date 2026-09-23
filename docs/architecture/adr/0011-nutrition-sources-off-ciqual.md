@@ -1,0 +1,28 @@
+# ADR-0011: Nutrition sources are manual, Open Food Facts and CIQUAL (USDA dropped), with the order set in settings
+
+- Status: Accepted
+- Date: 2026-09-23
+- Deciders: Owner
+
+## Context
+PRD §5.7 planned manual entry → Open Food Facts / USDA → an AI estimate, and PRD Q3 asked which database should be primary for French products (a spike was planned for Sprint 3). The owner shops in France. USDA covers American generic foods and not French products. ANSES publishes **CIQUAL**, the French reference table of about 3,500 generic foods, as open data (Excel/XML on data.gouv / recherche.data.gouv). **CIQUAL has no search API.** It's a downloadable table.
+
+## Decision
+- **Sources:** manual entry, Open Food Facts (branded and barcoded products, live API) and **CIQUAL** (generic foods, raw ingredients). **USDA is dropped.** The AI estimate stays as the last fallback (A-2), flagged as estimated.
+- **CIQUAL is bundled, not called.** A one-off script converts the official file into a `ciqual_food` table that ships in a migration (seed data). Searching it is a local `LIKE` query that works offline. Updating to a new CIQUAL release means a new migration.
+- **The order and on/off state of the sources are a setting** (SPEC-008). The default search order is CIQUAL → Open Food Facts. Manual entry is always available.
+- `ingredient.source` becomes `manual | off | ciqual | ai_estimate`, and `external_id` holds the OFF barcode or the CIQUAL `alim_code`.
+
+## Alternatives considered
+| Option | Pros | Cons |
+|---|---|---|
+| OFF + USDA (the original plan) | Two live APIs, symmetric code | USDA doesn't know French products and uses American generic names |
+| OFF only | One integration | Raw ingredients (e.g. "courgette crue") are poorly covered and quality varies |
+| Call CIQUAL through a third-party API | Nothing to bundle | No official API; a third-party dependency for public data |
+| Keep the Sprint 3 spike | Decide with evidence | The owner decided now; the spike is no longer needed |
+
+## Consequences
+- The Sprint 3 spike "OFF vs USDA" is cancelled.
+- The seed adds roughly 3,500 rows to the image and the DB. That's small for SQLite.
+- CIQUAL's licence (Etalab open licence) requires attribution. An "Open Food Facts · CIQUAL (ANSES)" credit goes on the import sheet.
+- **Follow-ups (not done in this ADR's PR):** SPEC-004 (`search?source=off|usda`, the upstream sequence diagram, `normaliseImport` fixtures), `data-model.md` (the `ciqual_food` table; the `source` enum is already updated), `backend.md` (`integrations/usda.ts`, routes), `overview.md`, `roadmap.md` (S3 line), `testing/strategy.md`, `process/workflow.md` (spike example) and `scripts/setup-github.sh` (milestone text) still say USDA. Update them when SPEC-004 is revised.
