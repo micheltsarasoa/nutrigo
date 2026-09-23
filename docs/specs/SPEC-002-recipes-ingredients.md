@@ -8,7 +8,7 @@
 | Design | `design/source/Healthy Menu.dc.html` (list) · `design/source/Recipe Details.dc.html` (detail) · editors: derived, not in design |
 
 ## 1. Summary
-Your personal recipe library. You can browse, search and filter recipes and open one to see its ingredients (scaled by servings), steps, tools, notes and nutrition per serving. You also create and edit recipes and ingredients, entering nutrition by hand. Imports from Open Food Facts and USDA come in Sprint 3 (SPEC-004).
+Your personal recipe library. You can browse, search and filter recipes and open one to see its ingredients (scaled by servings), steps, tools, notes and nutrition per serving. You also create and edit recipes and ingredients, entering nutrition by hand. Imports from CIQUAL and Open Food Facts come in Sprint 3 (SPEC-004, ADR-0011).
 
 ## 2. User stories
 - **US-1** As the owner, I can add an ingredient with its nutrition per 100 g, so recipes can compute nutrition.
@@ -97,7 +97,7 @@ The tables `ingredient`, `recipe`, `recipe_ingredient`, `recipe_step`, `recipe_t
 | `nutritionPerServing(recipe)` | Σ(grams × per100g ÷ 100) ÷ servings, for each nutrient; rounded only for display | 200 g turkey (135 kcal/100 g) for 2 servings → 135 kcal |
 | `scaleQuantities(recipe, servings)` | quantity × servings ÷ recipe.servings; display ≤ 2 decimals | 200 g at 2 → 300 g at 3 |
 | `totalTime(recipe)` | prep + cook; null if both are missing | 10 + 15 = 25 min |
-| `healthScore(nutrition, categories)` **(proposal, PRD Q8)** | Start 5. +2 if protein ≥ 20 g; +1 if fibre ≥ 5 g; +1 if 300 ≤ kcal ≤ 700; +1 if ingredients span ≥ 3 food categories; −1 if sugars > 15 g; −1 if sodium > 800 mg; −1 if fat supplies > 40 % of kcal. Clamp to 0–10. A missing optional nutrient counts as 0 | Turkey, rice, asparagus → 9 |
+| `healthScore(nutrition, categories)` (approved, PRD Q8) | Start 5. +2 if protein ≥ 20 g; +1 if fibre ≥ 5 g; +1 if 300 ≤ kcal ≤ 700; +1 if ingredients span ≥ 3 food categories; −1 if sugars > 15 g; −1 if sodium > 800 mg; −1 if fat supplies > 40 % of kcal. Clamp to 0–10. A missing optional nutrient counts as 0 | Turkey, rice, asparagus → 9 |
 
 ## 8. Out of scope
 Reviews and rating counts, Popular and Recommended panels, the featured recipe, importing a recipe from a URL, sharing, Vitamin C and % daily values.
@@ -111,6 +111,6 @@ Reviews and rating counts, Popular and Recommended panels, the featured recipe, 
 | E2E | AC-1 … AC-10, run on mobile (390 px) and desktop viewports |
 
 ## 10. Open questions
-- Q6 (PRD): recipe photo source beyond your own uploads.
-- Q8 (PRD): health-score formula above; approve or change it.
+- ~~Q6 (PRD): recipe photo source beyond your own uploads.~~ **Your own uploads are the main source**; the ingredient mosaic and meal-type placeholder stay as fallbacks (resolved 2026-09-23).
+- ~~Q8 (PRD): health-score formula above; approve or change it.~~ **Approved** as written (resolved 2026-09-23).
 - Are tags still needed, given the meal type covers the design's filters? Proposal: keep tags in the data, and hide them in the UI until needed.

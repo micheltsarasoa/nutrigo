@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Draft**: design reviewed (rev 0.3), awaiting owner approval |
+| Status | **Draft**: design reviewed, open questions answered (rev 0.4), awaiting owner approval |
 | Owner | Michel Tsarasoa |
 | Last updated | 2026-09-23 |
 | Target | v1.0.0 (local) at the end of Sprint 5 · v1.1.0 on Railway at the end of Sprint 6 |
@@ -12,6 +12,7 @@
 | 0.1 | 2026-09-23 | First draft from the kickoff Q&A |
 | 0.2 | 2026-09-23 | Railway deployment moved after v1.0.0 (new §5.6, Sprint 6) |
 | 0.3 | 2026-09-23 | Claude Design export reviewed: recipe fields, food diary (check-off), grocery costs in EUR, photos from imports, Monday weeks; progress/activity/insights out of scope |
+| 0.4 | 2026-09-23 | Open questions Q1–Q9 answered: Tailscale then Cloudflare Access (ADR-0009), AI provider choice + spend cap (ADR-0010), CIQUAL replaces USDA (ADR-0011), new Settings (§5.10, SPEC-008) |
 
 ## 1. Problem
 
@@ -58,7 +59,7 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | R-2 | Create, edit and delete recipes: name, description, meal type (breakfast/lunch/snack/dinner), servings, ingredients with quantities, titled steps, tools, notes, tags | Must |
 | R-3 | Nutrition per serving is computed from the ingredients | Must |
 | R-4 | Search and filter recipes by name and tag | Should |
-| R-5 | Recipe photo, from imports (see §5.8) | Could |
+| R-5 | Recipe photo: your own upload, with fallbacks (see §5.8) | Could |
 | R-6 | Difficulty (easy/medium/hard), prep time and cook time | Should |
 | R-7 | Your own rating (1–5); no reviews, no rating counts | Could |
 | R-8 | Health score (0–10) computed from nutrition per serving; the formula is defined in SPEC-002 and shown as a number | Should |
@@ -80,7 +81,7 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | N-1 | Daily and weekly totals of kcal and macros from the plan | Must |
 | N-2 | Personal targets (kcal and macros) with progress against them | Must |
 | N-3 | Charts: daily macros and a weekly trend (following the dataviz rules) | Must |
-| N-4 | Import ingredient data from Open Food Facts / USDA, cached locally | Should |
+| N-4 | Import ingredient data from Open Food Facts (live, cached locally) and CIQUAL (French generic foods, bundled) | Should |
 | N-5 | **Food diary**: tick a planned meal as eaten, optionally adjusting the servings eaten; untick to undo | Must |
 | N-6 | Show **planned vs eaten**: kcal and macros eaten (ticked meals only), planned for the day, and left vs target | Must |
 
@@ -96,13 +97,15 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | S-6 | When ticking an item as purchased, you can enter the actual price paid | Should |
 | S-7 | Spending insights: estimated vs actual per week, and a breakdown by category | Could |
 
-### 5.5 Claude-assisted features (Sprint 5)
+### 5.5 AI-assisted features (Sprint 5)
 
 | ID | Requirement | Priority |
 |---|---|---|
 | A-1 | Suggest a week's plan from targets and existing recipes | Should |
 | A-2 | Estimate the nutrition of an ingredient that isn't in any database | Should |
 | A-3 | The AI never writes data without explicit confirmation | Must |
+| A-4 | The AI provider is chosen in Settings: Claude (default), Mistral or DeepSeek (ADR-0010) | Should |
+| A-5 | A monthly AI spend cap in EUR, set in Settings; calls are refused once it's reached (ADR-0010) | Should |
 
 ### 5.6 Production deployment (Sprint 6, after v1.0.0)
 
@@ -117,15 +120,26 @@ Until v1.0.0 the app runs only locally (Docker Compose).
 
 ### 5.7 Nutrition data sources
 
-All three sources are used, in this priority order: **manual entry** (always available) → **Open Food Facts / USDA** (import and cache) → **Claude estimate** (fallback, flagged as estimated). Every ingredient stores its `source`.
+The sources are **manual entry** (always available), **CIQUAL** (the ANSES French generic food table, bundled in the DB, works offline), **Open Food Facts** (branded products, live search, cached) and, last, an **AI estimate** (fallback, flagged as estimated). USDA isn't used. Whether CIQUAL and Open Food Facts are each searched is a setting (both on by default); their results are merged into one ranked list. Every ingredient stores its `source` (ADR-0011).
 
 ### 5.8 Photos
 
-Photos come from imports. An ingredient imported from Open Food Facts keeps the product image URL, cached locally for offline use. A recipe shows its own photo when you upload one, otherwise a mosaic of its ingredients' imported images, otherwise a token-coloured placeholder by meal type. The Claude API cannot generate images, so AI-suggested recipes have no photo of their own (open question Q6).
+Your **own uploaded photo** is the main source for a recipe. An ingredient imported from Open Food Facts keeps the product image URL, cached locally for offline use. A recipe shows its own photo when you upload one, otherwise a mosaic of its ingredients' imported images, otherwise a token-coloured placeholder by meal type. The AI providers don't generate images, so AI-suggested recipes have no photo of their own.
 
 ### 5.9 Conventions
 
-Weeks start on **Monday** (ISO 8601, `2026-W40`). Currency is **EUR**. Units are g, ml and pieces, always written `g` (never `gr`).
+Weeks start on **Monday** (ISO 8601, `2026-W40`). Currency is **EUR**. Units are g, ml and pieces, always written `g` (never `gr`). Numbers and money are formatted with the locale from Settings, **`fr-FR` by default** (1 240 kcal, 57,40 €); `en-IE` is the alternative (1,240 kcal, €57.40).
+
+### 5.10 Settings (SPEC-008)
+
+One configuration screen for app-wide preferences. It's stored in the DB, so it follows the app rather than the device.
+
+| ID | Requirement | Priority |
+|---|---|---|
+| C-1 | Number and currency locale: `fr-FR` (default) or `en-IE` | Must |
+| C-2 | Nutrition sources: turn CIQUAL and Open Food Facts on or off; results from both are merged into one ranked list | Should |
+| C-3 | AI provider and model (A-4); a provider with no API key in env can't be selected | Should |
+| C-4 | Monthly AI spend cap in EUR (A-5), with the current month's estimated spend shown | Should |
 
 ## 6. Non-functional requirements
 
@@ -134,8 +148,8 @@ Weeks start on **Monday** (ISO 8601, `2026-W40`). Currency is **EUR**. Units are
 | Platform | Mobile-first PWA, installable, usable offline for reads and the shopping list |
 | Performance | Lighthouse Performance ≥ 90 on mobile; interactive in < 2 s on 4G |
 | Accessibility | WCAG 2.2 AA; axe checks pass in CI. **Temporary exception:** the brand colour contrast failures are kept until the owner updates the token values (ADR-0008) |
-| Privacy | Data stays in the owner's SQLite; only AI prompts go out to the Claude API |
-| Security | No auth in the app. Up to v1.0 it runs locally only; from v1.1 the Railway URL is protected at the edge (ADR-0002). Secrets live only in env |
+| Privacy | Data stays in the owner's SQLite; only AI prompts go out, to the provider chosen in Settings. Mistral is hosted in the EU; **DeepSeek is hosted in China**, and the Settings screen says so (ADR-0010) |
+| Security | No auth in the app. Up to v1.0 it runs locally and the phone reaches it over Tailscale; from v1.1 the Railway URL is behind Cloudflare Access (ADR-0002, ADR-0009). Secrets, including the AI API keys, live only in env |
 | Reliability | Daily SQLite backup (local from Sprint 1, off-site from v1.1), and a tested restore procedure |
 | Maintainability | Ponytail-minimal code; all changes tested; ADR for each new dependency |
 
@@ -166,15 +180,15 @@ See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint, 
 
 | # | Item | Type | Next step |
 |---|---|---|---|
-| Q1 | The design-system page in Claude Design isn't in the repo yet | Open | Export it to `design/source/` |
-| Q2 | How is the Railway URL protected: Cloudflare Access, basic auth at a proxy, or an unguessable URL? | Open | Decide before Sprint 6 (ADR-0002) |
-| Q3 | Open Food Facts vs USDA: which is primary for French products? | Open | Spike in Sprint 3 |
-| Q4 | Monthly budget for the Claude API | Open | Set before Sprint 5 |
-| Q6 | Recipe photos: is "upload your own photo" acceptable as the main source, since imports only give ingredient product images? | Open | Before Sprint 1 |
-| Q7 | The mobile tab bar is proposed as Today · Recipes · Plan · Groceries · Targets. OK? | Open | Validate in the Sprint 0 playground |
-| Q8 | Health-score formula (SPEC-002 §7 proposal) | Open | Before Sprint 1 |
-| Q9 | Number and currency locale: `fr-FR` (1 240 kcal, 57,40 €) or `en-IE` (1,240 kcal, €57.40)? | Open | Sprint 0 |
-| Q5 | How does the phone reach the local app before v1.1? A service worker (offline, install) needs HTTPS, and plain `http://192.168.x.x` won't allow it | Open | Decide in Sprint 0 (options in ADR-0004) |
+| Q1 | The design-system page in Claude Design isn't in the repo yet | Resolved | Exported: `design/source/Design System.dc.html` |
+| Q2 | How is the Railway URL protected: Cloudflare Access, basic auth at a proxy, or an unguessable URL? | Decided | **Cloudflare Access** (ADR-0009) |
+| Q3 | Open Food Facts vs USDA: which is primary for French products? | Decided | **Manual + Open Food Facts + CIQUAL**, each on/off in Settings, results merged; USDA dropped; the spike is cancelled (ADR-0011) |
+| Q4 | Monthly budget for the Claude API | Decided | **Choice of provider** (Claude, Mistral, DeepSeek) and a **monthly € cap set in Settings** (ADR-0010). The cap amount is the owner's to set in the app |
+| Q6 | Recipe photos: is "upload your own photo" acceptable as the main source, since imports only give ingredient product images? | Decided | **Yes**, own uploads are the main source; the mosaic and placeholder fallbacks are kept (§5.8) |
+| Q7 | The mobile tab bar is proposed as Today · Recipes · Plan · Groceries · Targets. OK? | Decided | **Yes**, as proposed |
+| Q8 | Health-score formula (SPEC-002 §7 proposal) | Decided | **Approved** as written in SPEC-002 §7 |
+| Q9 | Number and currency locale: `fr-FR` (1 240 kcal, 57,40 €) or `en-IE` (1,240 kcal, €57.40)? | Decided | **A setting**, `fr-FR` by default (§5.9, §5.10, SPEC-008) |
+| Q5 | How does the phone reach the local app before v1.1? A service worker (offline, install) needs HTTPS, and plain `http://192.168.x.x` won't allow it | Decided | **Tailscale** (`tailscale serve`) on the laptop and phone (ADR-0009) |
 | R1 | Before v1.1 all data lives on one laptop | Risk | Local daily backup from Sprint 1 (ADR-0004) |
 | R3 | SQLite on Railway loses data without a volume | Risk | Volume and backups in Sprint 6 (ADR-0004) |
 | R2 | Offline sync conflicts on the shopping list | Risk | Last-write-wins per item, spec in Sprint 4 |

@@ -56,7 +56,7 @@ Before saying a task is done, run lint, typecheck and tests. Say so if any of th
 7. **No auth code**: no login, sessions or user tables. Single user by design (ADR-0002).
 8. **No logging libraries**. Errors go to stderr only on the API; the web app shows user-facing error states.
 9. **Conventional Commits** (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`, `ci:`). PR titles follow the same format because PRs are squash-merged. Versions and the changelog come from them (release-please).
-10. **Never** skip, disable or `.only` a test to get green. Never commit secrets. `ANTHROPIC_API_KEY` and `RAILWAY_TOKEN` live in env / GitHub secrets.
+10. **Never** skip, disable or `.only` a test to get green. Never commit secrets. The AI keys (`ANTHROPIC_API_KEY`, `MISTRAL_API_KEY`, `DEEPSEEK_API_KEY`; ADR-0010) and `RAILWAY_TOKEN` live in env / GitHub secrets, never in the DB or settings.
 11. Mermaid for every diagram in docs. Pick the right diagram type (see [`docs/README.md`](docs/README.md#diagram-conventions)).
 
 ## Workflow for a task

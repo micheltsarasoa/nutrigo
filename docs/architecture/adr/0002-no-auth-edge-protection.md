@@ -1,6 +1,6 @@
 # ADR-0002: No in-app auth; protect at the edge
 
-- Status: Accepted (edge mechanism: **open**, decide before Sprint 6, the Railway deployment after v1.0.0)
+- Status: Accepted. The edge mechanism was decided in ADR-0009: Cloudflare Access.
 - Date: 2026-09-23
 
 ## Context

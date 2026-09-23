@@ -1,6 +1,6 @@
 # ADR-0004: Local Docker until v1.0.0, then Railway with a volume
 
-- Status: Accepted
+- Status: Accepted. Phone access before Railway was decided in ADR-0009: Tailscale serve.
 - Date: 2026-09-23
 
 ## Context
