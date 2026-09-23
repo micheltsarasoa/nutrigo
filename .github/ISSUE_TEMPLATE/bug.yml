@@ -1,0 +1,23 @@
+name: Bug
+description: Something doesn't work as specified
+title: "bug: "
+labels: ["type:bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes: { label: Steps to reproduce }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected vs actual (cite the spec AC if any) }
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes: { label: Version, placeholder: "v0.3.0" }
+  - type: checkboxes
+    id: regression
+    attributes:
+      label: Fix rule
+      options:
+        - label: A failing regression test will be written before the fix
+          required: true

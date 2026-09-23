@@ -1,0 +1,16 @@
+name: Epic
+description: A PRD section, delivered through several stories
+title: "epic: "
+labels: ["type:epic"]
+body:
+  - type: input
+    id: prd
+    attributes: { label: PRD references, placeholder: "P-1, P-2" }
+    validations: { required: true }
+  - type: textarea
+    id: goal
+    attributes: { label: Goal and outcome }
+    validations: { required: true }
+  - type: input
+    id: spec
+    attributes: { label: Spec, placeholder: docs/specs/SPEC-00X-… }

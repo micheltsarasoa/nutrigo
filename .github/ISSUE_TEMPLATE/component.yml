@@ -1,0 +1,34 @@
+name: Component
+description: An atom, molecule or organism. It goes test → playground → owner validation → integration
+title: "component: "
+labels: ["type:component", "awaiting-validation"]
+body:
+  - type: dropdown
+    id: level
+    attributes:
+      label: Atomic level
+      options: [atom, molecule, organism]
+    validations: { required: true }
+  - type: input
+    id: design
+    attributes: { label: Design reference, placeholder: "Claude Design page / design/source/…" }
+    validations: { required: true }
+  - type: textarea
+    id: composition
+    attributes: { label: Built from (lower-level components, all already approved) }
+  - type: textarea
+    id: states
+    attributes:
+      label: States to show in the playground
+      value: "- default\n- focus\n- disabled\n- loading\n- empty\n- error\n- long content\n- 320px / 1280px"
+    validations: { required: true }
+  - type: checkboxes
+    id: flow
+    attributes:
+      label: Workflow
+      options:
+        - label: 1. Failing test committed
+        - label: 2. Component implemented (tokens only)
+        - label: 3. Playground demo with every state
+        - label: 4. Owner validated (label design-approved)
+        - label: 5. Screenshot baseline committed
