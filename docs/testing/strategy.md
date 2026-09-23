@@ -20,9 +20,9 @@ flowchart TB
 |---|---|---|---|
 | Unit | `packages/shared/**/*.test.ts` | Vitest | `test` |
 | API integration | `apps/api/**/*.test.ts` | Vitest, a fresh SQLite file per test file, migrations applied | `test` |
-| Component | `apps/web/src/**/*.test.tsx` | Vitest (jsdom), Testing Library, `vitest-axe` (all rules except `color-contrast`, ADR-0008) | `test` |
+| Component | `apps/web/src/**/*.test.tsx` | Vitest (jsdom), Testing Library, `axe-core` via `src/axe.ts` (all rules except `color-contrast`, ADR-0008) | `test` |
 | Visual | `apps/web/e2e/playground.spec.ts` | Playwright screenshots of `/playground/*` at 390 px and 1280 px | `e2e` |
-| E2E | `apps/web/e2e/*.spec.ts` | Playwright against the built Docker image | `e2e` |
+| E2E | `apps/web/e2e/*.spec.ts` | Playwright against the built app (`vite preview` until the Docker image exists, #18), axe injected from `axe-core` | `e2e` |
 | Performance/PWA | n/a | Lighthouse CI | `lighthouse` (from S1) |
 | Migrations | `apps/api/db/migrations.test.ts` | Apply all migrations to an empty DB and to the previous release's fixture | `test` |
 
@@ -36,7 +36,7 @@ External services (OFF, USDA, Claude) are **always mocked** in CI with recorded 
 | `apps/api` | 85 % | 80 % |
 | `apps/web` (components) | 80 % | 75 % |
 
-Coverage may not decrease in a PR. Excluded from coverage: `*.playground.tsx`, generated migrations and `main.tsx`.
+Coverage may not decrease in a PR. Excluded from coverage: `*.playground.tsx`, generated migrations, and the boot files `main.tsx` (web) and `index.ts` (api). The gates are enforced per package in `vitest.config.js`.
 
 ## 4. Test conventions
 

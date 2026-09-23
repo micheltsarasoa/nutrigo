@@ -30,7 +30,7 @@ design/source/  Raw exports from Claude Design (read-only source of truth)
 
 ## Commands
 
-> The app is not scaffolded yet (Sprint 0). Keep this table up to date when it is.
+Keep this table up to date. The API runs its TypeScript directly on Node 24 (type stripping), so it has no build step.
 
 | Task | Command |
 |---|---|
@@ -38,10 +38,10 @@ design/source/  Raw exports from Claude Design (read-only source of truth)
 | Dev (web + api) | `npm run dev` |
 | Lint / format | `npm run lint` / `npm run format` |
 | Typecheck | `npm run typecheck` |
-| Unit + component tests | `npm test` |
-| E2E | `npm run test:e2e` |
-| DB migration | `npm run db:generate` then `npm run db:migrate` |
-| Local prod-like run | `docker compose up --build` |
+| Unit + component tests | `npm test` (coverage: `npm test -- --coverage`) |
+| E2E | `npm run build` then `npm run test:e2e` (first time: `npx -w @nutrigo/web playwright install chromium`) |
+| DB migration | `npm run db:generate` then `npm run db:migrate` (from #17) |
+| Local prod-like run | `docker compose up --build` (from #18) |
 
 Before saying a task is done, run lint, typecheck and tests. Say so if any of them fail.
 
