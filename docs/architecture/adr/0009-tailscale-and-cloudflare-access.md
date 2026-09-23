@@ -1,6 +1,6 @@
 # ADR-0009: Tailscale for phone access before v1.1, Cloudflare Access on Railway
 
-- Status: Proposed (Accepted when the PR is approved)
+- Status: Accepted (2026-09-24)
 - Date: 2026-09-23
 - Deciders: Owner
 - Amends: ADR-0002 (picks the edge mechanism), ADR-0004 (picks the phone access before Railway)

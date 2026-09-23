@@ -13,7 +13,7 @@ stateDiagram-v2
 
 | Spec | Sprint | Status |
 |---|---|---|
-| [SPEC-001 Foundations](SPEC-001-foundations.md) | S0 | Draft |
+| [SPEC-001 Foundations](SPEC-001-foundations.md) | S0 | Approved |
 | [SPEC-002 Recipes & ingredients](SPEC-002-recipes-ingredients.md) | S1 | Draft |
 | [SPEC-003 Weekly meal plan](SPEC-003-meal-plan.md) | S2 | Draft |
 | [SPEC-004 Today, nutrition & food diary](SPEC-004-today-nutrition-diary.md) | S3 | Draft |
