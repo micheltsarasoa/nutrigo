@@ -29,11 +29,14 @@ Stories and tasks are linked to their epic as GitHub **sub-issues**.
 ## 2. GitHub setup
 
 Run `scripts/setup-github.sh` once. It creates:
-- **Project (v2) board "NutriGo"** with a `Stage` field and a `Size` field (and a manual step to add a 2-week `Sprint` iteration field)
+- **Project (v2) board "NutriGo"**: the stages below in the built-in `Status` field (GitHub's built-in workflows only set `Status`), plus `Size`, `Level` and a 2-week `Sprint` iteration field
 - **Milestones** `Sprint 0 … Sprint 6`, each due on the sprint's last day. The milestone is the sprint's release scope
 - **Labels**: type (`type:story`, …), level (`level:atom`, …), `awaiting-validation`, `design-approved`, `tech-debt`, `blocked`, priority (`P0`–`P2`)
+- **Repo settings**: squash merge only (PR title = commit title), branches deleted after merge, Actions allowed to open PRs (release-please), and `main` protected (PR required with 0 approvals, CI checks, linear history). Admins can bypass, which is needed for release-please PRs because GitHub doesn't run CI on PRs opened by `GITHUB_TOKEN`
 
-### Board columns (`Stage` field)
+Two steps have no API. See **Board setup (browser)** below.
+
+### Board columns (`Status` field)
 
 ```mermaid
 flowchart LR
@@ -50,6 +53,15 @@ flowchart LR
 | Awaiting validation | UI only: playground demo ready, label `awaiting-validation` |
 | In review | PR open, CI green |
 | Done | Meets the **Definition of Done** and is merged |
+
+### Board setup (browser)
+
+The GitHub API can't change views or turn on the auto-add workflow. Do these once, at https://github.com/users/micheltsarasoa/projects/2:
+
+1. **Board view.** The project opens on a table named "View 1". Click the **▾** arrow on the "View 1" tab. Under **Layout**, pick **Board**. The columns come from the `Status` field, so they already are Backlog … Done. Click **Save** (the button next to the view tabs).
+2. **WIP limit.** On the board, click **⋯** on the "In progress" column header → **Set column limit** → type `2` → **Save**.
+3. **Auto-add.** Click **⋯** in the top-right corner of the project → **Workflows**. In the list on the left, click **Auto-add to project** → **Edit** (top right). Under **Filters**, choose the repository `nutrigo` and keep the filter `is:issue,pr is:open` → **Save and turn on workflow**. Only new or updated items are added, not existing ones.
+4. **Check the other workflows** in the same list: **Item closed** and **Pull request merged** must be **On** and set `Status` to **Done**; **Item added to project** should set `Status` to **Backlog**. Turn each one on with **Edit → Save and turn on workflow** if needed.
 
 ## 3. Definition of Ready (DoR)
 
