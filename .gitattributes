@@ -1,0 +1,5 @@
+# LF everywhere, so Prettier passes on Windows checkouts too (core.autocrlf would add CRLF).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.woff2 binary

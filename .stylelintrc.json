@@ -1,0 +1,30 @@
+{
+  "ignoreFiles": ["apps/web/src/design-system/tokens.css"],
+  "rules": {
+    "color-no-hex": true,
+    "color-named": "never",
+    "function-disallowed-list": [
+      "rgb",
+      "rgba",
+      "hsl",
+      "hsla",
+      "hwb",
+      "lab",
+      "lch",
+      "oklab",
+      "oklch",
+      "color"
+    ],
+    "unit-disallowed-list": [
+      ["px", "rem", "em", "pt"],
+      {
+        "ignoreMediaFeatureNames": { "px": ["min-width", "max-width", "width"] }
+      }
+    ],
+    "declaration-property-value-allowed-list": {
+      "font-family": ["/^var[(]/", "inherit"],
+      "font-size": ["/^var[(]/", "inherit"],
+      "font-weight": ["/^var[(]/", "inherit"]
+    }
+  }
+}
