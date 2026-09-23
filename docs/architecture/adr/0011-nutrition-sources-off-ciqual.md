@@ -1,6 +1,6 @@
 # ADR-0011: Nutrition sources are manual, Open Food Facts and CIQUAL (USDA dropped), with the order set in settings
 
-- Status: Accepted
+- Status: Proposed (Accepted when the PR is approved)
 - Date: 2026-09-23
 - Deciders: Owner
 
@@ -24,5 +24,5 @@ PRD §5.7 planned manual entry → Open Food Facts / USDA → an AI estimate, an
 ## Consequences
 - The Sprint 3 spike "OFF vs USDA" is cancelled.
 - The seed adds roughly 3,500 rows to the image and the DB. That's small for SQLite.
-- CIQUAL's licence (Etalab open licence) requires attribution. An "Open Food Facts · CIQUAL (ANSES)" credit goes on the import sheet.
+- CIQUAL is published as open data. The exact licence and attribution terms are confirmed when writing the import script; plan an "Open Food Facts · CIQUAL (ANSES)" credit on the import sheet.
 - **Follow-ups (not done in this ADR's PR):** SPEC-004 (`search?source=off|usda`, the upstream sequence diagram, `normaliseImport` fixtures), `data-model.md` (the `ciqual_food` table; the `source` enum is already updated), `backend.md` (`integrations/usda.ts`, routes), `overview.md`, `roadmap.md` (S3 line), `testing/strategy.md`, `process/workflow.md` (spike example) and `scripts/setup-github.sh` (milestone text) still say USDA. Update them when SPEC-004 is revised.

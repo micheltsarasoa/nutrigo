@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Draft**: design reviewed (rev 0.3), awaiting owner approval |
+| Status | **Draft**: design reviewed, open questions answered (rev 0.4), awaiting owner approval |
 | Owner | Michel Tsarasoa |
 | Last updated | 2026-09-23 |
 | Target | v1.0.0 (local) at the end of Sprint 5 · v1.1.0 on Railway at the end of Sprint 6 |
@@ -59,7 +59,7 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | R-2 | Create, edit and delete recipes: name, description, meal type (breakfast/lunch/snack/dinner), servings, ingredients with quantities, titled steps, tools, notes, tags | Must |
 | R-3 | Nutrition per serving is computed from the ingredients | Must |
 | R-4 | Search and filter recipes by name and tag | Should |
-| R-5 | Recipe photo, from imports (see §5.8) | Could |
+| R-5 | Recipe photo: your own upload, with fallbacks (see §5.8) | Could |
 | R-6 | Difficulty (easy/medium/hard), prep time and cook time | Should |
 | R-7 | Your own rating (1–5); no reviews, no rating counts | Could |
 | R-8 | Health score (0–10) computed from nutrition per serving; the formula is defined in SPEC-002 and shown as a number | Should |
