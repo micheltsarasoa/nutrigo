@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./nutrigo.css" />
+<script src="./image-slot.js"></script>
+<style>
+/* ===== PAGE: Healthy Menu ===== */
+.app{width:1600px}
+/* MOLECULE: FeaturedMenuCard */
+.featured{background:var(--color-subtle);border-radius:var(--radius-xl);padding:16px;
+  display:grid;grid-template-columns:300px minmax(0,1fr) 190px;gap:18px}
+.featured__media{border-radius:var(--radius-lg);overflow:hidden;background:#EDEAE4;min-height:260px}
+.featured__title{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+.featured__tagline{display:flex;align-items:center;gap:12px;margin:12px 0 18px}
+.featured__reviews{font-size:12px;color:var(--color-muted)}
+.featured__reviews b{color:var(--color-ink);font-weight:700}
+.featured__meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.meta-item{display:flex;align-items:center;gap:10px}
+.meta-item__label{font-size:11px;color:var(--color-muted)}
+.meta-item__value{font-size:13px;font-weight:700}
+.featured__chips{display:flex;flex-direction:column;gap:10px}
+.chip-block{border-radius:var(--radius-md);padding:12px 14px}
+.chip-block__label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:rgba(31,41,55,.72)}
+.chip-block__label svg{width:13px;height:13px}
+.chip-block__value{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.chip-block__value span{font-size:11.5px;font-weight:600}
+.chip-block--green{background:var(--color-green-base)}
+.chip-block--yellow{background:var(--color-yellow-base)}
+.chip-block--orange{background:var(--color-orange-base)}
+.chip-block--grey{background:#EFEEEB}
+.chip-block--orange .chip-block__label{color:rgba(255,255,255,.9)}
+.chip-block--orange .chip-block__value{color:#fff}
+
+/* ORGANISM: HealthyMenuGrid */
+.menu-toolbar{display:flex;align-items:center;gap:10px;margin:22px 0 14px}
+.seg{display:flex;gap:4px;background:var(--color-subtle);border-radius:var(--radius-sm);padding:3px}
+.seg__btn{display:grid;place-items:center;width:30px;height:28px;border-radius:6px;color:var(--color-muted)}
+.seg__btn.is-active{background:var(--color-green-base);color:var(--color-ink)}
+.seg__btn svg{width:15px;height:15px}
+.filter-tabs{display:flex;gap:4px;background:var(--color-subtle);border-radius:var(--radius-sm);padding:4px}
+.filter-tab{padding:7px 16px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--color-muted);cursor:pointer}
+.filter-tab:hover{color:var(--color-ink)}
+.filter-tab.is-active{background:var(--color-green-base);color:var(--color-ink);font-weight:600}
+.menu-list{display:flex;flex-direction:column;gap:14px}
+.menu-list--grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.menu-list--grid .menu-item{grid-template-columns:minmax(0,1fr)}
+.menu-list--grid .menu-item__media{min-height:150px}
+/* MOLECULE: MenuListItem */
+.menu-item{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;background:var(--color-subtle);
+  border-radius:var(--radius-lg);padding:14px;transition:.16s}
+.menu-item:hover{background:var(--color-orange-light)}
+.menu-item__media{border-radius:var(--radius-md);overflow:hidden;background:#EDEAE4;min-height:110px}
+.menu-item__top{display:flex;align-items:center;gap:8px}
+.menu-item__spacer{flex:1}
+.menu-item__score{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--color-muted)}
+.menu-item__score b{color:var(--color-ink);font-weight:700}
+.score-ticks{display:flex;gap:2px}
+.score-ticks i{width:7px;height:14px;border-radius:2px;background:#E7E5E0}
+.score-ticks i.is-on{background:var(--color-orange-base)}
+.menu-item__title{font-size:16px;font-weight:700;letter-spacing:-.01em;margin:10px 0 12px}
+.menu-item__foot{display:flex;align-items:center;gap:0}
+.macro-strip{display:flex;align-items:center;background:var(--color-surface);border-radius:var(--radius-sm);
+  padding:8px 4px;flex:1;max-width:520px}
+.macro-strip span{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:11.5px;color:var(--color-muted);border-right:1px solid var(--color-line)}
+.macro-strip span:last-child{border-right:0}
+.macro-strip svg{width:12px;height:12px}
+
+/* ASIDE */
+.aside-card{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);padding:var(--space-4)}
+.mini-item{display:grid;grid-template-columns:54px minmax(0,1fr) 26px;gap:10px;align-items:center;
+  background:var(--color-subtle);border-radius:var(--radius-md);padding:10px;margin-top:10px}
+.mini-item__media{width:54px;height:54px;border-radius:var(--radius-sm);overflow:hidden;background:#EDEAE4}
+.mini-item__title{font-size:12.5px;font-weight:700;line-height:1.35}
+.mini-item__row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.mini-item__add{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;
+  background:var(--color-green-base);color:var(--color-ink)}
+.mini-item__add:hover{background:#B4DD57}
+.mini-item__add svg{width:14px;height:14px}
+.mini-item__macros{display:flex;gap:10px;font-size:10.5px;color:var(--color-muted);margin-top:7px;flex-wrap:wrap}
+</style>
+</helmet>
+
+<div class="app app--with-aside">
+
+  <!-- ORGANISM: Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-label="Nutrigo">
+        <path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65" />
+        <path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E" />
+      </svg>
+      <span class="sidebar__wordmark">Nutrigo</span>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="./Meal Plan.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3" /><path d="M8 3v3M16 3v3M3 10h18" /></svg>
+        Calendar
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z" /></svg>
+        Messages
+        <span class="nav-link__badge">6</span>
+      </a>
+      <a class="nav-link is-active" href="./Healthy Menu.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21" /><path d="M19 3v18" /></svg>
+        Healthy Menu
+      </a>
+      <div class="nav-link is-open" onClick="{{ toggleMealPlan }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 12l5-3" /></svg>
+        Meal Plan
+        <span class="nav-link__chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </span>
+      </div>
+      <sc-if value="{{ mealPlanOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="nav-sub">
+          <a class="nav-link" href="./Meal Plan.dc.html">Meal Plan</a>
+          <a class="nav-link" href="./Grocery List.dc.html">Grocery List</a>
+        </div>
+      </sc-if>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+        Food Diary
+      </a>
+      <a class="nav-link" href="./Progress.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg>
+        Progress
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="13" cy="4.5" r="1.8" /><path d="M10 21l2.5-6 3 2.5L18 21M6 10l5-2 4 2 4 1" /></svg>
+        Exercises
+      </a>
+      <a class="nav-link" href="./Health Insights.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" /></svg>
+        Health Insights
+      </a>
+    </nav>
+    <div class="sidebar__spacer"></div>
+    <div class="promo-banner">
+      <image-slot id="hm-promo" class="promo-banner__art" style="width:100%;height:74px" shape="rounded" radius="10" fit="contain" placeholder="Veggies 3D"></image-slot>
+      <p class="promo-banner__text">Start your health journey with a <strong>FREE 1-month</strong> access to Nutrigo!</p>
+      <button class="promo-banner__cta">Claim Now!</button>
+    </div>
+    <a class="sidebar__logout" href="./Dashboard.dc.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9" /></svg>
+      Logout
+    </a>
+  </aside>
+
+  <!-- TEMPLATE: MenuBrowseLayout -->
+  <main class="app__main">
+    <header class="header">
+      <div class="header__titles"><h1 class="header__title">Healthy Menu</h1></div>
+      <div class="header__spacer"></div>
+      <label class="search-bar header__search" style="width:230px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+        <input placeholder="Search menu" value="{{ query }}" onChange="{{ onQuery }}" />
+      </label>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg>
+      </button>
+      <button class="btn btn--primary-green">Add Menu</button>
+    </header>
+
+    <!-- MOLECULE: FeaturedMenuCard -->
+    <section>
+      <div class="card__head" style="margin-bottom:12px">
+        <h2 class="section-title">Featured Menu</h2>
+        <span class="card__more">•••</span>
+      </div>
+      <div class="featured">
+        <div class="featured__media"><image-slot id="hm-featured" shape="rect" placeholder="Grilled turkey breast photo"></image-slot></div>
+        <div>
+          <h3 class="featured__title">Grilled Turkey Breast with Steamed Asparagus and Brown Rice</h3>
+          <div class="featured__tagline">
+            <span class="pill pill--solid-yellow">Lunch</span>
+            <span class="featured__reviews">
+              <span class="star-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z" /></svg></span>
+              <b>4.8/5</b> (125 reviews)
+            </span>
+          </div>
+          <div class="featured__meta">
+            <div class="meta-item">
+              <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M10 20V6M15 20v-5M20 20V9" /></svg></span>
+              <span><span class="meta-item__label">Difficulty</span><span class="meta-item__value" style="display:block">Medium</span></span>
+            </div>
+            <div class="meta-item">
+              <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" /></svg></span>
+              <span><span class="meta-item__label">Health Score</span><span class="meta-item__value" style="display:block">85/100</span></span>
+            </div>
+            <div class="meta-item">
+              <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10h16v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3zM8 10V7M16 10V7" /></svg></span>
+              <span><span class="meta-item__label">Cook Duration</span><span class="meta-item__value" style="display:block">10 minutes</span></span>
+            </div>
+            <div class="meta-item">
+              <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg></span>
+              <span><span class="meta-item__label">Total Steps</span><span class="meta-item__value" style="display:block">4 steps</span></span>
+            </div>
+          </div>
+          <a class="btn btn--primary-green btn--block" href="./Recipe Details.dc.html">Add to Meal Plan</a>
+        </div>
+        <!-- ATOM: StatChip stack -->
+        <div class="featured__chips">
+          <div class="chip-block chip-block--green">
+            <span class="chip-block__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5" /></svg>Calories</span>
+            <div class="chip-block__value">450<span> kcal</span></div>
+          </div>
+          <div class="chip-block chip-block--yellow">
+            <span class="chip-block__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 9h14l-1.5 10h-11z" /><path d="M9 9V6h6v3" /></svg>Carbs</span>
+            <div class="chip-block__value">40<span> gr</span></div>
+          </div>
+          <div class="chip-block chip-block--orange">
+            <span class="chip-block__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 4l6 6-9 9H5v-6z" /><path d="M9 15l3-3" /></svg>Proteins</span>
+            <div class="chip-block__value">35<span> gr</span></div>
+          </div>
+          <div class="chip-block chip-block--grey">
+            <span class="chip-block__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3c3 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 2-5 5-9z" /></svg>Fats</span>
+            <div class="chip-block__value">12<span> gr</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANISM: HealthyMenuGrid -->
+    <section>
+      <div class="menu-toolbar">
+        <h2 class="section-title">All Menu</h2>
+        <span class="header__spacer"></span>
+        <button class="btn btn--sm btn--ghost">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18l-7 8v6l-4-2v-4z" /></svg>
+          Filter
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+        <div class="seg">
+          <button class="{{ gridCls }}" onClick="{{ setGrid }}" aria-label="Grid view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="2" /><rect x="13" y="3" width="8" height="8" rx="2" /><rect x="3" y="13" width="8" height="8" rx="2" /><rect x="13" y="13" width="8" height="8" rx="2" /></svg>
+          </button>
+          <button class="{{ listCls }}" onClick="{{ setList }}" aria-label="List view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="menu-toolbar" style="margin-top:0">
+        <div class="filter-tabs">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+            <div class="{{ t.cls }}" onClick="{{ t.onSelect }}">{{ t.name }}</div>
+          </sc-for>
+        </div>
+        <span class="header__spacer"></span>
+        <span style="font-size:11.5px;color:var(--color-muted)">Sort by:</span>
+        <button class="select-pill" onClick="{{ cycleSort }}">{{ sort }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+      </div>
+
+      <div class="{{ listClass }}">
+        <sc-for list="{{ menus }}" as="m" hint-placeholder-count="3">
+          <!-- MOLECULE: MenuListItem -->
+          <article class="menu-item">
+            <div class="menu-item__media"><image-slot id="hm-item-{{ m.slot }}" shape="rect" placeholder="Photo"></image-slot></div>
+            <div style="min-width:0">
+              <div class="menu-item__top">
+                <span class="pill {{ m.mealClass }}">{{ m.meal }}</span>
+                <span class="pill pill--grey">{{ m.difficulty }}</span>
+                <span class="menu-item__spacer"></span>
+                <span class="menu-item__score">Health Score: <b>{{ m.score }}/10</b>
+                  <span class="score-ticks">
+                    <sc-for list="{{ m.ticks }}" as="tk" hint-placeholder-count="10">
+                      <i class="{{ tk }}"></i>
+                    </sc-for>
+                  </span>
+                </span>
+              </div>
+              <h3 class="menu-item__title">{{ m.title }}</h3>
+              <div class="menu-item__foot">
+                <div class="macro-strip">
+                  <span>{{ m.kcal }} kcal</span>
+                  <span>{{ m.carbs }} carbs</span>
+                  <span>{{ m.protein }} protein</span>
+                  <span>{{ m.fats }} fats</span>
+                </div>
+                <span class="header__spacer"></span>
+                <a class="btn btn--sm btn--primary-green" href="./Recipe Details.dc.html">Add to Meal Plan</a>
+              </div>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>Copyright © 2024 Peterdraw</span>
+      <a href="./Healthy Menu.dc.html">Privacy Policy</a>
+      <a href="./Healthy Menu.dc.html">Term and conditions</a>
+      <a href="./Healthy Menu.dc.html">Contact</a>
+      <span class="page-footer__spacer"></span>
+      <span class="page-footer__social">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-3H13V9c0-1 .3-1.5 1.6-1.5H17V4.6c-.4 0-1.6-.1-2.9-.1-2.7 0-4.1 1.5-4.1 4.3V11H7v3h3v8z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.5l4.3 6L17 3h4l-6.8 8.6L21.5 21H17l-4.6-6.4L6.8 21H3l7.3-9.1z" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17" cy="7" r="1" fill="currentColor" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2A2.7 2.7 0 0 0 19.7 5C18 4.6 12 4.6 12 4.6s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7.2C2 9 2 12 2 12s0 3 .4 4.8A2.7 2.7 0 0 0 4.3 19c1.7.4 7.7.4 7.7.4s6 0 7.7-.4a2.7 2.7 0 0 0 1.9-2.2C22 15 22 12 22 12s0-3-.4-4.8zM10 15.5v-7l6 3.5z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3A1.8 1.8 0 1 0 4.5 6.6 1.8 1.8 0 0 0 4.5 3zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.6-1.1 2-1.9 3.6-1.9 2.8 0 4.5 1.7 4.5 5V21h-3v-7c0-1.7-.7-2.6-2.1-2.6-1.3 0-2 .9-2 2.6v7H9z" /></svg>
+      </span>
+    </footer>
+  </main>
+
+  <aside class="app__aside">
+    <div class="user-menu" style="justify-content:space-between">
+      <div class="user-menu" style="min-width:0">
+        <span class="avatar avatar--md"><image-slot id="hm-avatar" shape="circle" style="width:40px;height:40px" placeholder="Avatar"></image-slot></span>
+        <div>
+          <div class="user-menu__name">Adam Vasylenko</div>
+          <div class="user-menu__role">Member</div>
+        </div>
+      </div>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg>
+        <span class="dot"></span>
+      </button>
+    </div>
+
+    <!-- ORGANISM: Popular Menu -->
+    <section class="aside-card">
+      <div class="card__head" style="margin-bottom:2px">
+        <h2 class="card__title">Popular Menu</h2>
+        <span class="card__more">•••</span>
+      </div>
+      <sc-for list="{{ popular }}" as="p" hint-placeholder-count="3">
+        <article class="mini-item">
+          <div class="mini-item__media"><image-slot id="hm-pop-{{ p.slot }}" shape="rect" placeholder="Photo"></image-slot></div>
+          <div style="min-width:0">
+            <h3 class="mini-item__title">{{ p.title }}</h3>
+            <div class="mini-item__row">
+              <span class="star-rating">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z" /></svg>
+                <span style="font-size:11px;font-weight:700;color:var(--color-ink)">{{ p.rating }}<span style="color:var(--color-faint)">/5</span></span>
+              </span>
+              <span class="pill {{ p.mealClass }}">{{ p.meal }}</span>
+            </div>
+          </div>
+          <button class="mini-item__add" aria-label="Add">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+        </article>
+      </sc-for>
+    </section>
+
+    <!-- ORGANISM: Recommended Menu -->
+    <section class="aside-card">
+      <div class="card__head" style="margin-bottom:2px">
+        <h2 class="card__title">Recommended Menu</h2>
+        <span class="card__more">•••</span>
+      </div>
+      <sc-for list="{{ recommended }}" as="r" hint-placeholder-count="3">
+        <article class="mini-item">
+          <div class="mini-item__media"><image-slot id="hm-rec-{{ r.slot }}" shape="rect" placeholder="Photo"></image-slot></div>
+          <div style="min-width:0">
+            <h3 class="mini-item__title">{{ r.title }}</h3>
+            <div class="mini-item__row"><span class="pill {{ r.mealClass }}">{{ r.meal }}</span></div>
+            <div class="mini-item__macros">
+              <span>{{ r.kcal }} kcal</span><span>C {{ r.carbs }}</span><span>P {{ r.protein }}</span><span>F {{ r.fats }}</span>
+            </div>
+          </div>
+          <button class="mini-item__add" aria-label="Add">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+        </article>
+      </sc-for>
+    </section>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1300}}">
+const MEAL_CLASS = {
+  Breakfast: 'pill--solid-green', Lunch: 'pill--solid-yellow',
+  Snack: 'pill--green', Dinner: 'pill--solid-orange'
+};
+
+class Component extends DCLogic {
+  state = { mealPlanOpen: false, tab: 'All', sort: 'Calories', view: 'list', query: '' };
+
+  renderVals() {
+    const sorts = ['Calories', 'Health Score', 'Cook Time', 'Rating'];
+    const tabNames = ['All', 'Breakfast', 'Lunch', 'Snack', 'Dinner'];
+    const q = this.state.query.trim().toLowerCase();
+
+    const all = [
+      { title: 'Avocado Toast with Poached Egg', meal: 'Breakfast', difficulty: 'Easy', score: 9, kcal: 320, carbs: '30g', protein: '14g', fats: '18g' },
+      { title: 'Grilled Shrimp Tacos with Mango Salsa', meal: 'Lunch', difficulty: 'Medium', score: 8, kcal: 400, carbs: '45g', protein: '28g', fats: '12g' },
+      { title: 'Baked Chicken Breast with Quinoa and Kale', meal: 'Dinner', difficulty: 'Medium', score: 9, kcal: 480, carbs: '50g', protein: '40g', fats: '15g' }
+    ];
+
+    const menus = all
+      .filter(m => this.state.tab === 'All' || m.meal === this.state.tab)
+      .filter(m => !q || m.title.toLowerCase().indexOf(q) >= 0)
+      .map((m, i) => Object.assign({}, m, {
+        slot: i,
+        mealClass: MEAL_CLASS[m.meal],
+        ticks: Array.from({ length: 10 }, (_, k) => k < m.score ? 'is-on' : '')
+      }));
+
+    const popular = [
+      { title: 'Greek Salad with Feta and Olives', rating: '4.9', meal: 'Lunch' },
+      { title: 'Blueberry Protein Smoothie', rating: '4.8', meal: 'Breakfast' },
+      { title: 'Grilled Salmon with Lemon and Asparagus', rating: '4.9', meal: 'Dinner' }
+    ].map((p, i) => Object.assign({}, p, { slot: i, mealClass: MEAL_CLASS[p.meal] }));
+
+    const recommended = [
+      { title: 'Oatmeal with Almond Butter and Berries', meal: 'Breakfast', kcal: 350, carbs: '45g', protein: '12g', fats: '14g' },
+      { title: 'Grilled Chicken Wrap with Avocado and Spinach', meal: 'Lunch', kcal: 450, carbs: '40g', protein: '30g', fats: '18g' },
+      { title: 'Quinoa Salad with Roasted Vegetables and Feta', meal: 'Dinner', kcal: 400, carbs: '50g', protein: '15g', fats: '12g' }
+    ].map((r, i) => Object.assign({}, r, { slot: i, mealClass: MEAL_CLASS[r.meal] }));
+
+    return {
+      mealPlanOpen: this.state.mealPlanOpen,
+      toggleMealPlan: () => this.setState(s => ({ mealPlanOpen: !s.mealPlanOpen })),
+      tabs: tabNames.map(name => ({
+        name, cls: 'filter-tab' + (this.state.tab === name ? ' is-active' : ''),
+        onSelect: () => this.setState({ tab: name })
+      })),
+      sort: this.state.sort,
+      cycleSort: () => this.setState(s => ({ sort: sorts[(sorts.indexOf(s.sort) + 1) % sorts.length] })),
+      query: this.state.query,
+      onQuery: e => this.setState({ query: e.target.value }),
+      gridCls: 'seg__btn' + (this.state.view === 'grid' ? ' is-active' : ''),
+      listCls: 'seg__btn' + (this.state.view === 'list' ? ' is-active' : ''),
+      setGrid: () => this.setState({ view: 'grid' }),
+      setList: () => this.setState({ view: 'list' }),
+      listClass: this.state.view === 'grid' ? 'menu-list menu-list--grid' : 'menu-list',
+      menus, popular, recommended
+    };
+  }
+}
+</script>
+</body>
+</html>

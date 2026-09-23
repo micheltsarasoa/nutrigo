@@ -30,8 +30,8 @@ gantt
 | S0 | v0.1.0 | Foundations: monorepo, CI/CD, Docker, tokens, atoms in `/playground`, board | G4 | CI green, `docker compose up` serves the playground, atoms approved |
 | S1 | v0.2.0 | Recipes & ingredients (manual nutrition entry) | R-1…R-5 | CRUD works end to end on a phone |
 | S2 | v0.3.0 | Weekly meal plan screen | P-1…P-4 | A week can be planned from recipes |
-| S3 | v0.4.0 | Nutrition totals, targets, charts; Open Food Facts/USDA import | N-1…N-4 | Daily and weekly nutrition visible against targets |
-| S4 | v0.5.0 | Shopping list, offline PWA | S-1…S-4 | List usable offline in the store (on the local deployment) |
+| S3 | v0.4.0 | Today screen: nutrition totals, targets, charts, **food diary check-off**; Open Food Facts/USDA import | N-1…N-6 | Daily and weekly nutrition visible against targets |
+| S4 | v0.5.0 | Shopping list with **costs in EUR**, offline PWA | S-1…S-7 | List usable offline in the store (on the local deployment) |
 | S5 | v1.0.0 | Claude-assisted plan and nutrient estimates, hardening | A-1…A-3 | All Must requirements are met locally, and the backup/restore has been tested |
 | S6 | v1.1.0 | **Production on Railway**: volume, edge protection, off-site backups, deploy pipeline on | D-1…D-4 | Prod URL live and protected; restore drill passes against a prod backup |
 

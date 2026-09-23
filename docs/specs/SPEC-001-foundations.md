@@ -26,21 +26,30 @@ Set up everything the feature sprints depend on: the monorepo skeleton, CI/CD, l
 | AC-6 | A PR titled `update stuff` | CI runs | The PR title check fails |
 | AC-7 | The release PR is merged | release.yml runs | Tag `v0.1.0`, a GitHub Release and an image on GHCR exist |
 | AC-8 | The app shell on a phone | "Add to Home screen" | Installs as a PWA with the NutriGo name and icon |
+| AC-9 | `/playground` at 390 px | Open any atom | No horizontal scroll; every interactive atom has a ≥ 44 px target |
+| AC-10 | The app shell < 1200 px / ≥ 1200 px | Resize | The bottom tab bar (5 items) switches to the sidebar |
 
 ## 4. UI: component inventory
-**Blocked on the design-system export.** The atoms are taken from the Claude Design "Design System" page. The expected candidates are:
+Source: `design/source/Design System.dc.html` + `nutrigo.css`, documented in `docs/design-system/index.html`.
 
-| Level | Component | States |
-|---|---|---|
-| Tokens | colour, type scale, spacing, radius, elevation, motion | light (+ dark if designed) |
-| Atom | Button | primary, secondary, ghost, icon-only · default, focus, disabled, loading |
-| Atom | TextInput, NumberInput | empty, filled, focus, error, disabled |
-| Atom | Icon | set from the design |
-| Atom | Chip/Tag | default, selected, removable |
-| Atom | Checkbox | unchecked, checked, disabled |
-| Atom | ProgressBar | 0 %, partial, 100 %, over target |
+| Level | Component | Design class | States to show (★ = missing in design, proposed) |
+|---|---|---|---|
+| Tokens | colour (incl. derived), radius, space, shadow, type scale, breakpoints | `:root` + tokens.json | light only (no dark theme in the design) |
+| Atom | Icon (inline SVG set, 24 grid) | inline `<svg>` | every in-scope icon |
+| Atom | Logo (mark, lockup) | `.sidebar__brand` | sizes 20/26/52 |
+| Atom | Button | `.btn` | primary-green, primary-orange, ghost × md/sm × default, hover, focus★, disabled★, loading★ |
+| Atom | Pill | `.pill` | green/yellow/orange/grey × light/solid/outline, with icon |
+| Atom | IconBadge | `.icon-badge` | 3 solid + 4 light, sizes 28/44 |
+| Atom | SearchField | `.search-bar` | default, filled, sm, focus★ |
+| Atom | ProgressBar | `.progress-bar` | green/yellow/orange, thin, 0 %, 100 %, over★ |
+| Atom | Stepper | `.stepper` | min, max, focus★, 44 px mobile target★ |
+| Atom | StarRating | `.star-rating` | 0–5, editable★ |
+| Atom | MealCheck | `.meal-check` | done, todo, next |
+| Atom | SelectPill | `.select-pill` | closed; wraps a native select★ |
+| Atom | NavLink / TabBarItem | `.nav-link` / derived | default, hover, active |
+| Atom | Card | `.card` | with header + more menu |
 
-Confirm or replace this list once the design is in the repo.
+Not built (out of scope, design-system §12): Avatar, UserMenu, PromoBanner, notification dot, footer.
 
 ## 5. API
 | Method | Path | Response |
@@ -54,7 +63,9 @@ The initial migration creates only a `meta` table (schema version). Domain table
 - [ ] npm workspaces `apps/web`, `apps/api`, `packages/shared`; TS strict; ESLint (with import boundaries), Prettier, Stylelint (tokens only)
 - [ ] Vitest in all three; Playwright in web
 - [ ] `Dockerfile` (multi-stage) + `docker-compose.yml` with the `./data` volume
-- [ ] `tokens.css` generated from the design export
+- [ ] `tokens.css` generated from `docs/design-system/tokens.json` (a small script; the ~16 derived colours become tokens)
+- [ ] Poppins self-hosted (woff2, 5 weights) and precached, with no Google Fonts call at runtime
+- [ ] axe configured with `color-contrast` disabled per ADR-0008 (+ one `design-debt` issue)
 - [ ] `/playground` with `import.meta.glob` discovery
 - [ ] Atoms: test → playground → approved
 - [ ] CI, release and deploy workflows active and green
@@ -65,6 +76,6 @@ The initial migration creates only a `meta` table (schema version). Domain table
 Any domain feature, backups (S1) and the Railway deployment (S6, after v1.0.0).
 
 ## 9. Open questions
-- Q1: Does the design system define a dark theme?
-- Q2: Which icon set does the design use (custom SVGs or a library)?
+- ~~Q1: dark theme?~~ **No**: the design is light-only (resolved 2026-09-23).
+- ~~Q2: icon set?~~ **Custom inline SVGs**, 24 grid, 1.9–2 px round strokes (resolved).
 - Q3: How will the phone reach the local app over HTTPS: Tailscale, mkcert or Cloudflare Tunnel? This is needed for AC-8 (PWA install); see ADR-0004.

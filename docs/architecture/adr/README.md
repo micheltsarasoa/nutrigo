@@ -12,6 +12,7 @@ These use the Michael Nygard format. An ADR is **immutable once Accepted**: to c
 | [0005](0005-monorepo-single-image.md) | npm-workspaces monorepo, single Docker image | Proposed |
 | [0006](0006-in-app-playground.md) | In-app `/playground` route instead of Storybook | Accepted |
 | [0007](0007-release-please-semver.md) | SemVer + Conventional Commits + release-please | Accepted |
+| [0008](0008-contrast-deviation.md) | Keep the design's colour contrast for now (temporary WCAG exception) | Accepted (temporary) |
 
 ```mermaid
 stateDiagram-v2

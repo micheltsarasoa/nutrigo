@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./nutrigo.css" />
+<script src="./image-slot.js"></script>
+<style>
+/* ===== PAGE: Progress ===== */
+.app{width:1600px;grid-template-columns:252px minmax(0,1fr)}
+.pg-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:var(--space-4);align-items:start}
+/* ORGANISM: BodyMeasurementPanel */
+.body-panel{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:var(--space-5);align-items:center}
+.body-panel--single{grid-template-columns:minmax(0,1fr)}
+.silhouette{position:relative;height:420px;border-radius:var(--radius-lg);background:var(--color-subtle);overflow:hidden}
+.point{position:absolute;display:flex;align-items:center;gap:8px}
+.point__dot{width:11px;height:11px;border-radius:50%;background:var(--color-orange-base);box-shadow:0 0 0 3px #fff}
+.point__box{background:var(--color-surface);border-radius:var(--radius-sm);padding:6px 10px;box-shadow:var(--shadow-soft);white-space:nowrap}
+.point__label{font-size:10px;color:var(--color-muted)}
+.point__value{font-size:13px;font-weight:700}
+.point__value span{font-size:10px;font-weight:500;color:var(--color-muted)}
+.mtable{width:100%;border-collapse:collapse;margin-top:18px}
+.mtable th{text-align:left;padding:10px;font-size:11px;font-weight:600;color:var(--color-muted);
+  border-bottom:1px solid var(--color-line);white-space:nowrap}
+.mtable td{padding:10px;font-size:12.5px;font-weight:500;border-bottom:1px solid var(--color-line)}
+.mtable tr:last-child td{border-bottom:0}
+.mtable tbody tr:hover{background:var(--color-subtle)}
+/* MOLECULE: WeightTracking */
+.wt-stats{display:flex;flex-direction:column;gap:10px}
+.wt-stat{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--color-subtle);border-radius:var(--radius-sm);padding:9px 12px}
+.wt-stat__label{font-size:11.5px;color:var(--color-muted)}
+.wt-stat__value{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.wt-stat__value span{font-size:11px;font-weight:600;color:var(--color-muted)}
+.line-chart{margin-top:16px}
+.line-chart__axis{display:flex;justify-content:space-between;font-size:10.5px;color:var(--color-faint);margin-top:6px}
+/* MOLECULE: ProgressPhotos */
+.photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.photo{border-radius:var(--radius-md);overflow:hidden;height:150px;background:var(--color-subtle);position:relative}
+.photo__cap{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.92);border-radius:6px;
+  padding:4px 8px;font-size:10px;font-weight:600;pointer-events:none}
+</style>
+</helmet>
+
+<div class="app">
+
+  <!-- ORGANISM: Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-label="Nutrigo">
+        <path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65" />
+        <path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E" />
+      </svg>
+      <span class="sidebar__wordmark">Nutrigo</span>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="./Meal Plan.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3" /><path d="M8 3v3M16 3v3M3 10h18" /></svg>
+        Calendar
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z" /></svg>
+        Messages
+        <span class="nav-link__badge">6</span>
+      </a>
+      <a class="nav-link" href="./Healthy Menu.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21" /><path d="M19 3v18" /></svg>
+        Healthy Menu
+      </a>
+      <div class="nav-link is-open" onClick="{{ toggleMealPlan }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 12l5-3" /></svg>
+        Meal Plan
+        <span class="nav-link__chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </span>
+      </div>
+      <sc-if value="{{ mealPlanOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="nav-sub">
+          <a class="nav-link" href="./Meal Plan.dc.html">Meal Plan</a>
+          <a class="nav-link" href="./Grocery List.dc.html">Grocery List</a>
+        </div>
+      </sc-if>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+        Food Diary
+      </a>
+      <a class="nav-link is-active" href="./Progress.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg>
+        Progress
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="13" cy="4.5" r="1.8" /><path d="M10 21l2.5-6 3 2.5L18 21M6 10l5-2 4 2 4 1" /></svg>
+        Exercises
+      </a>
+      <a class="nav-link" href="./Health Insights.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" /></svg>
+        Health Insights
+      </a>
+    </nav>
+    <div class="sidebar__spacer"></div>
+    <div class="promo-banner">
+      <image-slot id="pg-promo" class="promo-banner__art" style="width:100%;height:74px" shape="rounded" radius="10" fit="contain" placeholder="Veggies 3D"></image-slot>
+      <p class="promo-banner__text">Start your health journey with a <strong>FREE 1-month</strong> access to Nutrigo!</p>
+      <button class="promo-banner__cta">Claim Now!</button>
+    </div>
+    <a class="sidebar__logout" href="./Dashboard.dc.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9" /></svg>
+      Logout
+    </a>
+  </aside>
+
+  <!-- TEMPLATE: ProgressLayout -->
+  <main class="app__main">
+    <header class="header">
+      <div class="header__titles"><h1 class="header__title">Progress</h1></div>
+      <div class="header__spacer"></div>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+      </button>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg>
+        <span class="dot"></span>
+      </button>
+      <div class="user-menu">
+        <span class="avatar avatar--md"><image-slot id="pg-avatar" shape="circle" style="width:40px;height:40px" placeholder="Avatar"></image-slot></span>
+        <div>
+          <div class="user-menu__name">Adam Vasylenko</div>
+          <div class="user-menu__role">Member</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="pg-grid">
+      <!-- ORGANISM: BodyMeasurementPanel -->
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Body Measurement</h2>
+          <button class="select-pill" onClick="{{ cycleMonth }}">{{ month }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+        </div>
+        <div class="body-panel body-panel--single">
+          <div class="silhouette">
+            <image-slot id="pg-body" shape="rect" fit="contain" placeholder="Human silhouette render"></image-slot>
+            <div class="point" style="top:20%;left:58%">
+              <span class="point__dot"></span>
+              <span class="point__box"><span class="point__label">Chest</span><span class="point__value" style="display:block">93.0 <span>cm</span></span></span>
+            </div>
+            <div class="point" style="top:34%;left:70%">
+              <span class="point__dot"></span>
+              <span class="point__box"><span class="point__label">Arm</span><span class="point__value" style="display:block">28.5 <span>cm</span></span></span>
+            </div>
+            <div class="point" style="top:44%;left:56%">
+              <span class="point__dot"></span>
+              <span class="point__box"><span class="point__label">Waist</span><span class="point__value" style="display:block">77.5 <span>cm</span></span></span>
+            </div>
+            <div class="point" style="top:56%;left:66%">
+              <span class="point__dot"></span>
+              <span class="point__box"><span class="point__label">Hips</span><span class="point__value" style="display:block">98.0 <span>cm</span></span></span>
+            </div>
+            <div class="point" style="top:70%;left:58%">
+              <span class="point__dot"></span>
+              <span class="point__box"><span class="point__label">Thigh</span><span class="point__value" style="display:block">58.5 <span>cm</span></span></span>
+            </div>
+          </div>
+        </div>
+
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>{{ month }}</th>
+              <th>Chest (cm)</th>
+              <th>Arm (cm)</th>
+              <th>Waist (cm)</th>
+              <th>Hips (cm)</th>
+              <th>Thigh (cm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ measurements }}" as="m" hint-placeholder-count="4">
+              <tr>
+                <td style="color:var(--color-muted)">{{ m.week }}</td>
+                <td>{{ m.chest }}</td>
+                <td>{{ m.arm }}</td>
+                <td>{{ m.waist }}</td>
+                <td>{{ m.hips }}</td>
+                <td>{{ m.thigh }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+
+      <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+        <!-- MOLECULE: WeightTrackingCard -->
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Weight Tracking</h2>
+            <span class="card__more">•••</span>
+          </div>
+          <div class="wt-stats">
+            <div class="wt-stat"><span class="wt-stat__label">Start Weight</span><span class="wt-stat__value">85 <span>kg</span></span></div>
+            <div class="wt-stat" style="background:var(--color-orange-light)"><span class="wt-stat__label">Current Weight</span><span class="wt-stat__value">78 <span>kg</span></span></div>
+            <div class="wt-stat" style="background:var(--color-green-light)"><span class="wt-stat__label">Weight Goal</span><span class="wt-stat__value">65 <span>kg</span></span></div>
+          </div>
+          <div class="line-chart">
+            <svg viewBox="0 0 340 150" width="100%" height="150">
+              <g stroke="#F0EDE7" stroke-width="1">
+                <path d="M0 20h340M0 55h340M0 90h340M0 125h340" />
+              </g>
+              <path d="M14 34 L79 48 L144 64 L209 78 L274 88 L326 96" fill="none" stroke="#FFA257" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M14 34 L79 48 L144 64 L209 78 L274 88 L326 96 L326 150 L14 150 Z" fill="#FFA257" opacity=".08" />
+              <g fill="#fff" stroke="#FFA257" stroke-width="3">
+                <circle cx="14" cy="34" r="4.5" /><circle cx="79" cy="48" r="4.5" /><circle cx="144" cy="64" r="4.5" />
+                <circle cx="209" cy="78" r="4.5" /><circle cx="274" cy="88" r="4.5" /><circle cx="326" cy="96" r="4.5" />
+              </g>
+              <g font-size="10" font-family="Poppins" font-weight="700" fill="#1F2937" text-anchor="middle">
+                <text x="14" y="22">85</text><text x="326" y="84">78</text>
+              </g>
+            </svg>
+            <div class="line-chart__axis"><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span></div>
+          </div>
+        </section>
+
+        <!-- MOLECULE: ProgressPhotos -->
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Progress Photos</h2>
+            <button class="btn btn--sm btn--ghost">View All</button>
+          </div>
+          <div class="photos">
+            <div class="photo"><image-slot id="pg-photo-1" shape="rect" placeholder="July 2028"></image-slot><span class="photo__cap">July 2028 · 82 kg</span></div>
+            <div class="photo"><image-slot id="pg-photo-2" shape="rect" placeholder="Aug 2028"></image-slot><span class="photo__cap">Aug 2028 · 80 kg</span></div>
+            <div class="photo"><image-slot id="pg-photo-3" shape="rect" placeholder="Sept 2028"></image-slot><span class="photo__cap">Sept 2028 · 78 kg</span></div>
+          </div>
+        </section>
+
+        <!-- ORGANISM: RecentActivityFeed -->
+        <section class="card">
+          <div class="card__head" style="margin-bottom:2px">
+            <h2 class="card__title">Recent Activity</h2>
+            <span class="card__more">•••</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-item__time">8:00 PM</span>
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg></span>
+            <p class="activity-item__text"><b>Notification sent:</b> "Congratulations! You've reached 75% of your cardio endurance goal!"</p>
+          </div>
+          <div class="activity-item">
+            <span class="activity-item__time">5:15 PM</span>
+            <span class="icon-badge icon-badge--yellow-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4.5" r="1.8" /><path d="M12 8v6M12 14l-4 7M12 14l4 7M6 10h12" /></svg></span>
+            <p class="activity-item__text"><b>Ladya Mortimov</b> completed her 3rd stretching session for flexibility improvement</p>
+          </div>
+          <div class="activity-item">
+            <span class="activity-item__time">3:00 PM</span>
+            <span class="icon-badge icon-badge--orange-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg></span>
+            <p class="activity-item__text"><b>Cardio progress updated</b> – 7.5 km completed out of 10 km goal for endurance improvement</p>
+          </div>
+          <div class="activity-item">
+            <span class="activity-item__time">12:45 PM</span>
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M16 3c-1.4 2-1.4 4.6 0 6V21" /></svg></span>
+            <p class="activity-item__text"><b>Ladya Mortimov</b> logged her lunch meal: Grilled Chicken Wrap with Avocado and Spinach (450 kcal)</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <span>Copyright © 2024 Peterdraw</span>
+      <a href="./Progress.dc.html">Privacy Policy</a>
+      <a href="./Progress.dc.html">Term and conditions</a>
+      <a href="./Progress.dc.html">Contact</a>
+      <span class="page-footer__spacer"></span>
+      <span class="page-footer__social">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-3H13V9c0-1 .3-1.5 1.6-1.5H17V4.6c-.4 0-1.6-.1-2.9-.1-2.7 0-4.1 1.5-4.1 4.3V11H7v3h3v8z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.5l4.3 6L17 3h4l-6.8 8.6L21.5 21H17l-4.6-6.4L6.8 21H3l7.3-9.1z" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17" cy="7" r="1" fill="currentColor" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2A2.7 2.7 0 0 0 19.7 5C18 4.6 12 4.6 12 4.6s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7.2C2 9 2 12 2 12s0 3 .4 4.8A2.7 2.7 0 0 0 4.3 19c1.7.4 7.7.4 7.7.4s6 0 7.7-.4a2.7 2.7 0 0 0 1.9-2.2C22 15 22 12 22 12s0-3-.4-4.8zM10 15.5v-7l6 3.5z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3A1.8 1.8 0 1 0 4.5 6.6 1.8 1.8 0 0 0 4.5 3zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.6-1.1 2-1.9 3.6-1.9 2.8 0 4.5 1.7 4.5 5V21h-3v-7c0-1.7-.7-2.6-2.1-2.6-1.3 0-2 .9-2 2.6v7H9z" /></svg>
+      </span>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1200}}">
+class Component extends DCLogic {
+  state = { mealPlanOpen: false, month: 'September 2028' };
+
+  renderVals() {
+    const months = ['September 2028', 'August 2028', 'July 2028'];
+    return {
+      mealPlanOpen: this.state.mealPlanOpen,
+      toggleMealPlan: () => this.setState(s => ({ mealPlanOpen: !s.mealPlanOpen })),
+      month: this.state.month,
+      cycleMonth: () => this.setState(s => ({ month: months[(months.indexOf(s.month) + 1) % months.length] })),
+      measurements: [
+        { week: 'Week 1', chest: '95.0', arm: '30.0', waist: '80.0', hips: '100.0', thigh: '60.0' },
+        { week: 'Week 2', chest: '94.0', arm: '29.5', waist: '79.0', hips: '99.0', thigh: '59.5' },
+        { week: 'Week 3', chest: '93.5', arm: '29.0', waist: '78.0', hips: '98.5', thigh: '59.0' },
+        { week: 'Week 4', chest: '93.0', arm: '28.5', waist: '77.5', hips: '98.0', thigh: '58.5' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

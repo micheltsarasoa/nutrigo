@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NutriGo Data Visualisation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../design/source/nutrigo.css">
+<style>
+.dv{max-width:1200px;margin:0 auto;padding:40px 16px 96px;display:flex;flex-direction:column;gap:52px}
+h1{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+h1 em{font-style:normal;color:var(--color-orange-base)}
+.lead{color:var(--color-muted);max-width:680px;line-height:1.6;margin-top:8px}
+section{display:flex;flex-direction:column;gap:16px}
+.label{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--color-muted)}
+.label::after{content:"";flex:1;height:1px;background:var(--color-line)}
+h2{font-size:22px;font-weight:700;letter-spacing:-.02em}
+p.note{font-size:13px;color:var(--color-muted);line-height:1.6;max-width:780px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.tile{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);padding:20px;min-width:0;position:relative}
+.tile h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.tile .sub{font-size:12px;color:var(--color-muted);margin-bottom:14px}
+.spec{font-size:12px;color:var(--color-muted);line-height:1.6;margin-top:12px;border-top:1px solid var(--color-line);padding-top:10px}
+.spec b{color:var(--color-ink)}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--color-surface);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card)}
+.t th{text-align:left;padding:10px 12px;font-size:11.5px;color:var(--color-muted);font-weight:600;border-bottom:1px solid var(--color-line);background:var(--color-subtle)}
+.t td{padding:9px 12px;border-bottom:1px solid var(--color-line);vertical-align:top}
+.t tr:last-child td{border-bottom:0}
+.scroll{overflow-x:auto;border-radius:var(--radius-lg)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--color-ink);margin-top:10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.hatch-g{background:repeating-linear-gradient(45deg,#C2E66E 0 3px,#EDFFC4 3px 6px)}
+.tip{position:absolute;pointer-events:none;background:var(--color-surface);box-shadow:0 4px 18px rgba(31,41,55,.14);border-radius:8px;padding:6px 10px;font-size:12px;line-height:1.35;opacity:0;transition:opacity .12s;z-index:3;white-space:nowrap}
+.tip small{display:block;color:var(--color-muted);font-size:11px}
+svg text{font-family:Poppins,system-ui,sans-serif}
+.hit{fill:transparent;cursor:default}
+details{background:var(--color-surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:10px 14px;font-size:12.5px}
+details summary{cursor:pointer;font-weight:600}
+code{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+pre{background:#1F2937;color:#F8F6F1;padding:14px;border-radius:12px;overflow-x:auto;font-size:11.5px;line-height:1.5}
+ul.rules{margin:0;padding-left:18px;font-size:13px;line-height:1.75}
+.ringwrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.ring{position:relative;width:150px;height:150px;flex:none}
+.ring__label{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center}
+.ring__v{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.ring__v span{font-size:12px;font-weight:600}
+.ring__c{font-size:11.5px;color:var(--color-muted)}
+</style>
+</head>
+<body>
+<main class="dv">
+
+<header>
+  <h1>NutriGo <em>Data Visualisation</em></h1>
+  <p class="lead">Rules for every chart, stat and meter in NutriGo, derived from the charts in the Claude Design export and checked with a colour-blind validator. Tokens: <code>tokens.json</code>. Components: <a href="index.html"><b>index.html</b></a>. Charts are hand-built inline SVG; there is no chart library (Ponytail, ADR-0003).</p>
+</header>
+
+<!-- ===== 01 inventory ===== -->
+<section>
+  <div class="label">01 · Chart inventory</div>
+  <h2>Every data display in scope, and its form</h2>
+  <div class="scroll"><table class="t">
+    <thead><tr><th>Display</th><th>Question it answers</th><th>Form</th><th>Screen · sprint</th><th>Origin</th></tr></thead>
+    <tbody>
+      <tr><td>Calories left</td><td>How much can I still eat today?</td><td>Progress ring + hero number</td><td>Today · S3</td><td>Dashboard "Calories Intake"</td></tr>
+      <tr><td>Macro progress</td><td>How close am I to each macro target?</td><td>3 labelled bars (MacroBar)</td><td>Today · S3</td><td>Dashboard</td></tr>
+      <tr><td>Recipe macros</td><td>What does one serving contain?</td><td>4 stat tiles (MacroTile), not a chart</td><td>Recipe · S1</td><td>Recipe Details</td></tr>
+      <tr><td>Slot kcal</td><td>How big is each meal?</td><td>Number in a pill</td><td>Plan · S2</td><td>Meal Plan</td></tr>
+      <tr><td>Week nutrition trend</td><td>Which days are over or under target?</td><td>7 columns + target line</td><td>Plan / Today · S3</td><td><b>Not in design</b>: derived (PRD N-3)</td></tr>
+      <tr><td>Planned vs eaten</td><td>Did I eat what I planned?</td><td>Paired value in the ring caption + list ticks</td><td>Today · S3</td><td>Derived from check-off</td></tr>
+      <tr><td>Grocery KPIs</td><td>Cost, item count, kcal of the list</td><td>3 stat tiles with a delta</td><td>Groceries · S4</td><td>Grocery "KPI row"</td></tr>
+      <tr><td>Expense overview</td><td>How does spending change by week?</td><td>Column chart</td><td>Groceries · S4</td><td>"Expense Overview" (monthly in the design; weekly here)</td></tr>
+      <tr><td>Expense breakdown</td><td>Where does the money go?</td><td>Donut ≤ 6 segments + legend with € and %</td><td>Groceries · S4</td><td>"Expense Breakdown"</td></tr>
+      <tr><td>Items by category</td><td>What is the list made of?</td><td>Stacked bar + legend</td><td>Groceries · S4</td><td>"Grocery Category"</td></tr>
+      <tr><td>Purchase progress</td><td>How much of the list is done?</td><td>Progress bar + "22 of 40"</td><td>Groceries mobile · S4</td><td>Derived</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Out of scope</b> (the export has them): weight gauge and ruler, weight line chart, steps hatch bar, sleep bars, water bar, workout progress, health-score ticks as a chart. The health score is shown as a number ("8/10") with the tick meter as decoration only.</p>
+</section>
+
+<!-- ===== 02 colour ===== -->
+<section>
+  <div class="label">02 · Colour by job</div>
+  <h2>Identity colours come from the semantic tokens; nothing is cycled</h2>
+  <div class="grid">
+    <div class="tile"><h3>Macros (categorical, fixed order)</h3>
+      <div class="legend"><span><i style="background:#C2E66E"></i>kcal</span><span><i style="background:#FFCA65"></i>carbs</span><span><i style="background:#FFA257"></i>protein</span><span><i style="background:#E2E1E4"></i>fat</span></div>
+      <p class="spec">Order is always kcal → carbs → protein → fat, in lists, tiles, bars and tooltips.</p></div>
+    <div class="tile"><h3>Food categories (categorical, fixed order)</h3>
+      <div class="legend"><span><i style="background:#C2E66E"></i>Grains</span><span><i style="background:#FFCA65"></i>Veggies</span><span><i style="background:#FFA257"></i>Protein</span><span><i style="background:#FFC79A"></i>Fruits</span><span><i style="background:#FFE1C9"></i>Dairy</span><span><i style="background:#E9E7E2"></i>Others</span></div>
+      <p class="spec">Six is the ceiling. A 7th category folds into <b>Others</b>, never a new colour. The colour follows the category, never its rank.</p></div>
+    <div class="tile"><h3>Magnitude (sequential)</h3>
+      <div class="legend"><span><i style="background:#FFF2E8"></i></span><span><i style="background:#FFE1C9"></i></span><span><i style="background:#FFC79A"></i></span><span><i style="background:#FFA257"></i></span></div>
+      <p class="spec">A single hue (orange), light → dark. Used for a single-series column chart when one bar is highlighted (the peak in Expense Overview).</p></div>
+    <div class="tile"><h3>Target state</h3>
+      <div class="legend"><span><i style="background:#C2E66E"></i>within target</span><span><i style="background:#FFA257"></i>over target <b>▲</b></span><span><i style="background:#EEEEEE"></i>remaining</span></div>
+      <p class="spec"><span class="pill pill--yellow">proposed</span> The design has no over-target state. Over target: the fill stays full, the ring or bar switches to orange, and the label says "+120 kcal over" with ▲. The state is never shown by colour alone.</p></div>
+  </div>
+
+  <h2 style="margin-top:12px">Validator result: the brand palette fails colour-blind checks</h2>
+  <p class="note">Run on 2026-09-23 with the dataviz validator (light mode, white surface). The owner has decided to keep the colours for now (ADR-0008), so <b>secondary encoding is mandatory</b> on every chart, as listed below. When the token values change, re-run the command and update this table.</p>
+  <div class="scroll"><table class="t">
+    <thead><tr><th>Palette</th><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3">Macros<br><span class="sw" style="background:#C2E66E"></span><span class="sw" style="background:#FFCA65"></span><span class="sw" style="background:#FFA257"></span><span class="sw" style="background:#E2E1E4"></span></td><td>CVD separation</td><td><b>Fail</b>: kcal (green) ↔ carbs (yellow) ΔE 1.2 for deutan, effectively identical</td></tr>
+      <tr><td>Normal-vision floor</td><td><b>Fail</b>: carbs ↔ protein ΔE 9.5 (&lt; 15)</td></tr>
+      <tr><td>Contrast vs surface</td><td><b>Warn</b>: all &lt; 3:1, so visible labels or a table view are required</td></tr>
+      <tr><td rowspan="2">Categories<br><span class="sw" style="background:#C2E66E"></span><span class="sw" style="background:#FFCA65"></span><span class="sw" style="background:#FFA257"></span><span class="sw" style="background:#FFC79A"></span><span class="sw" style="background:#FFE1C9"></span><span class="sw" style="background:#E9E7E2"></span></td><td>CVD / normal vision</td><td><b>Fail</b>: grains ↔ veggies ΔE 1.2 (deutan); dairy ↔ others ΔE 4.0 (normal)</td></tr>
+      <tr><td>Chroma floor</td><td><b>Fail</b>: fruits, dairy and others read as grey</td></tr>
+    </tbody>
+  </table></div>
+  <details><summary>Re-run the validator</summary>
+<pre>node validate_palette.js "#C2E66E,#FFCA65,#FFA257,#E2E1E4" --mode light --surface "#FFFFFF"
+node validate_palette.js "#C2E66E,#FFCA65,#FFA257,#FFC79A,#FFE1C9,#E9E7E2" --mode light --surface "#FFFFFF"</pre>
+  </details>
+</section>
+
+<!-- ===== 03 rules ===== -->
+<section>
+  <div class="label">03 · Non-negotiable rules</div>
+  <h2>Applied to every chart</h2>
+  <div class="grid">
+    <div class="tile"><h3>Identity never by colour alone</h3><ul class="rules">
+      <li>≥ 2 series: a legend is always present, and ≤ 4 series are also labelled directly</li>
+      <li>Macro tiles and bars always carry their word ("Carbs"), not just a letter or colour</li>
+      <li>Donut and stacked bar: the legend shows name, value and %</li>
+      <li>Texture: the design's hatch (45°) is available as the backup channel</li></ul></div>
+    <div class="tile"><h3>Marks</h3><ul class="rules">
+      <li>Columns ≤ 24 px wide, 4 px rounded data end, square at the baseline</li>
+      <li>2 px surface-coloured gap between touching segments or bars</li>
+      <li>Lines 2 px, round caps; markers ≥ 8 px with a 2 px surface ring</li>
+      <li>Gridlines are 1 px solid <code>--color-line</code>; axis text is <code>--color-muted</code></li>
+      <li>One y-axis only. Never dual axes</li></ul></div>
+    <div class="tile"><h3>Text</h3><ul class="rules">
+      <li>Values and labels use text tokens (ink, muted), never the series colour</li>
+      <li>kcal as integers with a thin space: <code>1 240 kcal</code>; grams as integers: <code>35 g</code></li>
+      <li>EUR with 2 decimals; the locale is set once in a shared formatter</li>
+      <li>Estimated values prefixed "~" (e.g. <code>~€1.00</code>)</li></ul></div>
+    <div class="tile"><h3>Interaction &amp; access</h3><ul class="rules">
+      <li>Every bar, segment and point has a hover/tap tooltip with the exact value; the hit area is larger than the mark</li>
+      <li>Each chart has a visually hidden <code>&lt;table&gt;</code> (or a "Show as table" toggle) with the same data</li>
+      <li>SVG has <code>role="img"</code> + <code>aria-label</code> summarising the takeaway</li>
+      <li>Filters sit in one row above the chart (select pill)</li>
+      <li>Respect <code>prefers-reduced-motion</code>: no ring animation</li></ul></div>
+    <div class="tile"><h3>Empty &amp; edge states</h3><ul class="rules">
+      <li>No data: a placeholder with the reason and the action ("Plan meals to see nutrition")</li>
+      <li>Target not set: show totals without a ring and link to Targets</li>
+      <li>0 %: the track only, with a "0 of 325 g" label</li>
+      <li>Over 100 %: the fill caps at 100 % and the label shows the overshoot</li></ul></div>
+    <div class="tile"><h3>Is it even a chart?</h3><ul class="rules">
+      <li>One number = a stat tile (recipe macros, KPI tiles)</li>
+      <li>A 2-slice comparison = a sentence ("1 750 of 2 990 kcal eaten")</li>
+      <li>Close values (±5 %) = bars, never a donut</li></ul></div>
+  </div>
+</section>
+
+<!-- ===== 04 specimens ===== -->
+<section>
+  <div class="label">04 · Specimens</div>
+  <h2>Reference renderings (example data)</h2>
+  <div class="grid">
+
+    <div class="tile"><h3>Calories ring</h3><div class="sub">Today · planned 2 990 kcal target, 1 750 eaten</div>
+      <div class="ringwrap">
+        <div class="ring" role="img" aria-label="1 240 kcal left of 2 990 target; 59% eaten">
+          <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true">
+            <circle cx="75" cy="75" r="64" fill="#FAFAF8" stroke="#F0EFEC" stroke-width="11"/>
+            <circle cx="75" cy="75" r="64" fill="none" stroke="#FFA257" stroke-width="11" stroke-linecap="round" stroke-dasharray="237 402" transform="rotate(-90 75 75)"/>
+          </svg>
+          <div class="ring__label"><div class="ring__v">1 240<span> kcal</span></div><div class="ring__c">left</div></div>
+        </div>
+        <div style="font-size:12.5px;line-height:1.8"><b>1 750</b> eaten<br><b>2 150</b> planned<br><b>2 990</b> target</div>
+      </div>
+      <p class="spec"><b>Form:</b> a ring plus hero number. <b>Fill:</b> eaten ÷ target, orange as in the design. <b>Caption:</b> eaten, planned and target (planned-vs-eaten decision). <b>Over:</b> full orange ring, "+120 kcal over ▲". "Burned calories" from the design is removed.</p>
+    </div>
+
+    <div class="tile"><h3>Macro bars</h3><div class="sub">Eaten vs target</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px"><div style="background:var(--color-subtle);border-radius:8px;padding:6px 9px;min-width:84px"><b>120</b><span style="font-size:10.5px;color:var(--color-muted)">/325 g</span></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--color-muted)">Carbs</span><b>37%</b></div><div class="progress-bar progress-bar--yellow" role="progressbar" aria-valuenow="37" aria-valuemin="0" aria-valuemax="100" aria-label="Carbs"><div class="progress-bar__fill" style="width:37%"></div></div></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><div style="background:var(--color-subtle);border-radius:8px;padding:6px 9px;min-width:84px"><b>70</b><span style="font-size:10.5px;color:var(--color-muted)">/75 g</span></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--color-muted)">Protein</span><b>93%</b></div><div class="progress-bar progress-bar--orange" role="progressbar" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100" aria-label="Protein"><div class="progress-bar__fill" style="width:93%"></div></div></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><div style="background:var(--color-subtle);border-radius:8px;padding:6px 9px;min-width:84px"><b>52</b><span style="font-size:10.5px;color:var(--color-muted)">/44 g</span></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--color-muted)">Fat</span><b>+8 g over ▲</b></div><div class="progress-bar" role="progressbar" aria-valuenow="118" aria-valuemin="0" aria-valuemax="100" aria-label="Fat, over target"><div class="progress-bar__fill" style="width:100%;background:#FFA257"></div></div></div></div>
+      </div>
+      <p class="spec"><b>Order:</b> carbs, protein, fat (kcal lives in the ring). <b>Fill:</b> the macro colour; orange when over, with ▲ and text. The design's all-green fills are replaced by the canonical colours.</p>
+    </div>
+
+    <div class="tile" id="week"><h3>Week nutrition trend</h3><div class="sub">kcal per day vs target · derived (not in design)</div>
+      <svg viewBox="0 0 320 170" width="100%" role="img" aria-label="Daily kcal this week; Wednesday and Saturday over the 2 990 target">
+        <g stroke="#F0EDE7" stroke-width="1"><path d="M30 20H316M30 60H316M30 100H316M30 140H316"/></g>
+        <g font-size="10" fill="#6B7280" text-anchor="end"><text x="24" y="23">3k</text><text x="24" y="63">2k</text><text x="24" y="103">1k</text><text x="24" y="143">0</text></g>
+        <g id="wk"></g>
+        <path d="M30 20.4H316" stroke="#1F2937" stroke-width="1.5"/>
+        <text x="32" y="14" font-size="10" fill="#1F2937">target 2 990</text>
+        <g font-size="10" fill="#6B7280" text-anchor="middle" id="wkx"></g>
+      </svg>
+      <div class="legend"><span><i style="background:#C2E66E"></i>within target</span><span><i style="background:#FFA257"></i>over target ▲</span><span><i class="hatch-g"></i>planned, not yet eaten</span></div>
+      <p class="spec"><b>Form:</b> 7 columns and one target line (a single axis). Past days show eaten kcal; today and future days show planned kcal in hatched fill. Over-target columns are orange and get ▲ in the tooltip.</p>
+    </div>
+
+    <div class="tile" id="exp"><h3>Expense overview</h3><div class="sub">€ per week · last 8 weeks</div>
+      <svg viewBox="0 0 320 170" width="100%" role="img" aria-label="Weekly grocery spend, highest in week 36 at €71">
+        <g stroke="#F0EDE7" stroke-width="1"><path d="M34 20H316M34 60H316M34 100H316M34 140H316"/></g>
+        <g font-size="10" fill="#6B7280" text-anchor="end"><text x="28" y="23">€90</text><text x="28" y="63">€60</text><text x="28" y="103">€30</text><text x="28" y="143">€0</text></g>
+        <g id="ex"></g><g font-size="10" fill="#6B7280" text-anchor="middle" id="exx"></g>
+      </svg>
+      <p class="spec"><b>Form:</b> a single-series column chart, yellow bars, with the peak highlighted in orange (as designed). Weekly instead of monthly because the list is weekly. <b>Actual</b> spend where it's entered, otherwise the estimate, with a hatched bar and "~" in the tooltip.</p>
+    </div>
+
+    <div class="tile"><h3>Expense breakdown</h3><div class="sub">This week · €57.40</div>
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <svg viewBox="0 0 150 150" width="140" height="140" role="img" aria-label="Spend by category: grains 30%, veggies 25%, protein 18%, fruits 15%, dairy 7%, others 5%">
+          <g fill="none" stroke-width="18" transform="rotate(-90 75 75)">
+            <circle cx="75" cy="75" r="60" stroke="#C2E66E" stroke-dasharray="111 266" stroke-dashoffset="0"/>
+            <circle cx="75" cy="75" r="60" stroke="#FFCA65" stroke-dasharray="92 285" stroke-dashoffset="-113"/>
+            <circle cx="75" cy="75" r="60" stroke="#FFA257" stroke-dasharray="66 311" stroke-dashoffset="-207"/>
+            <circle cx="75" cy="75" r="60" stroke="#FFC79A" stroke-dasharray="55 322" stroke-dashoffset="-275"/>
+            <circle cx="75" cy="75" r="60" stroke="#FFE1C9" stroke-dasharray="24 353" stroke-dashoffset="-332"/>
+            <circle cx="75" cy="75" r="60" stroke="#E9E7E2" stroke-dasharray="17 360" stroke-dashoffset="-358"/>
+          </g>
+          <text x="75" y="74" text-anchor="middle" font-size="17" font-weight="800" fill="#1F2937">€57.40</text>
+          <text x="75" y="90" text-anchor="middle" font-size="10" fill="#6B7280">total</text>
+        </svg>
+        <div style="flex:1;min-width:160px;display:flex;flex-direction:column;gap:6px;font-size:12px">
+          <div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:#C2E66E"></i><span style="flex:1">Grains</span><span style="color:var(--color-muted)">€17.22</span><b>30%</b></div>
+          <div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:#FFCA65"></i><span style="flex:1">Veggies</span><span style="color:var(--color-muted)">€14.35</span><b>25%</b></div>
+          <div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:#FFA257"></i><span style="flex:1">Protein</span><span style="color:var(--color-muted)">€10.33</span><b>18%</b></div>
+          <div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:#FFC79A"></i><span style="flex:1">Fruits</span><span style="color:var(--color-muted)">€8.61</span><b>15%</b></div>
+          <div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:#FFE1C9"></i><span style="flex:1">Dairy</span><span style="color:var(--color-muted)">€4.02</span><b>7%</b></div>
+          <div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:#E9E7E2"></i><span style="flex:1">Others</span><span style="color:var(--color-muted)">€2.87</span><b>5%</b></div>
+        </div>
+      </div>
+      <p class="spec"><b>Form:</b> a donut with ≤ 6 segments, 2 px gaps, and segments in <b>category order</b> (not sorted by size, so colours stay stable). The legend always shows € and %. The design's round caps are replaced with butt ends plus gaps, because round caps overlap on small segments.</p>
+    </div>
+
+    <div class="tile"><h3>Items by category</h3><div class="sub">40 items</div>
+      <div style="display:flex;gap:2px;height:16px;border-radius:4px;overflow:hidden" role="img" aria-label="40 items: grains 12, veggies 10, protein 8, fruits 6, dairy 2, others 2">
+        <i style="flex:12;background:#C2E66E"></i><i style="flex:10;background:#FFCA65"></i><i style="flex:8;background:#FFA257"></i><i style="flex:6;background:#FFC79A"></i><i style="flex:2;background:#FFE1C9"></i><i style="flex:2;background:#E9E7E2"></i>
+      </div>
+      <div class="legend"><span><i style="background:#C2E66E"></i>Grains 12</span><span><i style="background:#FFCA65"></i>Veggies 10</span><span><i style="background:#FFA257"></i>Protein 8</span><span><i style="background:#FFC79A"></i>Fruits 6</span><span><i style="background:#FFE1C9"></i>Dairy 2</span><span><i style="background:#E9E7E2"></i>Others 2</span></div>
+      <p class="spec"><b>Form:</b> a stacked bar, a 2 px surface gap, the same category order as the donut, and a legend with counts. The legend is listed in category order (the design's 2-column legend reorders them).</p>
+    </div>
+
+  </div>
+  <div class="tip" id="tip" role="tooltip"></div>
+</section>
+
+<!-- ===== 05 build ===== -->
+<section>
+  <div class="label">05 · Implementation</div>
+  <h2>How charts are built in the app</h2>
+  <ul class="rules">
+    <li>Hand-written React + inline SVG components in <code>design-system/organisms/charts/</code>: <code>Ring</code>, <code>ColumnChart</code>, <code>Donut</code>, <code>StackedBar</code>, <code>Legend</code>, <code>ChartTable</code>. Adding a chart library needs an ADR.</li>
+    <li>Colours come from <code>semantic.*</code> tokens via CSS variables. Components never receive hex values.</li>
+    <li>Geometry (arc lengths, scales, over-target flags) is pure functions in <code>packages/shared/chart-math.ts</code>, unit-tested.</li>
+    <li>Every chart component has a playground page with the states: empty, 0 %, typical, 100 %, over target, and 1 / max categories.</li>
+    <li>Screenshot tests at 390 px and 1280 px.</li>
+  </ul>
+</section>
+
+</main>
+<script>
+// Demo data and hover tooltips for the specimens (docs only).
+(function(){
+  const tip=document.getElementById('tip');
+  function bind(el,html){
+    el.addEventListener('pointerenter',e=>{tip.innerHTML=html;tip.style.opacity=1});
+    el.addEventListener('pointermove',e=>{const r=tip.parentElement.getBoundingClientRect();tip.style.left=(e.clientX-r.left+12)+'px';tip.style.top=(e.clientY-r.top-38)+'px'});
+    el.addEventListener('pointerleave',()=>tip.style.opacity=0);
+  }
+  const NS='http://www.w3.org/2000/svg';
+  function mk(t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e}
+  // 4px rounded top, square baseline
+  function col(x,y,w,h){const r=Math.min(4,h);return `M${x} 140V${y+r}Q${x} ${y} ${x+r} ${y}H${x+w-r}Q${x+w} ${y} ${x+w} ${y+r}V140Z`}
+  function hatch(svg,id,c1,c2){const d=mk('defs',{});const p=mk('pattern',{id,width:6,height:6,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'});p.append(mk('rect',{width:6,height:6,fill:c2}),mk('rect',{width:3,height:6,fill:c1}));d.append(p);svg.prepend(d)}
+  // week trend: scale 3000 kcal = 120px
+  const wk=document.getElementById('wk'),wkx=document.getElementById('wkx');
+  hatch(wk.ownerSVGElement,'hg','#C2E66E','#EDFFC4');
+  const days=[['Mon',2650,'eaten'],['Tue',2810,'eaten'],['Wed',3110,'eaten'],['Thu',2740,'eaten'],['Fri',2900,'planned'],['Sat',3240,'planned'],['Sun',2600,'planned']];
+  days.forEach((d,i)=>{const x=44+i*39,h=d[1]/3000*120,y=140-h,over=d[1]>2990;
+    const fill=d[2]==='planned'?(over?'#FFA257':'url(#hg)'):(over?'#FFA257':'#C2E66E');
+    wk.append(mk('path',{d:col(x,y,22,h),fill}));
+    const hit=mk('rect',{x:x-8,y:14,width:38,height:130,class:'hit'});wk.append(hit);
+    bind(hit,`<b>${d[0]}</b> · ${d[1].toLocaleString('fr-FR')} kcal<small>${d[2]}${over?' · +'+(d[1]-2990)+' over ▲':''}</small>`);
+    const t=mk('text',{x:x+11,y:156});t.textContent=d[0];wkx.append(t);});
+  // expense: scale €90 = 120px
+  const ex=document.getElementById('ex'),exx=document.getElementById('exx');
+  hatch(ex.ownerSVGElement,'hy','#FFCA65','#FFF1D6');
+  const wks=[['W33',48.2,1],['W34',52.9,1],['W35',44.1,1],['W36',71.0,1],['W37',55.3,1],['W38',60.8,1],['W39',49.6,1],['W40',57.4,0]];
+  wks.forEach((w,i)=>{const x=46+i*34,h=w[1]/90*120,y=140-h,peak=w[1]===71.0;
+    ex.append(mk('path',{d:col(x,y,20,h),fill:peak?'#FFA257':(w[2]?'#FFCA65':'url(#hy)')}));
+    const hit=mk('rect',{x:x-7,y:14,width:34,height:130,class:'hit'});ex.append(hit);
+    bind(hit,`<b>${w[0]}</b> · ${w[2]?'':'~'}€${w[1].toFixed(2)}<small>${w[2]?'actual':'estimated (not yet shopped)'}</small>`);
+    const t=mk('text',{x:x+10,y:156});t.textContent=w[0];exx.append(t);});
+})();
+</script>
+</body>
+</html>

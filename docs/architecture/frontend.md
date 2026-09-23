@@ -86,15 +86,22 @@ stateDiagram-v2
 | Routing | React Router (data routers) | Standard, small |
 | Offline | Service worker cache + IndexedDB queue for shopping-list writes | Spec in Sprint 4 |
 
-## 6. Styling
+## 6. Navigation
+
+| Width | Navigation | Source |
+|---|---|---|
+| < 1200 px | Bottom tab bar, 5 items: **Today** (`/`) · **Recipes** (`/recipes`) · **Plan** (`/plan/:week`) · **Groceries** (`/groceries/:week`) · **Targets** (`/targets`) | Dashboard Mobile (items adapted to scope; PRD Q7) |
+| ≥ 1200 px | 252 px sidebar with the same 5 destinations; ≥ 1440 px adds a 340 px aside where the design has one | Dashboard, Meal Plan |
+
+## 7. Styling
 
 - The only source of design values is the CSS custom properties in `tokens.css`, generated from the design system.
 - Components use CSS Modules. There's no CSS-in-JS runtime.
 - Mobile-first media queries, with touch targets of at least 44 px.
 - Charts follow `docs/design-system/dataviz.html`.
 
-## 7. Quality gates specific to the frontend
+## 8. Quality gates specific to the frontend
 
-- Every component has a `*.test.tsx` that covers behaviour and states (Testing Library). Every state is checked with axe.
+- Every component has a `*.test.tsx` that covers behaviour and states (Testing Library). Every state is checked with axe (`color-contrast` temporarily off, ADR-0008).
 - Every playground page has a Playwright screenshot test, and approved screenshots are committed.
-- Lighthouse CI budgets: Performance ≥ 90, Accessibility 100, Best Practices ≥ 95, PWA installable.
+- Lighthouse CI budgets: Performance ≥ 90, Accessibility ≥ 90 (100 once ADR-0008 is resolved), Best Practices ≥ 95, PWA installable.

@@ -52,7 +52,7 @@ Before saying a task is done, run lint, typecheck and tests. Say so if any of th
 3. **Atomic design, bottom-up**: atoms → molecules → organisms → pages. Never build a level before the pieces below it exist and are approved. See [`docs/process/coding-policy.md`](docs/process/coding-policy.md).
 4. **Test first**. Write the failing test, then the code. No PR without tests for the code it adds or changes.
 5. **Playground before product**. Every new UI component is shown at `/playground/<level>/<name>` with all its states. The owner validates it (label `design-approved`) **before** it's used in a page.
-6. **Design tokens only**. No raw colors, sizes or font values in components. Use the CSS custom properties from the design system. `design/source/` is read-only.
+6. **Design tokens only**. No raw colors, sizes or font values in components. Use the CSS custom properties generated from `docs/design-system/tokens.json`. `design/source/` is read-only (the Claude Design export), and its `support.js`/`image-slot.js` are never imported. Semantic colours: kcal green · carbs yellow · protein orange · fat grey. Weeks start Monday; money is EUR in integer cents; units are written `g`.
 7. **No auth code**: no login, sessions or user tables. Single user by design (ADR-0002).
 8. **No logging libraries**. Errors go to stderr only on the API; the web app shows user-facing error states.
 9. **Conventional Commits** (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`, `ci:`). PR titles follow the same format because PRs are squash-merged. Versions and the changelog come from them (release-please).
@@ -85,6 +85,6 @@ Before saying a task is done, run lint, typecheck and tests. Say so if any of th
 - Architecture: `docs/architecture/*`, decisions in `docs/architecture/adr/`
 - Process: `docs/process/*` (coding policy, workflow, release)
 - Testing: `docs/testing/strategy.md`
-- Design system: `docs/design-system/` (HTML, generated from the Claude Design export)
+- Design system: `docs/design-system/index.html` (components, scope, known issues) and `dataviz.html` (chart rules); raw export in `design/source/`
 
 If a decision changes, write a new ADR. Don't silently edit old ones.

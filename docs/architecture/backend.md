@@ -34,10 +34,15 @@ All routes are under `/api`. Everything else serves the PWA (`index.html` fallba
 | POST | `/plans/:isoWeek/entries` | Add a meal entry | P-2 |
 | PATCH/DELETE | `/plans/:isoWeek/entries/:id` | Move, change servings, remove | P-3 |
 | POST | `/plans/:isoWeek/copy-from/:otherWeek` | Copy a week | P-3 |
-| GET | `/nutrition/:isoWeek` | Daily and weekly totals against targets | N-1, N-2 |
+| POST/DELETE | `/plans/:isoWeek/entries/:id/eaten` | Tick or untick a meal as eaten (food diary) | N-5 |
+| GET | `/nutrition/day/:date` · `/nutrition/week/:isoWeek` | Planned vs eaten vs target | N-1, N-2, N-6 |
+| GET | `/ingredients/search?source=off\|usda&q=` | Import candidates | N-4 |
 | GET/PUT | `/targets` | Personal targets | N-2 |
 | POST | `/shopping-lists/:isoWeek/generate` | Build a list from the plan | S-1 |
-| GET/PATCH | `/shopping-lists/:isoWeek` | Items, check off, manual items | S-2, S-3 |
+| GET | `/shopping-lists/:isoWeek` | Items, totals, estimated and actual cost | S-2, S-5 |
+| POST/PATCH/DELETE | `/shopping-lists/:isoWeek/items` | Manual items; batch patch with last-write-wins (offline sync) | S-2, S-3, S-6 |
+| GET | `/spending?weeks=8` | Weekly and category spend | S-7 |
+| POST | `/recipes/:id/photo` | Upload your own recipe photo | R-5 |
 | POST | `/ai/suggest-plan` · `/ai/estimate-ingredient` | Returns a **proposal**; nothing is persisted | A-1…A-3 |
 | GET | `/health` | Liveness + DB check (used by Railway) | NFR |
 

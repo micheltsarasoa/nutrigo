@@ -1,0 +1,259 @@
+/* ==========================================================================
+   NUTRIGO — DESIGN TOKENS + ATOMS + SHARED ORGANISMS
+   Kebab-case, component-prefixed (BEM-ish) for a 1:1 mapping to React/Tailwind.
+   ========================================================================== */
+
+:root{
+  /* --- color: green family (Grains / success) --- */
+  --color-green-base:#C2E66E;
+  --color-green-medium:#DFF9A2;
+  --color-green-light:#EDFFC4;
+  /* --- color: yellow family (Veggies / steps) --- */
+  --color-yellow-base:#FFCA65;
+  --color-yellow-medium:#FFE6B5;
+  --color-yellow-light:#FFF1D6;
+  /* --- color: orange family (Protein / weight / primary CTA) --- */
+  --color-orange-base:#FFA257;
+  --color-orange-medium:#FFE1C9;
+  --color-orange-light:#FFF2E8;
+  /* --- neutrals --- */
+  --color-ink:#1F2937;
+  --color-muted:#6B7280;
+  --color-faint:#9CA3AF;
+  --color-cream:#FBF8F3;
+  --color-surface:#FFFFFF;
+  --color-subtle:#F8F6F1;
+  --color-line:#F0EDE7;
+  --color-track:#EEEEEE;
+  /* --- radii --- */
+  --radius-xs:6px; --radius-sm:8px; --radius-md:12px;
+  --radius-lg:16px; --radius-xl:20px; --radius-2xl:24px; --radius-pill:999px;
+  /* --- elevation --- */
+  --shadow-soft:0 2px 16px rgba(31,41,55,.05);
+  --shadow-card:0 1px 2px rgba(31,41,55,.04),0 8px 24px rgba(31,41,55,.04);
+  /* --- spacing --- */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px;
+  /* --- type --- */
+  --font-sans:'Poppins',system-ui,-apple-system,sans-serif;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--color-cream);color:var(--color-ink);
+  font-family:var(--font-sans);font-size:14px;font-weight:400;line-height:1.45;
+  -webkit-font-smoothing:antialiased;text-wrap:pretty;
+}
+a{color:var(--color-ink);text-decoration:none}
+a:hover{color:#D9812F}
+button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input{font-family:inherit;font-size:inherit;color:inherit}
+h1,h2,h3,h4,p{margin:0}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:#E5E1D9;border-radius:99px}
+
+/* ==== ATOM: Button ==================================================== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:40px;padding:0 18px;border-radius:var(--radius-md);
+  font-size:13.5px;font-weight:600;white-space:nowrap;transition:.16s ease}
+.btn--primary-green{background:var(--color-green-base);color:var(--color-ink)}
+.btn--primary-green:hover{background:#B4DD57}
+.btn--primary-orange{background:var(--color-orange-base);color:#fff}
+.btn--primary-orange:hover{background:#F8923E}
+.btn--ghost{background:var(--color-surface);color:var(--color-muted);box-shadow:inset 0 0 0 1px var(--color-line)}
+.btn--ghost:hover{color:var(--color-ink);background:var(--color-subtle)}
+.btn--block{width:100%}
+.btn--sm{height:32px;padding:0 14px;font-size:12px;border-radius:var(--radius-sm)}
+
+/* ==== ATOM: Badge / Pill ============================================== */
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;
+  border-radius:var(--radius-sm);font-size:11.5px;font-weight:600;white-space:nowrap}
+.pill--green{background:var(--color-green-light);color:#6F9018}
+.pill--yellow{background:var(--color-yellow-light);color:#B77A09}
+.pill--orange{background:var(--color-orange-light);color:#D97426}
+.pill--grey{background:#F3F3F1;color:var(--color-muted)}
+.pill--outline{background:var(--color-surface);color:var(--color-muted);box-shadow:inset 0 0 0 1px #E4E0D8}
+.pill--solid-green{background:var(--color-green-base);color:var(--color-ink)}
+.pill--solid-yellow{background:var(--color-yellow-base);color:var(--color-ink)}
+.pill--solid-orange{background:var(--color-orange-base);color:#fff}
+
+/* ==== ATOM: IconBadge ================================================= */
+.icon-badge{display:grid;place-items:center;width:28px;height:28px;border-radius:var(--radius-sm);flex:none}
+.icon-badge--lg{width:44px;height:44px;border-radius:var(--radius-md)}
+.icon-badge--green{background:var(--color-green-base);color:#fff}
+.icon-badge--yellow{background:var(--color-yellow-base);color:#fff}
+.icon-badge--orange{background:var(--color-orange-base);color:#fff}
+.icon-badge--green-light{background:var(--color-green-light);color:#8CB531}
+.icon-badge--yellow-light{background:var(--color-yellow-light);color:#E0A02F}
+.icon-badge--orange-light{background:var(--color-orange-light);color:var(--color-orange-base)}
+.icon-badge--grey{background:#F3F3F1;color:var(--color-faint)}
+.icon-badge svg{width:15px;height:15px}
+.icon-badge--lg svg{width:20px;height:20px}
+
+/* ==== ATOM: Avatar ==================================================== */
+.avatar{border-radius:50%;overflow:hidden;flex:none;background:var(--color-yellow-light);
+  box-shadow:0 0 0 2px #fff}
+.avatar--sm{width:28px;height:28px}
+.avatar--md{width:40px;height:40px}
+.avatar--lg{width:52px;height:52px}
+
+/* ==== ATOM: Input / SearchBar ========================================= */
+.search-bar{display:flex;align-items:center;gap:10px;height:42px;padding:0 16px;
+  background:var(--color-surface);border-radius:var(--radius-md);
+  box-shadow:inset 0 0 0 1px var(--color-line);color:var(--color-faint)}
+.search-bar svg{width:16px;height:16px;flex:none}
+.search-bar input{border:0;outline:0;background:none;width:100%;font-size:13.5px;color:var(--color-ink)}
+.search-bar input::placeholder{color:var(--color-faint)}
+.search-bar--sm{height:36px;padding:0 12px}
+.search-bar--filled{background:var(--color-subtle);box-shadow:none}
+
+/* ==== ATOM: ProgressBar (two-tone: filled + light remainder) ========== */
+.progress-bar{height:6px;border-radius:var(--radius-pill);background:var(--color-track);overflow:hidden}
+.progress-bar__fill{height:100%;border-radius:var(--radius-pill);background:var(--color-green-base)}
+.progress-bar--green .progress-bar__fill{background:var(--color-green-base)}
+.progress-bar--yellow .progress-bar__fill{background:var(--color-yellow-base)}
+.progress-bar--orange .progress-bar__fill{background:var(--color-orange-base)}
+.progress-bar--on-green{background:rgba(255,255,255,.55)}
+.progress-bar--on-green .progress-bar__fill{background:#fff}
+.progress-bar--thin{height:5px}
+
+/* ==== ATOM: StatChip ================================================== */
+.stat-chip{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-md);
+  background:var(--color-subtle)}
+.stat-chip__value{display:block;font-size:15px;font-weight:800;line-height:1.15}
+.stat-chip__label{display:block;font-size:10.5px;font-weight:500;color:var(--color-muted)}
+.stat-chip--green .stat-chip__label,.stat-chip--yellow .stat-chip__label,.stat-chip--orange .stat-chip__label{color:rgba(31,41,55,.7)}
+.stat-chip--green{background:var(--color-green-base)}
+.stat-chip--yellow{background:var(--color-yellow-base)}
+.stat-chip--orange{background:var(--color-orange-base)}
+.stat-chip--grey{background:#F0F0EE}
+
+/* ==== ATOM: StarRating ================================================ */
+.star-rating{display:inline-flex;align-items:center;gap:2px;color:var(--color-yellow-base)}
+.star-rating svg{width:13px;height:13px}
+
+/* ==== ATOM: Stepper =================================================== */
+.stepper{display:inline-flex;align-items:center;gap:4px}
+.stepper__btn{display:grid;place-items:center;width:26px;height:26px;border-radius:var(--radius-xs);
+  background:var(--color-subtle);color:var(--color-muted);font-weight:600;transition:.15s}
+.stepper__btn:hover{background:var(--color-orange-light);color:var(--color-orange-base)}
+.stepper__value{min-width:28px;text-align:center;font-size:13px;font-weight:700}
+
+/* ==== ATOM: NavLink =================================================== */
+.nav-link{display:flex;align-items:center;gap:12px;height:44px;padding:0 14px;
+  border-radius:var(--radius-md);font-size:13.5px;font-weight:500;color:var(--color-muted);
+  transition:.15s ease;cursor:pointer}
+.nav-link svg{width:18px;height:18px;flex:none}
+.nav-link:hover{background:var(--color-green-light);color:var(--color-ink)}
+.nav-link.is-active{background:var(--color-green-base);color:var(--color-ink);font-weight:600}
+.nav-link.is-open{color:var(--color-ink);font-weight:600}
+.nav-link__badge{margin-left:auto;display:grid;place-items:center;min-width:19px;height:19px;
+  padding:0 5px;border-radius:var(--radius-pill);background:var(--color-orange-base);
+  color:#fff;font-size:10.5px;font-weight:700}
+.nav-link__chev{margin-left:auto;opacity:.6}
+.nav-sub{display:flex;flex-direction:column;gap:2px;padding-left:34px}
+.nav-sub .nav-link{height:38px}
+
+/* ==== ATOM/MOLECULE: Card ============================================= */
+.card{background:var(--color-surface);border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-card);padding:var(--space-5)}
+.card__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.card__title{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.card__more{color:var(--color-faint);letter-spacing:1px;font-weight:700;line-height:1;cursor:pointer}
+.card__more:hover{color:var(--color-ink)}
+.section-title{font-size:16px;font-weight:600;letter-spacing:-.01em}
+
+/* ==== ATOM: Select (dropdown look) ==================================== */
+.select-pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;
+  border-radius:var(--radius-sm);background:var(--color-surface);box-shadow:inset 0 0 0 1px var(--color-line);
+  font-size:12px;font-weight:500;color:var(--color-muted)}
+.select-pill:hover{color:var(--color-ink)}
+.select-pill svg{width:13px;height:13px;opacity:.7}
+
+/* ==== ORGANISM: App shell ============================================= */
+.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh;
+  background:var(--color-cream)}
+.app--with-aside{grid-template-columns:252px minmax(0,1fr) 340px}
+.app__main{display:flex;flex-direction:column;gap:var(--space-5);padding:var(--space-6) var(--space-6);min-width:0}
+.app__aside{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-6) var(--space-6) var(--space-6) 0;min-width:0}
+
+/* ==== ORGANISM: Sidebar =============================================== */
+.sidebar{display:flex;flex-direction:column;gap:var(--space-5);
+  padding:var(--space-6) var(--space-4);background:var(--color-surface);
+  position:sticky;top:0;align-self:start;height:100vh;min-height:100vh;overflow-y:auto}
+.sidebar__brand{display:flex;align-items:center;gap:10px;padding:0 10px 4px}
+.sidebar__wordmark{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.sidebar__nav{display:flex;flex-direction:column;gap:2px}
+.sidebar__spacer{flex:1}
+.sidebar__logout{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px;
+  border-radius:var(--radius-md);background:var(--color-subtle);
+  font-size:13.5px;font-weight:500;color:var(--color-muted)}
+.sidebar__logout:hover{background:var(--color-orange-light);color:var(--color-orange-base)}
+.sidebar__logout svg{width:17px;height:17px}
+
+/* ==== MOLECULE: PromoBanner =========================================== */
+.promo-banner{border-radius:var(--radius-lg);background:var(--color-yellow-base);
+  padding:14px 16px 16px;text-align:center}
+.promo-banner__art{height:74px;margin:-2px auto 8px;display:block}
+.promo-banner__text{font-size:12.5px;font-weight:500;line-height:1.4;color:var(--color-ink)}
+.promo-banner__text strong{font-weight:700}
+.promo-banner__cta{margin-top:12px;height:34px;padding:0 16px;border-radius:var(--radius-sm);
+  background:var(--color-green-base);font-size:12.5px;font-weight:600;color:var(--color-ink)}
+.promo-banner__cta:hover{background:#B4DD57}
+
+/* ==== ORGANISM: Header ================================================ */
+.header{display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap}
+.header__titles{min-width:0}
+.header__title{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.header__subtitle{font-size:12.5px;color:var(--color-muted);margin-top:2px}
+.header__spacer{flex:1}
+.header__search{width:280px;flex:none}
+.header__icon-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:var(--radius-md);
+  background:var(--color-surface);box-shadow:inset 0 0 0 1px var(--color-line);color:var(--color-muted);position:relative}
+.header__icon-btn:hover{color:var(--color-ink)}
+.header__icon-btn svg{width:17px;height:17px}
+.header__icon-btn .dot{position:absolute;top:9px;right:10px;width:7px;height:7px;border-radius:50%;
+  background:var(--color-orange-base);box-shadow:0 0 0 2px #fff}
+
+/* ==== MOLECULE: UserMenu ============================================== */
+.user-menu{display:flex;align-items:center;gap:10px}
+.user-menu__name{font-size:13.5px;font-weight:600;line-height:1.2}
+.user-menu__role{font-size:11px;color:var(--color-muted)}
+
+/* ==== MOLECULE: AsideCard ============================================= */
+.aside-card{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);padding:var(--space-4)}
+
+/* ==== MOLECULE: MiniCalendar ========================================== */
+.calendar__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calendar__month{font-size:14px;font-weight:700}
+.calendar__month span{color:var(--color-muted);font-weight:500}
+
+/* ==== MOLECULE: MealGroup / MealItem ================================== */
+.meal-group{border-top:1px solid var(--color-line);padding-top:12px;margin-top:12px}
+.meal-group__head{display:flex;align-items:center;gap:8px}
+.meal-group__spacer{flex:1}
+.meal-group__chev{color:var(--color-faint);cursor:pointer;display:grid;place-items:center;width:22px;height:22px}
+.meal-group__chev svg{width:14px;height:14px}
+.meal-item{display:flex;gap:10px;margin-top:10px}
+.meal-item__media{width:48px;height:48px;border-radius:var(--radius-sm);overflow:hidden;flex:none;background:var(--color-subtle)}
+.meal-item__title{font-size:12.5px;font-weight:600;line-height:1.35}
+.meal-item__macros{display:flex;gap:10px;font-size:10.5px;color:var(--color-muted);margin-top:5px}
+.meal-check{display:grid;place-items:center;width:18px;height:18px;border-radius:5px;flex:none}
+.meal-check--done{background:var(--color-green-base);color:#fff}
+.meal-check--todo{background:#fff;box-shadow:inset 0 0 0 1.5px var(--color-yellow-base)}
+.meal-check--todo.is-orange{box-shadow:inset 0 0 0 1.5px var(--color-orange-base)}
+.meal-check svg{width:11px;height:11px}
+
+/* ==== MOLECULE: ActivityFeedItem ====================================== */
+.activity-item{display:flex;gap:10px;padding-top:14px}
+.activity-item__time{font-size:10.5px;color:var(--color-faint);width:52px;flex:none;padding-top:2px}
+.activity-item__text{font-size:11.5px;color:var(--color-muted);line-height:1.5}
+.activity-item__text b{color:var(--color-ink);font-weight:600}
+
+/* ==== ORGANISM: Footer ================================================ */
+.page-footer{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:6px 4px 2px;font-size:11.5px;color:var(--color-muted)}
+.page-footer__spacer{flex:1}
+.page-footer__social{display:flex;gap:12px;color:var(--color-faint)}
+.page-footer__social svg{width:14px;height:14px}
+.page-footer a:hover{color:var(--color-orange-base)}

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./nutrigo.css" />
+<script src="./image-slot.js"></script>
+<style>
+/* ===== PAGE: Dashboard ===== */
+.app{width:1600px}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-4)}
+.stat-card{background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:14px 16px 16px;min-width:0}
+.stat-card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.stat-card__label{font-size:13px;font-weight:600}
+.stat-card__value{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-top:2px}
+.stat-card__unit{font-size:11.5px;font-weight:500;color:var(--color-muted);margin-left:3px}
+.stat-card__meta{display:flex;justify-content:space-between;font-size:10.5px;color:var(--color-muted);margin-top:8px}
+.ruler{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.ruler__track{position:relative;height:18px}
+.ruler__ticks{display:flex;justify-content:space-between;align-items:flex-end;height:14px;position:absolute;inset:auto 0 0}
+.ruler__tick{width:1px;background:#E2DED6;height:6px}
+.ruler__tick--major{height:12px}
+.ruler__dot{position:absolute;top:0;width:11px;height:11px;border-radius:50%;background:var(--color-orange-base);transform:translateX(-50%);box-shadow:0 0 0 3px #fff}
+.ruler__labels{display:flex;justify-content:space-between;font-size:10px;color:var(--color-faint)}
+.sleep-bars{display:flex;align-items:flex-end;gap:4px;height:34px;margin-top:10px}
+.sleep-bars__col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;justify-content:flex-end;height:100%}
+.sleep-bars__bar{width:3px;border-radius:99px;background:var(--color-yellow-base)}
+.sleep-bars__dot{width:3px;height:3px;border-radius:50%;background:var(--color-yellow-base)}
+.water-bar{position:relative;height:34px;border-radius:var(--radius-sm);background:var(--color-yellow-light);overflow:hidden;margin-top:12px;display:flex;align-items:center;justify-content:flex-end;padding:0 10px}
+.water-bar__fill{position:absolute;inset:0 auto 0 0;background:var(--color-yellow-base);border-radius:var(--radius-sm)}
+.water-bar__label{position:relative;font-size:10.5px;font-weight:600;color:var(--color-ink)}
+.hatch-bar{position:relative;height:14px;border-radius:var(--radius-xs);overflow:hidden;background:var(--color-yellow-medium);margin-top:10px}
+.hatch-bar__hatch{position:absolute;inset:0;background:repeating-linear-gradient(115deg,var(--color-yellow-base) 0 3px,var(--color-yellow-medium) 3px 7px)}
+.hatch-bar__fill{position:absolute;inset:0 auto 0 0;background:var(--color-orange-base);border-radius:var(--radius-xs)}
+
+.duo{display:grid;grid-template-columns:minmax(0,0.82fr) minmax(0,1.18fr);gap:var(--space-4)}
+.gauge{display:block;width:100%;max-width:240px;margin:2px auto 0}
+.gauge-card__center{text-align:center;margin-top:-58px}
+.gauge-card__value{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.gauge-card__value span{font-size:15px;font-weight:600}
+.gauge-card__cap{font-size:11.5px;color:var(--color-muted)}
+.gauge-card__scale{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;color:var(--color-ink);margin-top:4px}
+.gauge-card__scale em{font-style:normal;font-size:11px;font-weight:500;color:var(--color-muted)}
+.gauge-card__note{margin-top:14px;padding-top:14px;border-top:1px solid var(--color-green-base);
+  font-size:12px;color:var(--color-muted);text-align:center;line-height:1.5}
+.ring{position:relative;width:184px;height:184px;flex:none}
+.ring__label{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:1px;text-align:center}
+.ring__icon{color:var(--color-faint);margin-bottom:2px}
+.ring__value{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.ring__value span{font-size:14px;font-weight:600}
+.ring__cap{font-size:11px;color:var(--color-muted)}
+.cal-card__body{display:flex;gap:var(--space-5);align-items:center}
+.cal-card__right{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.cal-card__totals{display:flex;gap:18px}
+.cal-card__total{display:flex;align-items:center;gap:8px}
+.cal-card__total-value{font-size:16px;font-weight:800;line-height:1.1}
+.cal-card__total-value span{font-size:11.5px;font-weight:600}
+.cal-card__total-cap{font-size:10.5px;color:var(--color-muted)}
+.macro{display:flex;align-items:center;gap:12px}
+.macro__amount{display:flex;align-items:baseline;gap:3px;background:var(--color-subtle);border-radius:var(--radius-sm);
+  padding:6px 9px;min-width:74px}
+.macro__amount b{font-size:14px;font-weight:700}
+.macro__amount i{font-style:normal;font-size:10px;color:var(--color-muted)}
+.macro__body{flex:1;min-width:0}
+.macro__top{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px}
+.macro__top span{color:var(--color-muted)}
+.macro__top b{font-weight:700}
+
+.workout-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4)}
+.workout-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-lg)}
+.workout-card--green{background:var(--color-green-base)}
+.workout-card--yellow{background:var(--color-yellow-base)}
+.workout-card--orange{background:var(--color-orange-base)}
+.workout-card__icon{display:grid;place-items:center;width:42px;height:42px;border-radius:var(--radius-md);
+  background:rgba(255,255,255,.7);flex:none}
+.workout-card__icon svg{width:22px;height:22px}
+.workout-card__body{flex:1;min-width:0}
+.workout-card__title{font-size:13px;font-weight:600;margin-bottom:6px}
+.workout-card__foot{display:flex;align-items:center;gap:10px}
+.workout-card__pct{font-size:12px;font-weight:700;white-space:nowrap}
+.workout-card__pct em{font-style:normal;font-size:10px;font-weight:500;opacity:.75}
+.workout-card__cat{font-size:11px;font-weight:600;white-space:nowrap}
+.workout-card--orange .workout-card__title,.workout-card--orange .workout-card__pct,.workout-card--orange .workout-card__cat{color:#fff}
+
+.lower{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(0,1fr);gap:var(--space-4)}
+.recipe-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4)}
+.recipe-card__media{position:relative;height:132px;border-radius:var(--radius-md);overflow:hidden;background:var(--color-subtle)}
+.recipe-card__tags{position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;gap:6px;pointer-events:none;z-index:2}
+.recipe-card__macros{display:flex;gap:6px;margin:10px 0 8px}
+.recipe-card__title{font-size:13.5px;font-weight:700;line-height:1.35}
+.recipe-card__desc{font-size:11.5px;color:var(--color-muted);line-height:1.5;margin-top:5px}
+.exercise-item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:var(--radius-md);transition:.15s}
+.exercise-item:hover{background:var(--color-subtle)}
+.exercise-item__media{width:56px;height:56px;border-radius:var(--radius-sm);overflow:hidden;flex:none;background:var(--color-subtle)}
+.exercise-item__title{font-size:13px;font-weight:700}
+.exercise-item__meta{display:flex;gap:12px;font-size:11px;color:var(--color-muted);margin:4px 0 6px}
+.exercise-item__meta span{display:flex;align-items:center;gap:4px}
+.exercise-item__meta svg{width:11px;height:11px}
+
+/* ===== ASIDE ===== */
+.aside-card{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);padding:var(--space-4)}
+.calendar__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calendar__month{font-size:14px;font-weight:700}
+.calendar__month span{color:var(--color-muted);font-weight:500}
+.calendar__nav{display:flex;gap:6px}
+.calendar__nav button{display:grid;place-items:center;width:28px;height:28px;border-radius:var(--radius-xs);
+  background:var(--color-subtle);color:var(--color-muted)}
+.calendar__nav button:hover{background:var(--color-green-light);color:var(--color-ink)}
+.calendar__nav svg{width:13px;height:13px}
+.calendar__days{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.cal-day{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 8px;border-radius:var(--radius-sm);cursor:pointer}
+.cal-day__dow{font-size:10px;color:var(--color-muted)}
+.cal-day__num{font-size:14px;font-weight:700}
+.cal-day:hover{background:var(--color-green-light)}
+.cal-day.is-active{background:var(--color-green-base)}
+.cal-day.is-active .cal-day__dow{color:#5F7F12}
+.meal-group{border-top:1px solid var(--color-line);padding-top:12px;margin-top:12px}
+.meal-group__head{display:flex;align-items:center;gap:8px}
+.meal-group__spacer{flex:1}
+.meal-group__chev{color:var(--color-faint);cursor:pointer;display:grid;place-items:center;width:22px;height:22px}
+.meal-group__chev svg{width:14px;height:14px}
+.meal-item{display:flex;gap:10px;margin-top:10px}
+.meal-item__media{width:48px;height:48px;border-radius:var(--radius-sm);overflow:hidden;flex:none;background:var(--color-subtle)}
+.meal-item__title{font-size:12.5px;font-weight:600;line-height:1.35}
+.meal-item__macros{display:flex;gap:10px;font-size:10.5px;color:var(--color-muted);margin-top:5px}
+.meal-item__macros span{display:flex;align-items:center;gap:4px}
+.meal-item__macros svg{width:11px;height:11px}
+.meal-check{display:grid;place-items:center;width:18px;height:18px;border-radius:5px;flex:none}
+.meal-check--done{background:var(--color-green-base);color:#fff}
+.meal-check--todo{background:#fff;box-shadow:inset 0 0 0 1.5px var(--color-yellow-base)}
+.meal-check--todo.is-orange{box-shadow:inset 0 0 0 1.5px var(--color-orange-base)}
+.meal-check svg{width:11px;height:11px}
+.activity-item{display:flex;gap:10px;padding-top:14px}
+.activity-item__time{font-size:10.5px;color:var(--color-faint);width:52px;flex:none;padding-top:2px}
+.activity-item__text{font-size:11.5px;color:var(--color-muted);line-height:1.5}
+.activity-item__text b{color:var(--color-ink);font-weight:600}
+</style>
+</helmet>
+
+<div class="app app--with-aside">
+
+  <!-- ORGANISM: Sidebar -->
+  <aside class="sidebar">
+    <!-- ATOM: Logo -->
+    <div class="sidebar__brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-label="Nutrigo">
+        <path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65" />
+        <path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E" />
+      </svg>
+      <span class="sidebar__wordmark">Nutrigo</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <!-- ATOM: NavLink -->
+      <a class="nav-link is-active" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="./Meal Plan.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3" /><path d="M8 3v3M16 3v3M3 10h18" /></svg>
+        Calendar
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z" /></svg>
+        Messages
+        <span class="nav-link__badge">6</span>
+      </a>
+      <a class="nav-link" href="./Healthy Menu.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21" /><path d="M19 3v18" /></svg>
+        Healthy Menu
+      </a>
+      <div class="nav-link is-open" onClick="{{ toggleMealPlan }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 12l5-3" /></svg>
+        Meal Plan
+        <span class="nav-link__chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </span>
+      </div>
+      <sc-if value="{{ mealPlanOpen }}" hint-placeholder-val="{{ true }}">
+        <div class="nav-sub">
+          <a class="nav-link" href="./Meal Plan.dc.html">Meal Plan</a>
+          <a class="nav-link" href="./Grocery List.dc.html">Grocery List</a>
+        </div>
+      </sc-if>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+        Food Diary
+      </a>
+      <a class="nav-link" href="./Progress.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg>
+        Progress
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="13" cy="4.5" r="1.8" /><path d="M10 21l2.5-6 3 2.5L18 21M6 10l5-2 4 2 4 1" /></svg>
+        Exercises
+      </a>
+      <a class="nav-link" href="./Health Insights.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" /></svg>
+        Health Insights
+      </a>
+    </nav>
+
+    <div class="sidebar__spacer"></div>
+
+    <!-- MOLECULE: PromoBanner -->
+    <div class="promo-banner">
+      <image-slot id="dash-promo" class="promo-banner__art" style="width:100%;height:74px" shape="rounded" radius="10" fit="contain" placeholder="Veggies 3D"></image-slot>
+      <p class="promo-banner__text">Start your health journey with a <strong>FREE 1-month</strong> access to Nutrigo!</p>
+      <button class="promo-banner__cta">Claim Now!</button>
+    </div>
+
+    <a class="sidebar__logout" href="./Dashboard.dc.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9" /></svg>
+      Logout
+    </a>
+  </aside>
+
+  <!-- TEMPLATE: DashboardLayout / main column -->
+  <main class="app__main">
+
+    <!-- ORGANISM: Header -->
+    <header class="header">
+      <div class="header__titles">
+        <h1 class="header__title">Hello, Adam! 👋</h1>
+        <p class="header__subtitle">Let's begin our journey to better health today</p>
+      </div>
+      <div class="header__spacer"></div>
+      <!-- MOLECULE: SearchBar -->
+      <label class="search-bar header__search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+        <input placeholder="Search anything" />
+      </label>
+    </header>
+
+    <!-- ORGANISM: DashboardStatsRow -->
+    <div class="stats-row">
+      <!-- MOLECULE: StatCard — Weight -->
+      <div class="stat-card">
+        <div class="stat-card__head">
+          <div>
+            <div class="stat-card__label">Weight</div>
+            <div class="stat-card__value">78<span class="stat-card__unit">kg</span></div>
+          </div>
+          <span class="icon-badge icon-badge--green-light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16l-2 11H6L4 8zM9 8a3 3 0 0 1 6 0" /></svg>
+          </span>
+        </div>
+        <div class="ruler">
+          <div class="ruler__track">
+            <div class="ruler__ticks">
+              <i class="ruler__tick ruler__tick--major"></i><i class="ruler__tick"></i><i class="ruler__tick"></i><i class="ruler__tick"></i>
+              <i class="ruler__tick ruler__tick--major"></i><i class="ruler__tick"></i><i class="ruler__tick"></i><i class="ruler__tick"></i>
+              <i class="ruler__tick ruler__tick--major"></i><i class="ruler__tick"></i><i class="ruler__tick"></i><i class="ruler__tick"></i>
+              <i class="ruler__tick ruler__tick--major"></i><i class="ruler__tick"></i><i class="ruler__tick"></i><i class="ruler__tick"></i>
+              <i class="ruler__tick ruler__tick--major"></i>
+            </div>
+            <div class="ruler__dot" style="left:35%"></div>
+          </div>
+          <div class="ruler__labels"><span>85</span><span>80</span><span>75</span><span>70</span><span>65</span></div>
+        </div>
+      </div>
+
+      <!-- MOLECULE: StatCard — Steps -->
+      <div class="stat-card">
+        <div class="stat-card__head">
+          <div>
+            <div class="stat-card__label">Steps</div>
+            <div class="stat-card__value">8050<span class="stat-card__unit">steps</span></div>
+          </div>
+          <span class="icon-badge icon-badge--green-light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 4c2 0 3 2 3 5s-1 4-1 6 1 3-1 4-3-1-3-3 1-3 1-5-1-3-1-5 1-2 2-2zM16 7c1.6 0 2.5 1.6 2.5 4s-.8 3.2-.8 4.8.8 2.4-.8 3.2-2.4-.8-2.4-2.4.8-2.4.8-4-.8-2.4-.8-4 .8-1.6 1.5-1.6z" /></svg>
+          </span>
+        </div>
+        <div class="hatch-bar">
+          <div class="hatch-bar__hatch"></div>
+          <div class="hatch-bar__fill" style="width:76%"></div>
+        </div>
+        <div class="stat-card__meta"><span>76%</span><span>1950 steps left</span></div>
+      </div>
+
+      <!-- MOLECULE: StatCard — Sleep -->
+      <div class="stat-card">
+        <div class="stat-card__head">
+          <div>
+            <div class="stat-card__label">Sleep</div>
+            <div class="stat-card__value">6.5<span class="stat-card__unit">hours</span></div>
+          </div>
+          <span class="icon-badge icon-badge--green-light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>
+          </span>
+        </div>
+        <div class="sleep-bars">
+          <sc-for list="{{ sleepBars }}" as="h" hint-placeholder-count="11">
+            <div class="sleep-bars__col">
+              <i class="sleep-bars__bar" style="height:{{ h }}"></i>
+              <i class="sleep-bars__dot"></i>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- MOLECULE: StatCard — Water Intake -->
+      <div class="stat-card">
+        <div class="stat-card__head">
+          <div>
+            <div class="stat-card__label">Water Intake</div>
+            <div class="stat-card__value">0.7<span class="stat-card__unit">litre left</span></div>
+          </div>
+          <span class="icon-badge icon-badge--green-light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 4h10l-1 14a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3L7 4zM7.5 10h9" /></svg>
+          </span>
+        </div>
+        <div class="water-bar">
+          <div class="water-bar__fill" style="width:65%"></div>
+          <span class="water-bar__label">1.3/2 litre</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="duo">
+      <!-- MOLECULE: GaugeCard — Weight Data -->
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Weight Data</h2>
+          <span class="card__more">•••</span>
+        </div>
+        <svg class="gauge" viewBox="0 0 200 118">
+          <defs>
+            <pattern id="hatchYellow" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(58)">
+              <rect width="7" height="7" fill="#FFE6B5" />
+              <rect width="3.4" height="7" fill="#FFCA65" />
+            </pattern>
+          </defs>
+          <path d="M18 104 A82 82 0 0 1 182 104" fill="none" stroke="url(#hatchYellow)" stroke-width="26" stroke-linecap="round" />
+          <path d="M18 104 A82 82 0 0 1 182 104" fill="none" stroke="#FFA257" stroke-width="26" stroke-linecap="round" stroke-dasharray="90 400" />
+        </svg>
+        <div class="gauge-card__center">
+          <div class="gauge-card__value">78<span> kg</span></div>
+          <div class="gauge-card__cap">Current Weight</div>
+        </div>
+        <div class="gauge-card__scale"><span>85</span><em>13 kg left</em><span>65</span></div>
+        <p class="gauge-card__note">Progress is progress, no matter how slow. Keep going, you're getting closer to your goal every day! 🎉</p>
+      </section>
+
+      <!-- MOLECULE: CircularProgressCard — Calories Intake -->
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Calories Intake</h2>
+          <span class="card__more">•••</span>
+        </div>
+        <div class="cal-card__body">
+          <div class="ring">
+            <svg viewBox="0 0 184 184" width="184" height="184">
+              <circle cx="92" cy="92" r="80" fill="#FAFAF8" stroke="#F0EFEC" stroke-width="12" />
+              <circle cx="92" cy="92" r="80" fill="none" stroke="#FFA257" stroke-width="12" stroke-linecap="round" stroke-dasharray="392 503" transform="rotate(-88 92 92)" />
+            </svg>
+            <div class="ring__label">
+              <svg class="ring__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M13 2L5 14h6l-1 8 8-12h-6l1-8z" /></svg>
+              <div class="ring__value">1240<span> kcal</span></div>
+              <div class="ring__cap">Calories left</div>
+            </div>
+          </div>
+          <div class="cal-card__right">
+            <div class="cal-card__totals">
+              <div class="cal-card__total">
+                <span class="icon-badge icon-badge--green-light">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M16 3c-1.4 2-1.4 4.6 0 6V21" /></svg>
+                </span>
+                <div>
+                  <div class="cal-card__total-value">1750<span> kcal</span></div>
+                  <div class="cal-card__total-cap">Eaten calories</div>
+                </div>
+              </div>
+              <div class="cal-card__total">
+                <span class="icon-badge icon-badge--green-light">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5" /></svg>
+                </span>
+                <div>
+                  <div class="cal-card__total-value">510<span> kcal</span></div>
+                  <div class="cal-card__total-cap">Burned calories</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MOLECULE: MacroBar ×3 -->
+            <div class="macro">
+              <div class="macro__amount"><b>120</b><i>/325gr</i></div>
+              <div class="macro__body">
+                <div class="macro__top"><span>Carbohydrates</span><b>37%</b></div>
+                <div class="progress-bar progress-bar--green progress-bar--thin"><div class="progress-bar__fill" style="width:37%"></div></div>
+              </div>
+            </div>
+            <div class="macro">
+              <div class="macro__amount"><b>70</b><i>/75gr</i></div>
+              <div class="macro__body">
+                <div class="macro__top"><span>Proteins</span><b>93%</b></div>
+                <div class="progress-bar progress-bar--green progress-bar--thin"><div class="progress-bar__fill" style="width:93%"></div></div>
+              </div>
+            </div>
+            <div class="macro">
+              <div class="macro__amount"><b>20</b><i>/44gr</i></div>
+              <div class="macro__body">
+                <div class="macro__top"><span>Fats</span><b>45%</b></div>
+                <div class="progress-bar progress-bar--green progress-bar--thin"><div class="progress-bar__fill" style="width:45%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ORGANISM: WorkoutProgressSection -->
+    <section>
+      <div class="card__head" style="margin-bottom:12px">
+        <h2 class="section-title">Workout Progress</h2>
+        <button class="select-pill" onClick="{{ cycleRange }}">{{ range }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+      </div>
+      <div class="workout-row">
+        <!-- MOLECULE: WorkoutProgressCard -->
+        <div class="workout-card workout-card--green">
+          <span class="workout-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"><circle cx="15" cy="4.5" r="1.8" /><path d="M9 21l3-6 3.5 2.5L18 21M5 10l5-2 4 2.5 4 1" /></svg>
+          </span>
+          <div class="workout-card__body">
+            <div class="workout-card__title">Running 10 km</div>
+            <div class="workout-card__foot">
+              <span class="workout-card__pct">75% <em>(7/10)</em></span>
+              <div class="progress-bar progress-bar--on-green" style="flex:1"><div class="progress-bar__fill" style="width:75%"></div></div>
+              <span class="workout-card__cat">Cardio</span>
+            </div>
+          </div>
+        </div>
+        <div class="workout-card workout-card--yellow">
+          <span class="workout-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="4.5" r="1.8" /><path d="M6 9l6-1 6 1M9 21v-4l3-3 3 3v4M4 12h3M17 12h3" /></svg>
+          </span>
+          <div class="workout-card__body">
+            <div class="workout-card__title">Squatting 50kg</div>
+            <div class="workout-card__foot">
+              <span class="workout-card__pct">60% <em>(5/8)</em></span>
+              <div class="progress-bar progress-bar--on-green" style="flex:1"><div class="progress-bar__fill" style="width:60%"></div></div>
+              <span class="workout-card__cat">Strength</span>
+            </div>
+          </div>
+        </div>
+        <div class="workout-card workout-card--orange">
+          <span class="workout-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="4.5" r="1.8" /><path d="M12 8v6M12 14l-4 7M12 14l4 7M6 10h12" /></svg>
+          </span>
+          <div class="workout-card__body">
+            <div class="workout-card__title">Stretching to touch toes</div>
+            <div class="workout-card__foot">
+              <span class="workout-card__pct">50% <em>(3/6)</em></span>
+              <div class="progress-bar progress-bar--on-green" style="flex:1"><div class="progress-bar__fill" style="width:50%"></div></div>
+              <span class="workout-card__cat">Flexibility</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lower">
+      <!-- ORGANISM: RecommendedMenu -->
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Recommended Menu</h2>
+          <span class="card__more">•••</span>
+        </div>
+        <div class="recipe-grid">
+          <!-- MOLECULE: RecipeCard -->
+          <article class="recipe-card">
+            <div class="recipe-card__media">
+              <div class="recipe-card__tags">
+                <span class="pill pill--solid-green">Breakfast</span>
+                <span class="pill pill--green">350 kcal</span>
+              </div>
+              <image-slot id="dash-menu-1" shape="rect" placeholder="Oatmeal photo"></image-slot>
+            </div>
+            <div class="recipe-card__macros">
+              <span class="pill pill--green">C 45g</span>
+              <span class="pill pill--yellow">P 12g</span>
+              <span class="pill pill--orange">F 14g</span>
+            </div>
+            <h3 class="recipe-card__title">Oatmeal with Almond Butter and Berries</h3>
+            <p class="recipe-card__desc">High in fiber and antioxidants, providing long-lasting energy and improving digestion.</p>
+          </article>
+          <article class="recipe-card">
+            <div class="recipe-card__media">
+              <div class="recipe-card__tags">
+                <span class="pill pill--solid-yellow">Lunch</span>
+                <span class="pill pill--green">450 kcal</span>
+              </div>
+              <image-slot id="dash-menu-2" shape="rect" placeholder="Chicken wrap photo"></image-slot>
+            </div>
+            <div class="recipe-card__macros">
+              <span class="pill pill--green">C 40g</span>
+              <span class="pill pill--yellow">P 30g</span>
+              <span class="pill pill--orange">F 18g</span>
+            </div>
+            <h3 class="recipe-card__title">Grilled Chicken Wrap with Avocado and Spinach</h3>
+            <p class="recipe-card__desc">Rich in protein and healthy fats, perfect for muscle recovery and maintaining satiety.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ORGANISM: RecommendedExercises -->
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Recommended Exercises</h2>
+          <span class="card__more">•••</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ exercises }}" as="ex" hint-placeholder-count="3">
+            <article class="exercise-item">
+              <div class="exercise-item__media">
+                <image-slot id="dash-ex-{{ $index }}" shape="rect" placeholder="Photo"></image-slot>
+              </div>
+              <div style="min-width:0">
+                <h3 class="exercise-item__title">{{ ex.name }}</h3>
+                <div class="exercise-item__meta">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5" /></svg>
+                    {{ ex.kcal }} kcal
+                  </span>
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                    {{ ex.min }} min
+                  </span>
+                </div>
+                <span class="pill {{ ex.levelClass }}">{{ ex.level }}</span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+
+    <!-- ORGANISM: Footer -->
+    <footer class="page-footer">
+      <span>Copyright © 2024 Peterdraw</span>
+      <a href="./Dashboard.dc.html">Privacy Policy</a>
+      <a href="./Dashboard.dc.html">Term and conditions</a>
+      <a href="./Dashboard.dc.html">Contact</a>
+      <span class="page-footer__spacer"></span>
+      <span class="page-footer__social">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-3H13V9c0-1 .3-1.5 1.6-1.5H17V4.6c-.4 0-1.6-.1-2.9-.1-2.7 0-4.1 1.5-4.1 4.3V11H7v3h3v8z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.5l4.3 6L17 3h4l-6.8 8.6L21.5 21H17l-4.6-6.4L6.8 21H3l7.3-9.1z" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17" cy="7" r="1" fill="currentColor" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2A2.7 2.7 0 0 0 19.7 5C18 4.6 12 4.6 12 4.6s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7.2C2 9 2 12 2 12s0 3 .4 4.8A2.7 2.7 0 0 0 4.3 19c1.7.4 7.7.4 7.7.4s6 0 7.7-.4a2.7 2.7 0 0 0 1.9-2.2C22 15 22 12 22 12s0-3-.4-4.8zM10 15.5v-7l6 3.5z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3A1.8 1.8 0 1 0 4.5 6.6 1.8 1.8 0 0 0 4.5 3zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.6-1.1 2-1.9 3.6-1.9 2.8 0 4.5 1.7 4.5 5V21h-3v-7c0-1.7-.7-2.6-2.1-2.6-1.3 0-2 .9-2 2.6v7H9z" /></svg>
+      </span>
+    </footer>
+  </main>
+
+  <!-- TEMPLATE: aside / day panel -->
+  <aside class="app__aside">
+    <!-- MOLECULE: UserMenu -->
+    <div class="user-menu" style="justify-content:space-between">
+      <div class="user-menu" style="min-width:0">
+        <span class="avatar avatar--md"><image-slot id="dash-avatar" shape="circle" style="width:40px;height:40px" placeholder="Avatar"></image-slot></span>
+        <div>
+          <div class="user-menu__name">Adam Vasylenko</div>
+          <div class="user-menu__role">Member</div>
+        </div>
+      </div>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg>
+        <span class="dot"></span>
+      </button>
+    </div>
+
+    <!-- MOLECULE: MiniCalendar + meals -->
+    <section class="aside-card">
+      <div class="calendar__head">
+        <div class="calendar__month">September <span>2028</span></div>
+        <div class="calendar__nav">
+          <button aria-label="Previous week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+          <button aria-label="Next week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></button>
+        </div>
+      </div>
+      <div class="calendar__days">
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="6">
+          <div class="{{ d.cls }}" onClick="{{ d.onSelect }}">
+            <span class="cal-day__dow">{{ d.dow }}</span>
+            <span class="cal-day__num">{{ d.num }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- MOLECULE: MealGroup ×4 -->
+      <div class="meal-group">
+        <div class="meal-group__head">
+          <span class="meal-check meal-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10" /></svg></span>
+          <span class="pill pill--outline">Breakfast</span>
+          <span class="pill pill--green">300 kcal</span>
+          <span class="meal-group__spacer"></span>
+          <span class="meal-group__chev" onClick="{{ toggleBreakfast }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 15l6-6 6 6" /></svg></span>
+        </div>
+        <sc-if value="{{ openBreakfast }}" hint-placeholder-val="{{ true }}">
+          <div class="meal-item">
+            <div class="meal-item__media"><image-slot id="dash-meal-1" shape="rect" placeholder="Photo"></image-slot></div>
+            <div style="min-width:0">
+              <div class="meal-item__title">Scrambled Eggs with Spinach &amp; Whole Grain Toast</div>
+              <div class="meal-item__macros"><span>C 25g</span><span>P 20g</span><span>F 12g</span></div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="meal-group">
+        <div class="meal-group__head">
+          <span class="meal-check meal-check--todo"></span>
+          <span class="pill pill--outline">Lunch</span>
+          <span class="pill pill--green">450 kcal</span>
+          <span class="meal-group__spacer"></span>
+          <span class="meal-group__chev" onClick="{{ toggleLunch }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 15l6-6 6 6" /></svg></span>
+        </div>
+        <sc-if value="{{ openLunch }}" hint-placeholder-val="{{ true }}">
+          <div class="meal-item">
+            <div class="meal-item__media"><image-slot id="dash-meal-2" shape="rect" placeholder="Photo"></image-slot></div>
+            <div style="min-width:0">
+              <div class="meal-item__title">Grilled Chicken Salad with Avocado and Quinoa</div>
+              <div class="meal-item__macros"><span>C 40g</span><span>P 35g</span><span>F 20g</span></div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="meal-group">
+        <div class="meal-group__head">
+          <span class="meal-check meal-check--todo"></span>
+          <span class="pill pill--outline">Snack</span>
+          <span class="pill pill--green">200 kcal</span>
+          <span class="meal-group__spacer"></span>
+          <span class="meal-group__chev" onClick="{{ toggleSnack }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 15l6-6 6 6" /></svg></span>
+        </div>
+        <sc-if value="{{ openSnack }}" hint-placeholder-val="{{ true }}">
+          <div class="meal-item">
+            <div class="meal-item__media"><image-slot id="dash-meal-3" shape="rect" placeholder="Photo"></image-slot></div>
+            <div style="min-width:0">
+              <div class="meal-item__title">Greek Yogurt with Mixed Berries and Almonds</div>
+              <div class="meal-item__macros"><span>C 18g</span><span>P 12g</span><span>F 10g</span></div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="meal-group">
+        <div class="meal-group__head">
+          <span class="meal-check meal-check--todo is-orange"></span>
+          <span class="pill pill--outline">Dinner</span>
+          <span class="pill pill--green">500 kcal</span>
+          <span class="meal-group__spacer"></span>
+          <span class="meal-group__chev" onClick="{{ toggleDinner }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 15l6-6 6 6" /></svg></span>
+        </div>
+        <sc-if value="{{ openDinner }}" hint-placeholder-val="{{ true }}">
+          <div class="meal-item">
+            <div class="meal-item__media"><image-slot id="dash-meal-4" shape="rect" placeholder="Photo"></image-slot></div>
+            <div style="min-width:0">
+              <div class="meal-item__title">Grilled Chicken with Sweet Potato and Green Beans</div>
+              <div class="meal-item__macros"><span>C 45g</span><span>P 35g</span><span>F 20g</span></div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+
+    <!-- ORGANISM: RecentActivityFeed -->
+    <section class="aside-card">
+      <div class="card__head" style="margin-bottom:2px">
+        <h2 class="card__title">Recent Activity</h2>
+        <span class="card__more">•••</span>
+      </div>
+      <div class="activity-item">
+        <span class="activity-item__time">8:00 PM</span>
+        <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg></span>
+        <p class="activity-item__text"><b>Notification sent:</b> "Congratulations! You've reached 75% of your cardio endurance goal!"</p>
+      </div>
+      <div class="activity-item">
+        <span class="activity-item__time">5:15 PM</span>
+        <span class="icon-badge icon-badge--yellow-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4.5" r="1.8" /><path d="M12 8v6M12 14l-4 7M12 14l4 7M6 10h12" /></svg></span>
+        <p class="activity-item__text"><b>Ladya Mortimov</b> completed her 3rd stretching session for flexibility improvement</p>
+      </div>
+      <div class="activity-item">
+        <span class="activity-item__time">3:00 PM</span>
+        <span class="icon-badge icon-badge--orange-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg></span>
+        <p class="activity-item__text"><b>Cardio progress updated</b> – 7.5 km completed out of 10 km goal for endurance improvement</p>
+      </div>
+      <div class="activity-item">
+        <span class="activity-item__time">12:45 PM</span>
+        <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M16 3c-1.4 2-1.4 4.6 0 6V21" /></svg></span>
+        <p class="activity-item__text"><b>Ladya Mortimov</b> logged her lunch meal: Grilled Chicken Wrap with Avocado and Spinach (450 kcal)</p>
+      </div>
+    </section>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1200}}">
+class Component extends DCLogic {
+  state = {
+    mealPlanOpen: true,
+    activeDay: 5,
+    range: 'This Week',
+    open: { breakfast: true, lunch: true, snack: true, dinner: true }
+  };
+
+  toggleMeal(key) {
+    this.setState(s => ({ open: Object.assign({}, s.open, { [key]: !s.open[key] }) }));
+  }
+
+  renderVals() {
+    const ranges = ['This Week', 'This Month', 'Last 3 Months'];
+    const dows = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const days = dows.map((dow, i) => {
+      const num = 4 + i;
+      return {
+        dow, num,
+        cls: 'cal-day' + (this.state.activeDay === num ? ' is-active' : ''),
+        onSelect: () => this.setState({ activeDay: num })
+      };
+    });
+    return {
+      days,
+      mealPlanOpen: this.state.mealPlanOpen,
+      toggleMealPlan: () => this.setState(s => ({ mealPlanOpen: !s.mealPlanOpen })),
+      range: this.state.range,
+      cycleRange: () => this.setState(s => ({ range: ranges[(ranges.indexOf(s.range) + 1) % ranges.length] })),
+      openBreakfast: this.state.open.breakfast,
+      openLunch: this.state.open.lunch,
+      openSnack: this.state.open.snack,
+      openDinner: this.state.open.dinner,
+      toggleBreakfast: () => this.toggleMeal('breakfast'),
+      toggleLunch: () => this.toggleMeal('lunch'),
+      toggleSnack: () => this.toggleMeal('snack'),
+      toggleDinner: () => this.toggleMeal('dinner'),
+      sleepBars: ['60%', '85%', '45%', '95%', '70%', '100%', '55%', '80%', '40%', '90%', '65%'],
+      exercises: [
+        { name: 'Brisk Walking', kcal: 200, min: 30, level: 'Beginner', levelClass: 'pill--green' },
+        { name: 'Bodyweight Squats', kcal: 180, min: 20, level: 'Intermediate', levelClass: 'pill--yellow' },
+        { name: 'Dumbbell Squat', kcal: 300, min: 30, level: 'Hard', levelClass: 'pill--orange' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

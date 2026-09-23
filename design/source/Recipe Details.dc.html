@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./nutrigo.css">
+<script src="./image-slot.js"></script>
+<style>
+/* ===== PAGE: Recipe Details ===== */
+.app{width:1600px;background:var(--color-surface)}
+.app__main,.app__aside{background:var(--color-surface)}
+.sidebar{border-right:1px solid var(--color-line)}
+.back-link{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--color-muted)}
+.back-link:hover{color:var(--color-orange-base)}
+.back-link svg{width:16px;height:16px}
+.rd-grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:var(--space-8);align-items:start}
+/* ORGANISM: rail panel */
+.rd-left{display:flex;flex-direction:column;background:#FAF5F2;border-radius:var(--radius-lg);
+  padding-bottom:18px;overflow:hidden}
+.rd-hero{overflow:hidden;height:250px;background:#EDEAE4}
+/* MOLECULE: MetaList */
+.meta-list{display:flex;flex-direction:column;gap:6px;padding:18px 18px 0}
+.meta-row{display:flex;align-items:center;gap:12px;padding:6px 0}
+.meta-row__label{flex:1;font-size:14.5px;color:var(--color-muted)}
+.meta-row__value{font-size:15px;font-weight:700}
+/* MOLECULE: ReviewCard */
+.rd-reviews{margin:18px 18px 0;padding-top:18px;border-top:1px solid #EEE7E2}
+.rd-reviews .card__title{font-size:18px;font-weight:700}
+.rd-desc .pill{height:34px;padding:0 14px;font-size:14.5px;font-weight:500;border-radius:var(--radius-sm)}
+.star-rating svg{width:15px;height:15px}
+.reviews__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.reviews__count{font-size:13.5px;color:var(--color-muted)}
+.review-card{background:var(--color-surface);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
+.review-card__text{font-size:14px;color:var(--color-muted);line-height:1.6}
+.review-card__foot{display:flex;align-items:center;gap:10px;margin-top:14px}
+.review-card__name{font-size:14.5px;font-weight:600}
+.review-card__rating{font-size:12.5px;color:var(--color-muted);margin-top:1px}
+
+/* center column */
+.rd-title{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.28}
+.rd-desc{background:#F5F5F7;border-radius:var(--radius-lg);padding:20px 22px;margin-top:18px}
+.rd-desc p{font-size:14.5px;color:var(--color-muted);line-height:1.7;margin-top:14px}
+.rd-block{display:grid;grid-template-columns:130px minmax(0,1fr);gap:24px;margin-top:30px}
+.rd-block__label{font-size:17px;font-weight:700;padding-top:2px}
+.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+.numbered{display:flex;align-items:flex-start;gap:14px}
+.numbered__n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;flex:none;
+  background:var(--color-orange-base);color:#fff;font-size:13.5px;font-weight:600}
+.numbered__n--sq{border-radius:9px;background:var(--color-yellow-medium);color:var(--color-ink)}
+.numbered__text{font-size:14.5px;color:var(--color-muted);line-height:1.55;padding-top:4px}
+.steps{display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:30px minmax(0,1fr);gap:14px;padding-bottom:22px;position:relative}
+.step:last-child{padding-bottom:0}
+.step__rail{position:absolute;left:14.5px;top:34px;bottom:4px;width:1px;background:#E9E6E0}
+.step:last-child .step__rail{display:none}
+.step__title{font-size:16px;font-weight:700;margin-bottom:6px;padding-top:3px}
+.step__desc{font-size:14.5px;color:var(--color-muted);line-height:1.6}
+.notes{display:flex;flex-direction:column;gap:16px}
+.note{display:flex;align-items:flex-start;gap:14px}
+.note__dot{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;flex:none;
+  background:var(--color-green-base)}
+.note__dot i{width:7px;height:7px;border-radius:50%;background:var(--color-ink)}
+
+/* aside */
+.aside-card{background:#FAF5F2;border-radius:var(--radius-xl);box-shadow:none;padding:var(--space-5)}
+.aside-card .card__title{font-size:18px;font-weight:700}
+.servings{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-bottom:16px;border-bottom:1px solid #EEE7E2}
+.servings__label{font-size:18px;font-weight:700}
+.stepper__btn--green{background:var(--color-green-base);color:#fff;width:32px;height:32px;
+  border-radius:var(--radius-sm);font-size:17px;line-height:1}
+.stepper__btn--green:hover{background:#B4DD57;color:#fff}
+.stepper__value{font-size:15px;font-weight:500;color:var(--color-muted)}
+.ingredients{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.ingredient{display:flex;align-items:center;gap:14px}
+.ingredient__n{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;flex:none;
+  background:transparent;box-shadow:inset 0 0 0 1px #E6DFD9;font-size:13.5px;font-weight:500;color:var(--color-muted)}
+.ingredient__text{font-size:15px;color:var(--color-muted)}
+.chip-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.chip-block{border-radius:var(--radius-lg);padding:14px 10px 16px;text-align:center}
+.chip-block__icon{display:grid;place-items:center;width:34px;height:34px;margin:0 auto 10px;
+  border-radius:10px;background:#fff;color:var(--color-ink)}
+.chip-block__icon svg{width:17px;height:17px}
+.chip-block__label{font-size:13px;font-weight:500;color:rgba(31,41,55,.78)}
+.chip-block__value{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+.chip-block__unit{font-size:13px;font-weight:500;color:rgba(31,41,55,.78)}
+.chip-block--green{background:var(--color-green-base)}
+.chip-block--yellow{background:var(--color-yellow-base)}
+.chip-block--orange{background:var(--color-orange-base)}
+.chip-block--grey{background:#E2E1E4}
+.nutrition__row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 0;border-bottom:1px solid #EEE7E2;font-size:14.5px}
+.nutrition__row:last-child{border-bottom:0}
+.nutrition__row b{font-weight:700}
+.nutrition__row--head{font-size:19px;font-weight:700;border-bottom:1px solid #EEE7E2}
+.nutrition__row--head small{font-size:12.5px;font-weight:500;color:var(--color-muted)}
+</style>
+</helmet>
+
+<div class="app app--with-aside">
+
+  <!-- ORGANISM: Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-label="Nutrigo">
+        <path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65"></path>
+        <path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E"></path>
+      </svg>
+      <span class="sidebar__wordmark">Nutrigo</span>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="./Meal Plan.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"></rect><path d="M8 3v3M16 3v3M3 10h18"></path></svg>
+        Calendar
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z"></path></svg>
+        Messages
+        <span class="nav-link__badge">6</span>
+      </a>
+      <a class="nav-link is-active" href="./Healthy Menu.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21"></path><path d="M19 3v18"></path></svg>
+        Healthy Menu
+      </a>
+      <div class="nav-link is-open" onClick="{{ toggleMealPlan }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 12l5-3"></path></svg>
+        Meal Plan
+        <span class="nav-link__chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg>
+        </span>
+      </div>
+      <sc-if value="{{ mealPlanOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="nav-sub">
+          <a class="nav-link" href="./Meal Plan.dc.html">Meal Plan</a>
+          <a class="nav-link" href="./Grocery List.dc.html">Grocery List</a>
+        </div>
+      </sc-if>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+        Food Diary
+      </a>
+      <a class="nav-link" href="./Progress.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6"></path></svg>
+        Progress
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="13" cy="4.5" r="1.8"></circle><path d="M10 21l2.5-6 3 2.5L18 21M6 10l5-2 4 2 4 1"></path></svg>
+        Exercises
+      </a>
+      <a class="nav-link" href="./Health Insights.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5"></path></svg>
+        Health Insights
+      </a>
+    </nav>
+    <div class="sidebar__spacer"></div>
+    <div class="promo-banner">
+      <image-slot id="rd-promo" class="promo-banner__art" style="width:100%;height:74px" shape="rounded" radius="10" fit="contain" placeholder="Veggies 3D"></image-slot>
+      <p class="promo-banner__text">Start your health journey with a <strong>FREE 1-month</strong> access to Nutrigo!</p>
+      <button class="promo-banner__cta">Claim Now!</button>
+    </div>
+    <a class="sidebar__logout" href="./Dashboard.dc.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9"></path></svg>
+      Logout
+    </a>
+  </aside>
+
+  <!-- TEMPLATE: DetailPageLayout -->
+  <main class="app__main">
+    <header class="header">
+      <div class="header__titles">
+        <a class="back-link" href="./Healthy Menu.dc.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+          Back to Menu
+        </a>
+        <h1 class="header__title" style="margin-top:4px">Recipe Details</h1>
+      </div>
+      <div class="header__spacer"></div>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      </button>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z"></path><path d="M10 21h4"></path></svg>
+        <span class="dot"></span>
+      </button>
+      <div class="user-menu">
+        <span class="avatar avatar--md"><image-slot id="rd-avatar" shape="circle" style="width:40px;height:40px" placeholder="Avatar"></image-slot></span>
+        <div>
+          <div class="user-menu__name">Adam Vasylenko</div>
+          <div class="user-menu__role">Member</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg>
+      </div>
+    </header>
+
+    <div class="rd-grid">
+      <!-- ORGANISM: RecipeDetailPanels — left rail -->
+      <div class="rd-left">
+        <div class="rd-hero"><image-slot id="rd-hero" shape="rect" placeholder="Grilled turkey breast photo"></image-slot></div>
+
+        <!-- MOLECULE: MetaList -->
+        <div class="meta-list">
+          <div class="meta-row">
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></span>
+            <span class="meta-row__label">Eat Time</span>
+            <span class="meta-row__value">12:30 PM</span>
+          </div>
+          <div class="meta-row">
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 4l6 6-9 9H5v-6z"></path></svg></span>
+            <span class="meta-row__label">Prep Time</span>
+            <span class="meta-row__value">10 minutes</span>
+          </div>
+          <div class="meta-row">
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10h16v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3zM8 10V7M16 10V7"></path></svg></span>
+            <span class="meta-row__label">Cook Time</span>
+            <span class="meta-row__value">15 minutes</span>
+          </div>
+          <div class="meta-row">
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M10 20V6M15 20v-5M20 20V9"></path></svg></span>
+            <span class="meta-row__label">Difficulty</span>
+            <span class="meta-row__value">Medium</span>
+          </div>
+          <div class="meta-row">
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"></path></svg></span>
+            <span class="meta-row__label">Total Steps</span>
+            <span class="meta-row__value">5 steps</span>
+          </div>
+          <div class="meta-row">
+            <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5"></path></svg></span>
+            <span class="meta-row__label">Health Score</span>
+            <span class="meta-row__value">9/10</span>
+          </div>
+        </div>
+
+        <!-- MOLECULE: ReviewCard list -->
+        <section class="rd-reviews">
+          <h2 class="card__title" style="margin-bottom:8px">Reviews</h2>
+          <div class="reviews__head">
+            <span class="reviews__count">by 125 People</span>
+            <span class="header__spacer"></span>
+            <span class="star-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"></path></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"></path></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"></path></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"></path></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" opacity=".35"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"></path></svg>
+              <span style="font-size:12px;font-weight:700;color:var(--color-ink);margin-left:4px">4.8<span style="color:var(--color-faint)">/5</span></span>
+            </span>
+          </div>
+          <article class="review-card">
+            <p class="review-card__text">Very easy to make, and the portion was just right. I added a little garlic to the rice for extra flavor. This will be a regular meal in my meal prep rotation.</p>
+            <div class="review-card__foot">
+              <span class="avatar avatar--sm"><image-slot id="rd-rev-1" shape="circle" style="width:28px;height:28px" placeholder=" "></image-slot></span>
+              <div>
+                <div class="review-card__name">Sarah Murad</div>
+                <div class="review-card__rating">★ 5/5</div>
+              </div>
+            </div>
+          </article>
+          <article class="review-card">
+            <p class="review-card__text">This is my go-to lunch recipe now! Simple, nutritious, and delicious. I love how quickly it comes together on busy days.</p>
+            <div class="review-card__foot">
+              <span class="avatar avatar--sm"><image-slot id="rd-rev-2" shape="circle" style="width:28px;height:28px" placeholder=" "></image-slot></span>
+              <div>
+                <div class="review-card__name">Linda Rawls</div>
+                <div class="review-card__rating">★ 4.7/5</div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- center column -->
+      <div>
+        <h2 class="rd-title">Grilled Turkey Breast with Steamed Asparagus and Brown Rice</h2>
+        <div class="rd-desc">
+          <span class="pill pill--solid-yellow">Lunch</span>
+          <p>A lean and balanced meal that's perfect for a post-workout lunch or a healthy midday option. This meal provides a great balance of protein, fiber, and healthy fats while being low in calories. The grilled turkey breast offers a rich source of lean protein, while the steamed asparagus and brown rice provide essential vitamins and minerals.</p>
+        </div>
+
+        <!-- Tools &amp; Equipment -->
+        <div class="rd-block">
+          <div class="rd-block__label">Tools &amp;<br>Equipment</div>
+          <div class="tools">
+            <div class="numbered"><span class="numbered__n">1</span><span class="numbered__text">Grill pan or outdoor grill</span></div>
+            <div class="numbered"><span class="numbered__n">4</span><span class="numbered__text">Tongs for turning turkey</span></div>
+            <div class="numbered"><span class="numbered__n">2</span><span class="numbered__text">Medium pot for steaming</span></div>
+            <div class="numbered"><span class="numbered__n">5</span><span class="numbered__text">Cutting board</span></div>
+            <div class="numbered"><span class="numbered__n">3</span><span class="numbered__text">Saucepan for cooking brown rice</span></div>
+            <div class="numbered"><span class="numbered__n">6</span><span class="numbered__text">Knife</span></div>
+          </div>
+        </div>
+
+        <!-- Directions -->
+        <div class="rd-block">
+          <div class="rd-block__label">Directions</div>
+          <div class="steps">
+            <div class="step">
+              <span class="numbered__n numbered__n--sq">1</span>
+              <div>
+                <div class="step__title">Prepare the Turkey</div>
+                <p class="step__desc">Season the turkey breast with olive oil, salt, and pepper. Set aside.</p>
+              </div>
+              <span class="step__rail"></span>
+            </div>
+            <div class="step">
+              <span class="numbered__n numbered__n--sq">2</span>
+              <div>
+                <div class="step__title">Cook the Brown Rice</div>
+                <p class="step__desc">In a saucepan, cook 1/2 cup of brown rice in 1 cup of water. Let it simmer for 15 minutes or until fully cooked.</p>
+              </div>
+              <span class="step__rail"></span>
+            </div>
+            <div class="step">
+              <span class="numbered__n numbered__n--sq">3</span>
+              <div>
+                <div class="step__title">Grill the Turkey</div>
+                <p class="step__desc">Preheat the grill pan over medium heat. Grill the turkey breast for 6–7 minutes on each side until fully cooked (internal temp: 165°F).</p>
+              </div>
+              <span class="step__rail"></span>
+            </div>
+            <div class="step">
+              <span class="numbered__n numbered__n--sq">4</span>
+              <div>
+                <div class="step__title">Steam the Asparagus</div>
+                <p class="step__desc">In a medium pot, steam the asparagus for 5 minutes or until tender.</p>
+              </div>
+              <span class="step__rail"></span>
+            </div>
+            <div class="step">
+              <span class="numbered__n numbered__n--sq">5</span>
+              <div>
+                <div class="step__title">Serve and Garnish</div>
+                <p class="step__desc">Arrange the turkey breast, brown rice, and asparagus on a plate. Garnish with a lemon wedge.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="rd-block">
+          <div class="rd-block__label">Notes</div>
+          <div class="notes">
+            <div class="note"><span class="note__dot"><i></i></span><p class="numbered__text">For added flavor, marinate the turkey in lemon juice and garlic for 30 minutes before grilling.</p></div>
+            <div class="note"><span class="note__dot"><i></i></span><p class="numbered__text">You can replace brown rice with quinoa or couscous for variety.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <span>Copyright © 2024 Peterdraw</span>
+      <a href="./Recipe Details.dc.html">Privacy Policy</a>
+      <a href="./Recipe Details.dc.html">Term and conditions</a>
+      <a href="./Recipe Details.dc.html">Contact</a>
+      <span class="page-footer__spacer"></span>
+      <span class="page-footer__social">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-3H13V9c0-1 .3-1.5 1.6-1.5H17V4.6c-.4 0-1.6-.1-2.9-.1-2.7 0-4.1 1.5-4.1 4.3V11H7v3h3v8z"></path></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.5l4.3 6L17 3h4l-6.8 8.6L21.5 21H17l-4.6-6.4L6.8 21H3l7.3-9.1z"></path></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17" cy="7" r="1" fill="currentColor"></circle></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2A2.7 2.7 0 0 0 19.7 5C18 4.6 12 4.6 12 4.6s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7.2C2 9 2 12 2 12s0 3 .4 4.8A2.7 2.7 0 0 0 4.3 19c1.7.4 7.7.4 7.7.4s6 0 7.7-.4a2.7 2.7 0 0 0 1.9-2.2C22 15 22 12 22 12s0-3-.4-4.8zM10 15.5v-7l6 3.5z"></path></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3A1.8 1.8 0 1 0 4.5 6.6 1.8 1.8 0 0 0 4.5 3zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.6-1.1 2-1.9 3.6-1.9 2.8 0 4.5 1.7 4.5 5V21h-3v-7c0-1.7-.7-2.6-2.1-2.6-1.3 0-2 .9-2 2.6v7H9z"></path></svg>
+      </span>
+    </footer>
+  </main>
+
+  <aside class="app__aside">
+    <!-- MOLECULE: Servings + Ingredients -->
+    <section class="aside-card">
+      <div class="servings">
+        <span class="servings__label">Total Servings</span>
+        <span class="stepper">
+          <button class="stepper__btn stepper__btn--green" onClick="{{ dec }}">−</button>
+          <span class="stepper__value">{{ servings }}</span>
+          <button class="stepper__btn stepper__btn--green" onClick="{{ inc }}">+</button>
+        </span>
+      </div>
+      <h2 class="card__title" style="margin-top:16px">Ingredients</h2>
+      <div class="ingredients">
+        <sc-for list="{{ ingredients }}" as="ing" hint-placeholder-count="6">
+          <div class="ingredient">
+            <span class="ingredient__n">{{ ing.n }}</span>
+            <span class="ingredient__text">{{ ing.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ATOM: StatChip row -->
+    <div class="chip-row">
+      <div class="chip-block chip-block--green">
+        <span class="chip-block__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5"></path></svg></span>
+        <div class="chip-block__label">Calories</div>
+        <div class="chip-block__value">{{ calories }}</div>
+        <div class="chip-block__unit">kcal</div>
+      </div>
+      <div class="chip-block chip-block--yellow">
+        <span class="chip-block__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 9h14l-1.5 10h-11z"></path><path d="M9 9V6h6v3"></path></svg></span>
+        <div class="chip-block__label">Carbs</div>
+        <div class="chip-block__value">{{ carbs }}</div>
+        <div class="chip-block__unit">gr</div>
+      </div>
+      <div class="chip-block chip-block--orange">
+        <span class="chip-block__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 4l6 6-9 9H5v-6z"></path><path d="M9 15l3-3"></path></svg></span>
+        <div class="chip-block__label">Protein</div>
+        <div class="chip-block__value">{{ protein }}</div>
+        <div class="chip-block__unit">gr</div>
+      </div>
+      <div class="chip-block chip-block--grey">
+        <span class="chip-block__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c3 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 2-5 5-9z"></path></svg></span>
+        <div class="chip-block__label">Fats</div>
+        <div class="chip-block__value">{{ fats }}</div>
+        <div class="chip-block__unit">gr</div>
+      </div>
+    </div>
+
+    <!-- MOLECULE: NutritionFacts -->
+    <section class="aside-card">
+      <div class="card__head" style="margin-bottom:6px">
+        <h2 class="card__title">Nutrition Facts</h2>
+        <span class="card__more">•••</span>
+      </div>
+      <div class="nutrition__row nutrition__row--head">
+        <span>Calories</span>
+        <span style="text-align:right"><small style="display:block">Per Serving</small>{{ calories }} kcal</span>
+      </div>
+      <sc-for list="{{ nutrition }}" as="n" hint-placeholder-count="8">
+        <div class="nutrition__row"><span>{{ n.label }}</span><b>{{ n.value }}</b></div>
+      </sc-for>
+    </section>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1400}}">
+class Component extends DCLogic {
+  state = { mealPlanOpen: false, servings: 2 };
+
+  renderVals() {
+    const s = this.state.servings;
+    const per = { calories: 450, carbs: 40, protein: 35, fats: 12, fiber: 7, sodium: 420, cholesterol: 75, sugars: 4 };
+    const base = { turkey: 200, asparagus: 1, rice: 0.5, oil: 1 };
+    const k = s / 2;
+    const fmt = n => Math.round(n * 100) / 100;
+
+    return {
+      mealPlanOpen: this.state.mealPlanOpen,
+      toggleMealPlan: () => this.setState(st => ({ mealPlanOpen: !st.mealPlanOpen })),
+      servings: s,
+      inc: () => this.setState(st => ({ servings: Math.min(12, st.servings + 1) })),
+      dec: () => this.setState(st => ({ servings: Math.max(1, st.servings - 1) })),
+      calories: per.calories, carbs: per.carbs, protein: per.protein, fats: per.fats,
+      ingredients: [
+        { n: 1, text: fmt(base.turkey * k) + ' g turkey breast' },
+        { n: 2, text: fmt(base.asparagus * k) + ' cup asparagus (steamed)' },
+        { n: 3, text: fmt(base.rice * k) + ' cup cooked brown rice' },
+        { n: 4, text: fmt(base.oil * k) + ' tbsp olive oil' },
+        { n: 5, text: 'Salt and pepper to taste' },
+        { n: 6, text: 'Lemon for garnish' }
+      ],
+      nutrition: [
+        { label: 'Carbohydrates', value: per.carbs + ' gr' },
+        { label: 'Protein', value: per.protein + ' gr' },
+        { label: 'Total Fat', value: per.fats + ' gr' },
+        { label: 'Fiber', value: per.fiber + ' gr' },
+        { label: 'Sodium', value: per.sodium + ' mg' },
+        { label: 'Cholesterol', value: per.cholesterol + ' mg' },
+        { label: 'Sugars', value: per.sugars + ' gr' },
+        { label: 'Vitamin C', value: '20% DV' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

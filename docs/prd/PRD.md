@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Draft**: pending the design-system review |
+| Status | **Draft**: design reviewed (rev 0.3), awaiting owner approval |
 | Owner | Michel Tsarasoa |
 | Last updated | 2026-09-23 |
 | Target | v1.0.0 (local) at the end of Sprint 5 · v1.1.0 on Railway at the end of Sprint 6 |
@@ -10,7 +10,8 @@
 | Revision | Date | Change |
 |---|---|---|
 | 0.1 | 2026-09-23 | First draft from the kickoff Q&A |
-| 0.2 | 2026-09-23 | Railway deployment moved after v1.0.0 (new §5.7, Sprint 6) |
+| 0.2 | 2026-09-23 | Railway deployment moved after v1.0.0 (new §5.6, Sprint 6) |
+| 0.3 | 2026-09-23 | Claude Design export reviewed: recipe fields, food diary (check-off), grocery costs in EUR, photos from imports, Monday weeks; progress/activity/insights out of scope |
 
 ## 1. Problem
 
@@ -43,6 +44,7 @@ A single user: the owner. There are no accounts, no sharing and no multi-tenancy
 - Native iOS/Android apps (PWA only)
 - Medical or diet-prescription advice
 - Barcode scanning (a candidate for after v1)
+- From the design, **out of scope**: body/weight progress (Progress screen), steps, sleep, water, workouts, exercises and burned calories, Health Insights articles, messages, reviews and social features, promo banner, logout and user profile
 
 ## 5. Scope and requirements
 
@@ -53,16 +55,20 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | ID | Requirement | Priority |
 |---|---|---|
 | R-1 | Create, edit and delete ingredients with nutrition per 100 g (kcal, protein, carbs, fat, fibre) | Must |
-| R-2 | Create, edit and delete recipes: name, servings, ingredients with quantities, steps, tags | Must |
+| R-2 | Create, edit and delete recipes: name, description, meal type (breakfast/lunch/snack/dinner), servings, ingredients with quantities, titled steps, tools, notes, tags | Must |
 | R-3 | Nutrition per serving is computed from the ingredients | Must |
 | R-4 | Search and filter recipes by name and tag | Should |
-| R-5 | Recipe photo | Could |
+| R-5 | Recipe photo, from imports (see §5.8) | Could |
+| R-6 | Difficulty (easy/medium/hard), prep time and cook time | Should |
+| R-7 | Your own rating (1–5); no reviews, no rating counts | Could |
+| R-8 | Health score (0–10) computed from nutrition per serving; the formula is defined in SPEC-002 and shown as a number | Should |
+| R-9 | Scale the ingredient quantities with a servings stepper on the recipe page | Should |
 
 ### 5.2 Weekly meal plan (Sprint 2): the "Meal Plan" screen in Claude Design
 
 | ID | Requirement | Priority |
 |---|---|---|
-| P-1 | Week view (Mon–Sun), each day with slots: breakfast, lunch, dinner, snack | Must |
+| P-1 | Week view (Mon–Sun, ISO weeks), each day with slots in the order breakfast, lunch, snack, dinner. On mobile: a week strip plus a one-day view | Must |
 | P-2 | Assign a recipe (with a number of servings) to a slot | Must |
 | P-3 | Move, duplicate and clear a meal, and copy the previous week | Should |
 | P-4 | Navigate between weeks | Must |
@@ -75,6 +81,8 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | N-2 | Personal targets (kcal and macros) with progress against them | Must |
 | N-3 | Charts: daily macros and a weekly trend (following the dataviz rules) | Must |
 | N-4 | Import ingredient data from Open Food Facts / USDA, cached locally | Should |
+| N-5 | **Food diary**: tick a planned meal as eaten, optionally adjusting the servings eaten; untick to undo | Must |
+| N-6 | Show **planned vs eaten**: kcal and macros eaten (ticked meals only), planned for the day, and left vs target | Must |
 
 ### 5.4 Shopping list (Sprint 4)
 
@@ -84,6 +92,9 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | S-2 | Check items off, and add manual items | Must |
 | S-3 | Works offline (PWA); changes sync when back online | Must |
 | S-4 | Group items by store aisle or category | Should |
+| S-5 | Each ingredient can store a price in EUR per pack (price + pack size); the list shows an estimated cost per item and in total | Should |
+| S-6 | When ticking an item as purchased, you can enter the actual price paid | Should |
+| S-7 | Spending insights: estimated vs actual per week, and a breakdown by category | Could |
 
 ### 5.5 Claude-assisted features (Sprint 5)
 
@@ -108,13 +119,21 @@ Until v1.0.0 the app runs only locally (Docker Compose).
 
 All three sources are used, in this priority order: **manual entry** (always available) → **Open Food Facts / USDA** (import and cache) → **Claude estimate** (fallback, flagged as estimated). Every ingredient stores its `source`.
 
+### 5.8 Photos
+
+Photos come from imports. An ingredient imported from Open Food Facts keeps the product image URL, cached locally for offline use. A recipe shows its own photo when you upload one, otherwise a mosaic of its ingredients' imported images, otherwise a token-coloured placeholder by meal type. The Claude API cannot generate images, so AI-suggested recipes have no photo of their own (open question Q6).
+
+### 5.9 Conventions
+
+Weeks start on **Monday** (ISO 8601, `2026-W40`). Currency is **EUR**. Units are g, ml and pieces, always written `g` (never `gr`).
+
 ## 6. Non-functional requirements
 
 | Area | Requirement |
 |---|---|
 | Platform | Mobile-first PWA, installable, usable offline for reads and the shopping list |
 | Performance | Lighthouse Performance ≥ 90 on mobile; interactive in < 2 s on 4G |
-| Accessibility | WCAG 2.2 AA; axe checks pass in CI |
+| Accessibility | WCAG 2.2 AA; axe checks pass in CI. **Temporary exception:** the brand colour contrast failures are kept until the owner updates the token values (ADR-0008) |
 | Privacy | Data stays in the owner's SQLite; only AI prompts go out to the Claude API |
 | Security | No auth in the app. Up to v1.0 it runs locally only; from v1.1 the Railway URL is protected at the edge (ADR-0002). Secrets live only in env |
 | Reliability | Daily SQLite backup (local from Sprint 1, off-site from v1.1), and a tested restore procedure |
@@ -151,6 +170,10 @@ See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint, 
 | Q2 | How is the Railway URL protected: Cloudflare Access, basic auth at a proxy, or an unguessable URL? | Open | Decide before Sprint 6 (ADR-0002) |
 | Q3 | Open Food Facts vs USDA: which is primary for French products? | Open | Spike in Sprint 3 |
 | Q4 | Monthly budget for the Claude API | Open | Set before Sprint 5 |
+| Q6 | Recipe photos: is "upload your own photo" acceptable as the main source, since imports only give ingredient product images? | Open | Before Sprint 1 |
+| Q7 | The mobile tab bar is proposed as Today · Recipes · Plan · Groceries · Targets. OK? | Open | Validate in the Sprint 0 playground |
+| Q8 | Health-score formula (SPEC-002 §7 proposal) | Open | Before Sprint 1 |
+| Q9 | Number and currency locale: `fr-FR` (1 240 kcal, 57,40 €) or `en-IE` (1,240 kcal, €57.40)? | Open | Sprint 0 |
 | Q5 | How does the phone reach the local app before v1.1? A service worker (offline, install) needs HTTPS, and plain `http://192.168.x.x` won't allow it | Open | Decide in Sprint 0 (options in ADR-0004) |
 | R1 | Before v1.1 all data lives on one laptop | Risk | Local daily backup from Sprint 1 (ADR-0004) |
 | R3 | SQLite on Railway loses data without a volume | Risk | Volume and backups in Sprint 6 (ADR-0004) |

@@ -20,7 +20,7 @@ flowchart TB
 |---|---|---|---|
 | Unit | `packages/shared/**/*.test.ts` | Vitest | `test` |
 | API integration | `apps/api/**/*.test.ts` | Vitest, a fresh SQLite file per test file, migrations applied | `test` |
-| Component | `apps/web/src/**/*.test.tsx` | Vitest (jsdom), Testing Library, `vitest-axe` | `test` |
+| Component | `apps/web/src/**/*.test.tsx` | Vitest (jsdom), Testing Library, `vitest-axe` (all rules except `color-contrast`, ADR-0008) | `test` |
 | Visual | `apps/web/e2e/playground.spec.ts` | Playwright screenshots of `/playground/*` at 390 px and 1280 px | `e2e` |
 | E2E | `apps/web/e2e/*.spec.ts` | Playwright against the built Docker image | `e2e` |
 | Performance/PWA | n/a | Lighthouse CI | `lighthouse` (from S1) |
