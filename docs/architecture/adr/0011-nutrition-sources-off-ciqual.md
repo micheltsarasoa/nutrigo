@@ -1,4 +1,4 @@
-# ADR-0011: Nutrition sources are manual, Open Food Facts and CIQUAL (USDA dropped), with the order set in settings
+# ADR-0011: Nutrition sources are manual, Open Food Facts and CIQUAL (USDA dropped), each switchable in settings
 
 - Status: Proposed (Accepted when the PR is approved)
 - Date: 2026-09-23
@@ -10,7 +10,7 @@ PRD §5.7 planned manual entry → Open Food Facts / USDA → an AI estimate, an
 ## Decision
 - **Sources:** manual entry, Open Food Facts (branded and barcoded products, live API) and **CIQUAL** (generic foods, raw ingredients). **USDA is dropped.** The AI estimate stays as the last fallback (A-2), flagged as estimated.
 - **CIQUAL is bundled, not called.** A one-off script converts the official file into a `ciqual_food` table that ships in a migration (seed data). Searching it is a local `LIKE` query that works offline. Updating to a new CIQUAL release means a new migration.
-- **The order and on/off state of the sources are a setting** (SPEC-008). The default search order is CIQUAL → Open Food Facts. Manual entry is always available.
+- **Each source can be turned on or off in Settings** (SPEC-008); both are on by default. When both are on, their results are **merged into one list** ranked by name match (`mergeCandidates`, SPEC-008 §7). Manual entry is always available.
 - `ingredient.source` becomes `manual | off | ciqual | ai_estimate`, and `external_id` holds the OFF barcode or the CIQUAL `alim_code`.
 
 ## Alternatives considered
@@ -25,4 +25,4 @@ PRD §5.7 planned manual entry → Open Food Facts / USDA → an AI estimate, an
 - The Sprint 3 spike "OFF vs USDA" is cancelled.
 - The seed adds roughly 3,500 rows to the image and the DB. That's small for SQLite.
 - CIQUAL is published as open data. The exact licence and attribution terms are confirmed when writing the import script; plan an "Open Food Facts · CIQUAL (ANSES)" credit on the import sheet.
-- **Follow-ups (not done in this ADR's PR):** SPEC-004 (`search?source=off|usda`, the upstream sequence diagram, `normaliseImport` fixtures), `data-model.md` (the `ciqual_food` table; the `source` enum is already updated), `backend.md` (`integrations/usda.ts`, routes), `overview.md`, `roadmap.md` (S3 line), `testing/strategy.md`, `process/workflow.md` (spike example) and `scripts/setup-github.sh` (milestone text) still say USDA. Update them when SPEC-004 is revised.
+- **Follow-ups (not done in this ADR's PR):** SPEC-004 (`search?source=off|usda`, the upstream sequence diagram, `normaliseImport` fixtures), `data-model.md` (the `ciqual_food` table; the `source` enum is already updated), `backend.md` (`integrations/usda.ts`, routes), `overview.md`, `testing/strategy.md`, `process/workflow.md` (spike example) and `scripts/setup-github.sh` (milestone text) still say USDA. Update them when SPEC-004 is revised.

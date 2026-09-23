@@ -3,18 +3,18 @@
 | | |
 |---|---|
 | Status | Draft |
-| Sprint | Staged (proposal, see §10): S1 locale → S3 nutrition sources → S5 AI provider and spend cap |
+| Sprint | Staged: S1 locale → S3 nutrition sources → S5 AI provider and spend cap |
 | PRD refs | C-1 … C-4, A-4, A-5, §5.7, §5.9 |
 | Epic | n/a (created after approval) |
 | Design | **Derived**: no settings screen in `design/source/`. It's built from existing atoms and the card and dialog styles |
 
 ## 1. Summary
-A single configuration modal for app-wide preferences: the number and currency locale, the order and on/off state of the nutrition sources, the AI provider, and the monthly AI spend cap. Settings live in the DB (one row), so the laptop and phone always agree. The modal is delivered in sections as the features that need them arrive.
+A single configuration modal for app-wide preferences: the number and currency locale, which nutrition sources the import searches, the AI provider, and the monthly AI spend cap. Settings live in the DB (one row), so the laptop and phone always agree. The modal is delivered in sections as the features that need them arrive.
 
 ## 2. User stories
 - **US-1** As the owner, I can choose how numbers and money are written (`fr-FR` or `en-IE`), so the app reads naturally to me.
-- **US-2** As the owner, I can choose which nutrition databases the ingredient import searches, and in which order.
-- **US-3** As the owner, I can choose the AI provider (and model), knowing where my data goes.
+- **US-2** As the owner, I can turn each nutrition database (CIQUAL, Open Food Facts) on or off for the ingredient import; results from the ones that are on are merged into one list.
+- **US-3** As the owner, I can choose the AI provider, and optionally a model other than its default, knowing where my data goes.
 - **US-4** As the owner, I can set a monthly AI budget in euros and see how much of it I've spent this month.
 
 ## 3. Acceptance criteria
@@ -23,10 +23,11 @@ A single configuration modal for app-wide preferences: the number and currency l
 | AC-1 | A fresh DB | I open Settings | Locale `fr-FR` is selected; an amount of 1240 kcal and 5740 cents shows as "1 240 kcal" and "57,40 €" |
 | AC-2 | Settings open | I pick `en-IE` and Save | The modal closes; amounts show as "1,240 kcal" and "€57.40"; the choice is still there after a reload and on another device |
 | AC-3 | Settings open with a changed value | I press Esc or Cancel | The modal closes and nothing is saved |
-| AC-4 | Sources: CIQUAL on, OFF on, CIQUAL first | I turn OFF off and Save, then search "avoine" in the import sheet | Only CIQUAL is searched; the results show no OFF items |
-| AC-5 | Both sources on | I move OFF above CIQUAL and Save | Import results list OFF items before CIQUAL items |
+| AC-4 | Sources: CIQUAL on, OFF on | I turn OFF off and Save, then search "avoine" in the import sheet | Only CIQUAL is searched; the results show no OFF items |
+| AC-5 | Both sources on | I search "avoine" | One list mixes CIQUAL and OFF items, ranked by `mergeCandidates` (§7); each item shows a source badge |
 | AC-6 | Both sources off | I open the import sheet | Only "Enter manually" is offered, with a link to Settings |
 | AC-7 | Only `ANTHROPIC_API_KEY` is set in env | I open the AI section | Claude is selectable; Mistral and DeepSeek are shown disabled with "No API key configured" |
+| AC-7b | Claude selected, model "Default" | I pick another model from the list and Save | AI calls use that model; choosing "Default" again goes back to the provider default (SPEC-006) |
 | AC-8 | DeepSeek has a key | I select DeepSeek | A notice "Your prompts (recipes, targets, plans) are sent to servers in China" is shown before I can save |
 | AC-9 | Cap €5.00 and €5.02 estimated spend this month | I ask for a plan suggestion | No provider call is made; I see "Monthly AI budget reached (€5.02 of €5.00)" with a link to Settings |
 | AC-10 | No cap set | I use AI features | No limit is applied; Settings shows the month's estimated spend without a gauge |
@@ -37,7 +38,7 @@ A single configuration modal for app-wide preferences: the number and currency l
 ### Screens and routes
 | Entry point | Screen | Source |
 |---|---|---|
-| A settings icon button, placed as decided in §10 Q-A | The `SettingsDialog`: a native `<dialog>` (modal on desktop, a full-screen sheet < 768 px). Sections: **Display** (locale), **Nutrition sources**, **AI** (provider, model, monthly cap, this month's spend) | **Derived** |
+| A settings icon button at the right of the mobile top bar, and at the bottom of the desktop sidebar (the tab bar stays at 5 items) | The `SettingsDialog`: a native `<dialog>` (modal on desktop, a full-screen sheet < 768 px). Sections: **Display** (locale), **Nutrition sources**, **AI** (provider, model, monthly cap, this month's spend) | **Derived** |
 
 A section appears only once its feature exists (S1: Display; S3: + Nutrition sources; S5: + AI). Save sends the whole object; Cancel discards.
 
@@ -48,8 +49,8 @@ A section appears only once its feature exists (S1: Display; S3: + Nutrition sou
 | Atom | IconButton (settings) | new | default, hover, focus, active (dialog open) |
 | Atom | Switch | new | on, off, focus, disabled |
 | Molecule | SettingRow (label, help text, control) | new | with/without help, error |
-| Molecule | SourceOrderList (move up/down buttons, one Switch per source) | new | both on, one off, both off, first/last item (buttons disabled) |
-| Molecule | ProviderOption (radio + model select + notice) | new | selected, available, no API key (disabled), with privacy notice |
+| Molecule | SourceSwitches (one Switch per source, with its credit line) | new | both on, one off, both off (with "manual only" hint) |
+| Molecule | ProviderOption (radio + model select, "Default" first + notice) | new | selected, available, no API key (disabled), model overridden, with privacy notice |
 | Molecule | SpendMeter (spent vs cap, EUR) | new | no cap, 0 %, typical, reached / over |
 | Organism | SettingsDialog | new | S1 sections only, all sections, dirty, saving, save error, loading |
 | Page | n/a (it's a dialog mounted in the app shell) | n/a | n/a |
@@ -95,17 +96,18 @@ sequenceDiagram
 
 ## 6. Data
 New tables (also in `data-model.md`):
-- `settings`: one row, `CHECK (id = 1)`, created by the migration with the defaults `locale = 'fr-FR'`, `nutrition_sources = '["ciqual","off"]'` (JSON, ordered; a source that isn't listed is off), `ai_provider = 'anthropic'`, `ai_model = NULL` (the provider's default), `ai_monthly_cap_cents = NULL` (no cap).
+- `settings`: one row, `CHECK (id = 1)`, created by the migration with the defaults `locale = 'fr-FR'`, `source_ciqual = 1`, `source_off = 1` (integer booleans), `ai_provider = 'anthropic'`, `ai_model = NULL` (the provider's default), `ai_monthly_cap_cents = NULL` (no cap).
 - `ai_usage`: `id`, `at` (ISO), `provider`, `model`, `input_tokens`, `output_tokens`, `cost_micro_eur` (an integer estimate frozen at call time).
 
-The `nutrition_sources` and `ai_*` columns are added by the S1 migration too, so there's only one `settings` migration. They're unused until S3 and S5.
+The `source_*` and `ai_*` columns are added by the S1 migration too, so there's only one `settings` migration. They're unused until S3 and S5.
 
 ## 7. Business rules (`packages/shared`)
 | Function | Rule | Example |
 |---|---|---|
 | `formatNumber(n, locale)` | `Intl.NumberFormat(locale, { maximumFractionDigits: 0 })` | 1240 → "1 240" (fr-FR, U+202F thin no-break space) / "1,240" (en-IE) |
 | `formatEUR(cents, locale)` | `Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' })` on cents ÷ 100 (SPEC-005) | 5740 → "57,40 €" / "€57.40" |
-| `activeSources(settings)` | the ordered list from `nutrition_sources`; an empty list means manual only | `["off"]` → OFF only |
+| `activeSources(settings)` | the sources whose switch is on; none means manual only | `source_off = 0` → `["ciqual"]` |
+| `mergeCandidates(lists, q)` | one list, ranked by name match: exact (case- and accent-insensitive) > starts with `q` > contains `q` > other; ties: CIQUAL before OFF, then alphabetical | q "avoine": CIQUAL "Avoine, flocons" and OFF "Flocons d'avoine" → CIQUAL item first |
 | `estimateCostMicroEur(usage, prices)` | (input × inPrice + output × outPrice) per million tokens, from the price table in `shared`; an unknown model throws | 1 000 in + 500 out at 3/15 € per M → 10 500 micro-€ |
 | `monthSpend(rows, now)` | Σ `cost_micro_eur` for the current calendar month (local time) | rows on Sep 30 and Oct 1 → only October counts on Oct 2 |
 | `canCallAi(spendMicroEur, capCents)` | true when there's no cap or spend < cap × 10 000 | 5 020 000 vs 500 → false |
@@ -116,15 +118,16 @@ Storing API keys in the app (they stay in env, ADR-0010); a dark theme (SPEC-001
 ## 9. Test plan
 | Layer | What |
 |---|---|
-| Unit | `formatNumber` and `formatEUR` for both locales (assert the exact U+202F / U+00A0 characters), `activeSources`, `estimateCostMicroEur`, `monthSpend` across a month boundary with a fixed clock, `canCallAi` at, below and above the cap |
+| Unit | `formatNumber` and `formatEUR` for both locales (assert the exact U+202F / U+00A0 characters), `activeSources`, `mergeCandidates` (each rank, ties, accents), `estimateCostMicroEur`, `monthSpend` across a month boundary with a fixed clock, `canCallAi` at, below and above the cap |
 | Integration | GET/PUT `/api/settings` (defaults on a fresh DB, validation errors, unavailable provider rejected), 402 from an AI route with a seeded `ai_usage`, provider availability driven by env |
 | Component | Every component above in every state, with axe; SettingsDialog focus trap and Esc |
 | E2E | AC-1 … AC-11 (AC-4…AC-6 from S3, AC-7…AC-10 from S5), mobile and desktop viewports |
 
 ## 10. Open questions
-- **Q-A Entry point.** The tab bar is fixed at five items (PRD Q7), so Settings can't be a sixth tab. Proposal: a settings icon button at the right of the mobile top bar, and at the bottom of the desktop sidebar. OK?
-- **Q-B Locale parameters.** You said the locale is "the two first parameters". Is that **one** setting (a locale that drives both numbers and money: `fr-FR` / `en-IE`), or **two** settings (number format and currency format chosen separately)? The spec currently assumes one.
-- **Q-C Staging.** Number formatting is used from Sprint 1 (recipe kcal) and money from Sprint 4, so the modal can't wait for S5. Proposal: ship the dialog with the Display section in **S1**, add Nutrition sources in **S3**, and AI in **S5**. OK?
-- **Q-D Source settings.** Is it enough to have one ordered list with an on/off switch per source (proposal), or do you want OFF and CIQUAL results merged and ranked together?
-- **Q-E Model choice.** Should you pick the model per provider (e.g. a larger or smaller Claude model), or should each provider have one fixed model chosen in SPEC-006? Proposal: a fixed default per provider, with an optional override.
-- **Q-F Sub-cent costs.** A single AI call often costs less than a cent, so `ai_usage` stores **micro-euros** instead of the usual integer cents. Is that exception OK (proposal), or should it store tokens only and compute the cost when read?
+All resolved 2026-09-23:
+- ~~Q-A Entry point~~: a settings icon in the mobile top bar and at the bottom of the desktop sidebar.
+- ~~Q-B Locale parameters~~: **one** setting (`fr-FR` / `en-IE`) that drives both numbers and money.
+- ~~Q-C Staging~~: S1 Display → S3 Nutrition sources → S5 AI.
+- ~~Q-D Source settings~~: **merged results**, ranked together (`mergeCandidates`); only the on/off switches remain, with no source order.
+- ~~Q-E Model choice~~: a default model per provider (set in SPEC-006), with an optional override.
+- ~~Q-F Sub-cent costs~~: `ai_usage` stores **micro-euros**, frozen at call time.

@@ -106,7 +106,8 @@ erDiagram
     SETTINGS {
         integer id PK "always 1 (single user)"
         text locale "fr-FR|en-IE, default fr-FR"
-        text nutrition_sources "JSON ordered list, default [ciqual, off]"
+        integer source_ciqual "0|1, default 1"
+        integer source_off "0|1, default 1"
         text ai_provider "anthropic|mistral|deepseek"
         text ai_model "nullable, provider default"
         integer ai_monthly_cap_cents "nullable = no cap"
@@ -155,8 +156,8 @@ erDiagram
 | `shopping_item.est_cost_cents` is frozen at generation | Later price edits don't rewrite past weeks' estimates |
 | Titled steps and tools in their own tables | They are ordered lists (the design shows numbered items); positions let you reorder them |
 | `targets` is a single-row table with `CHECK (id = 1)` | The simplest way to store settings |
-| `settings` is also a single-row table, stored in the DB rather than in the browser | The laptop and phone share one locale, source order and AI choice (SPEC-008). API keys are **not** stored here; they stay in env (ADR-0010) |
-| `ai_usage.cost_micro_eur` in integer millionths of a euro | One AI call often costs less than a cent. It's still integer money, and the estimate is frozen so price-table updates don't rewrite past months (SPEC-008 Q-F) |
+| `settings` is also a single-row table, stored in the DB rather than in the browser | The laptop and phone share one locale, source switches and AI choice (SPEC-008). API keys are **not** stored here; they stay in env (ADR-0010) |
+| `ai_usage.cost_micro_eur` in integer millionths of a euro | One AI call often costs less than a cent. It's still integer money, and the estimate is frozen so price-table updates don't rewrite past months (SPEC-008, owner-approved) |
 | `ingredient.source` has `ciqual`, not `usda` | USDA dropped; CIQUAL bundled (ADR-0011). The `ciqual_food` seed table is added when SPEC-004 is revised |
 | Dates are ISO text; weeks are ISO (Monday start) | SQLite has no date type; ISO strings sort correctly |
 | `ON DELETE RESTRICT` from recipe_ingredient to ingredient | You can't delete an ingredient that a recipe uses (the API returns 409) |

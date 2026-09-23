@@ -120,7 +120,7 @@ Until v1.0.0 the app runs only locally (Docker Compose).
 
 ### 5.7 Nutrition data sources
 
-The sources are **manual entry** (always available), **CIQUAL** (the ANSES French generic food table, bundled in the DB, works offline), **Open Food Facts** (branded products, live search, cached) and, last, an **AI estimate** (fallback, flagged as estimated). USDA isn't used. The search order of CIQUAL and Open Food Facts, and whether each is on, is a setting (default: CIQUAL → Open Food Facts). Every ingredient stores its `source` (ADR-0011).
+The sources are **manual entry** (always available), **CIQUAL** (the ANSES French generic food table, bundled in the DB, works offline), **Open Food Facts** (branded products, live search, cached) and, last, an **AI estimate** (fallback, flagged as estimated). USDA isn't used. Whether CIQUAL and Open Food Facts are each searched is a setting (both on by default); their results are merged into one ranked list. Every ingredient stores its `source` (ADR-0011).
 
 ### 5.8 Photos
 
@@ -137,7 +137,7 @@ One configuration screen for app-wide preferences. It's stored in the DB, so it 
 | ID | Requirement | Priority |
 |---|---|---|
 | C-1 | Number and currency locale: `fr-FR` (default) or `en-IE` | Must |
-| C-2 | Nutrition sources: the search order of CIQUAL and Open Food Facts, and turning each one on or off | Should |
+| C-2 | Nutrition sources: turn CIQUAL and Open Food Facts on or off; results from both are merged into one ranked list | Should |
 | C-3 | AI provider and model (A-4); a provider with no API key in env can't be selected | Should |
 | C-4 | Monthly AI spend cap in EUR (A-5), with the current month's estimated spend shown | Should |
 
@@ -182,7 +182,7 @@ See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint, 
 |---|---|---|---|
 | Q1 | The design-system page in Claude Design isn't in the repo yet | Resolved | Exported: `design/source/Design System.dc.html` |
 | Q2 | How is the Railway URL protected: Cloudflare Access, basic auth at a proxy, or an unguessable URL? | Decided | **Cloudflare Access** (ADR-0009) |
-| Q3 | Open Food Facts vs USDA: which is primary for French products? | Decided | **Manual + Open Food Facts + CIQUAL**, order set in Settings; USDA dropped; the spike is cancelled (ADR-0011) |
+| Q3 | Open Food Facts vs USDA: which is primary for French products? | Decided | **Manual + Open Food Facts + CIQUAL**, each on/off in Settings, results merged; USDA dropped; the spike is cancelled (ADR-0011) |
 | Q4 | Monthly budget for the Claude API | Decided | **Choice of provider** (Claude, Mistral, DeepSeek) and a **monthly € cap set in Settings** (ADR-0010). The cap amount is the owner's to set in the app |
 | Q6 | Recipe photos: is "upload your own photo" acceptable as the main source, since imports only give ingredient product images? | Decided | **Yes**, own uploads are the main source; the mosaic and placeholder fallbacks are kept (§5.8) |
 | Q7 | The mobile tab bar is proposed as Today · Recipes · Plan · Groceries · Targets. OK? | Decided | **Yes**, as proposed |
