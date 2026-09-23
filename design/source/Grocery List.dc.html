@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./nutrigo.css" />
+<script src="./image-slot.js"></script>
+<style>
+/* ===== PAGE: Grocery List ===== */
+.app{width:1600px;grid-template-columns:252px minmax(0,1fr)}
+.gl-top{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:var(--space-4);align-items:start}
+.gl-left{display:flex;flex-direction:column;gap:var(--space-4);min-width:0}
+.kpi-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4)}
+/* MOLECULE: StatCard (KPI) */
+.kpi-card{display:flex;align-items:center;gap:14px;background:var(--color-surface);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:16px 18px}
+.kpi-card__body{flex:1;min-width:0}
+.kpi-card__label{font-size:12px;color:var(--color-muted)}
+.kpi-card__value{font-size:23px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.kpi-card__value span{font-size:12px;font-weight:600;color:var(--color-muted);margin-left:3px}
+.kpi-card__delta{font-size:11px;font-weight:600;padding:5px 8px;border-radius:var(--radius-xs);white-space:nowrap}
+.kpi-card__delta--up{background:var(--color-green-light);color:#6F9018}
+.kpi-card__delta--down{background:var(--color-orange-light);color:#D97426}
+
+.charts{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:var(--space-4)}
+/* MOLECULE: BarChartCard */
+.bars{display:flex;gap:18px;height:210px}
+.bars__axis{display:flex;flex-direction:column;justify-content:space-between;
+  font-size:10.5px;color:var(--color-faint);padding-bottom:22px;text-align:right}
+.bars__plot{flex:1;display:flex;align-items:flex-end;gap:10px;position:relative;border-bottom:1px solid var(--color-line)}
+.bars__col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bars__bar{width:100%;max-width:38px;border-radius:5px 5px 0 0;background:var(--color-yellow-base);transition:.16s}
+.bars__bar:hover{background:var(--color-orange-base)}
+.bars__bar.is-peak{background:var(--color-orange-base)}
+.bars__label{font-size:10.5px;color:var(--color-muted);padding-bottom:4px}
+.bars__tip{position:absolute;top:-4px;left:50%;transform:translateX(-50%);background:var(--color-subtle);
+  border-radius:var(--radius-sm);padding:6px 10px;text-align:center;box-shadow:var(--shadow-soft)}
+.bars__tip small{display:block;font-size:9.5px;color:var(--color-muted)}
+.bars__tip b{font-size:13px;font-weight:800}
+/* MOLECULE: DonutChartCard */
+.donut-card__body{display:flex;align-items:center;gap:18px}
+.donut{position:relative;width:170px;height:170px;flex:none}
+.donut__label{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center}
+.donut__value{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.donut__cap{font-size:10.5px;color:var(--color-muted)}
+.legend{flex:1;min-width:0;display:flex;flex-direction:column;gap:9px}
+.legend__row{display:flex;align-items:center;gap:8px;font-size:11.5px}
+.legend__dot{width:9px;height:9px;border-radius:3px;flex:none}
+.legend__name{flex:1;color:var(--color-muted)}
+.legend__amt{color:var(--color-faint);font-size:10.5px}
+.legend__pct{font-weight:700;min-width:32px;text-align:right}
+/* MOLECULE: StackedBar (Grocery Category) */
+.stack{display:flex;gap:3px;height:16px;margin:10px 0 16px}
+.stack__seg{border-radius:4px}
+.cat-total{font-size:11.5px;color:var(--color-muted)}
+.cat-total b{display:block;font-size:22px;font-weight:800;color:var(--color-ink);letter-spacing:-.02em}
+.cat-total b span{font-size:12px;font-weight:600;color:var(--color-muted)}
+.cat-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px}
+
+/* ORGANISM: GroceryTable */
+.table-card{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);padding:var(--space-5)}
+.table-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--color-line);margin-bottom:8px;overflow-x:auto}
+.tab{padding:10px 16px;font-size:12.5px;font-weight:500;color:var(--color-muted);
+  border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer}
+.tab:hover{color:var(--color-ink)}
+.tab.is-active{color:var(--color-ink);font-weight:600;border-bottom-color:var(--color-green-base);background:var(--color-green-light);border-radius:8px 8px 0 0}
+.gtable{width:100%;border-collapse:collapse}
+.gtable th{text-align:left;padding:12px 10px;font-size:11.5px;font-weight:600;color:var(--color-muted);border-bottom:1px solid var(--color-line);white-space:nowrap}
+.gtable th span{color:var(--color-faint);font-size:9px;margin-left:3px}
+.gtable td{padding:11px 10px;font-size:12.5px;border-bottom:1px solid var(--color-line);vertical-align:middle}
+.gtable tr:last-child td{border-bottom:0}
+.gtable tbody tr:hover{background:var(--color-subtle)}
+.gt-item{display:flex;align-items:center;gap:10px;font-weight:600}
+.gt-item__thumb{width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;background:var(--color-subtle)}
+.gt-qty{display:flex;align-items:center;gap:6px}
+.gt-qty__box{display:flex;align-items:center;background:var(--color-subtle);border-radius:var(--radius-xs);overflow:hidden}
+.gt-qty__box input{width:46px;border:0;background:none;outline:0;text-align:center;font-size:12.5px;font-weight:600;padding:6px 0}
+.gt-qty__btn{width:24px;height:30px;color:var(--color-muted);font-weight:600;display:grid;place-items:center}
+.gt-qty__btn:hover{background:var(--color-orange-light);color:var(--color-orange-base)}
+.gt-qty__unit{font-size:11.5px;color:var(--color-muted)}
+.gt-cal span{color:var(--color-muted);font-size:10.5px}
+.pagination{display:flex;align-items:center;gap:12px;padding-top:16px;font-size:11.5px;color:var(--color-muted)}
+.pagination__spacer{flex:1}
+.pagination__pages{display:flex;gap:6px}
+.pagination__page{display:grid;place-items:center;width:28px;height:28px;border-radius:var(--radius-xs);
+  font-size:12px;font-weight:600;color:var(--color-muted);background:var(--color-subtle);cursor:pointer}
+.pagination__page:hover{background:var(--color-green-light);color:var(--color-ink)}
+.pagination__page.is-active{background:var(--color-green-base);color:var(--color-ink)}
+.pagination__page svg{width:13px;height:13px}
+</style>
+</helmet>
+
+<div class="app">
+
+  <!-- ORGANISM: Sidebar (identical across dashboard screens) -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-label="Nutrigo">
+        <path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65" />
+        <path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E" />
+      </svg>
+      <span class="sidebar__wordmark">Nutrigo</span>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="./Meal Plan.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3" /><path d="M8 3v3M16 3v3M3 10h18" /></svg>
+        Calendar
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z" /></svg>
+        Messages
+        <span class="nav-link__badge">6</span>
+      </a>
+      <a class="nav-link" href="./Healthy Menu.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21" /><path d="M19 3v18" /></svg>
+        Healthy Menu
+      </a>
+      <div class="nav-link is-open" onClick="{{ toggleMealPlan }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 12l5-3" /></svg>
+        Meal Plan
+        <span class="nav-link__chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </span>
+      </div>
+      <sc-if value="{{ mealPlanOpen }}" hint-placeholder-val="{{ true }}">
+        <div class="nav-sub">
+          <a class="nav-link" href="./Meal Plan.dc.html">Meal Plan</a>
+          <a class="nav-link is-active" href="./Grocery List.dc.html">Grocery List</a>
+        </div>
+      </sc-if>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+        Food Diary
+      </a>
+      <a class="nav-link" href="./Progress.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg>
+        Progress
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="13" cy="4.5" r="1.8" /><path d="M10 21l2.5-6 3 2.5L18 21M6 10l5-2 4 2 4 1" /></svg>
+        Exercises
+      </a>
+      <a class="nav-link" href="./Health Insights.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" /></svg>
+        Health Insights
+      </a>
+    </nav>
+    <div class="sidebar__spacer"></div>
+    <div class="promo-banner">
+      <image-slot id="gl-promo" class="promo-banner__art" style="width:100%;height:74px" shape="rounded" radius="10" fit="contain" placeholder="Veggies 3D"></image-slot>
+      <p class="promo-banner__text">Start your health journey with a <strong>FREE 1-month</strong> access to Nutrigo!</p>
+      <button class="promo-banner__cta">Claim Now!</button>
+    </div>
+    <a class="sidebar__logout" href="./Dashboard.dc.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9" /></svg>
+      Logout
+    </a>
+  </aside>
+
+  <!-- TEMPLATE: ListPageLayout -->
+  <main class="app__main">
+
+    <!-- ORGANISM: Header -->
+    <header class="header">
+      <div class="header__titles">
+        <h1 class="header__title">Grocery List</h1>
+      </div>
+      <div class="header__spacer"></div>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+      </button>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg>
+        <span class="dot"></span>
+      </button>
+      <div class="user-menu">
+        <span class="avatar avatar--md"><image-slot id="gl-avatar" shape="circle" style="width:40px;height:40px" placeholder="Avatar"></image-slot></span>
+        <div>
+          <div class="user-menu__name">Adam Vasylenko</div>
+          <div class="user-menu__role">Member</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+      </div>
+    </header>
+
+    <div class="gl-top">
+      <div class="gl-left">
+        <!-- ORGANISM: KPI row -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <span class="icon-badge icon-badge--lg icon-badge--green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.8 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11" /></svg>
+            </span>
+            <div class="kpi-card__body">
+              <div class="kpi-card__label">Estimated Cost</div>
+              <div class="kpi-card__value">$157</div>
+            </div>
+            <span class="kpi-card__delta kpi-card__delta--up">+2.08%</span>
+          </div>
+          <div class="kpi-card">
+            <span class="icon-badge icon-badge--lg icon-badge--yellow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" /><path d="M4 7.5l8 4.5 8-4.5M12 12v9" /></svg>
+            </span>
+            <div class="kpi-card__body">
+              <div class="kpi-card__label">Total Items</div>
+              <div class="kpi-card__value">40</div>
+            </div>
+            <span class="kpi-card__delta kpi-card__delta--up">+10.2%</span>
+          </div>
+          <div class="kpi-card">
+            <span class="icon-badge icon-badge--lg icon-badge--orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5" /></svg>
+            </span>
+            <div class="kpi-card__body">
+              <div class="kpi-card__label">Total Calories</div>
+              <div class="kpi-card__value">21,615<span>kcal</span></div>
+            </div>
+            <span class="kpi-card__delta kpi-card__delta--down">-3.56%</span>
+          </div>
+        </div>
+
+        <!-- ORGANISM: ExpenseChartsSection -->
+        <div class="charts">
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Expense Overview</h2>
+              <button class="select-pill" onClick="{{ cycleMonths }}">{{ monthsRange }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+              </button>
+            </div>
+            <div class="bars">
+              <div class="bars__axis"><span>$600</span><span>$450</span><span>$300</span><span>$150</span><span>$0</span></div>
+              <div class="bars__plot">
+                <sc-for list="{{ months }}" as="m" hint-placeholder-count="8">
+                  <div class="bars__col">
+                    <sc-if value="{{ m.peak }}" hint-placeholder-val="{{ false }}">
+                      <div class="bars__tip"><small>May 2028</small><b>$530</b></div>
+                    </sc-if>
+                    <div class="{{ m.barClass }}" style="height:{{ m.h }}"></div>
+                    <span class="bars__label">{{ m.name }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Expense Breakdown</h2>
+              <button class="select-pill" onClick="{{ cycleWeek }}">{{ weekRange }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+              </button>
+            </div>
+            <div class="donut-card__body">
+              <div class="donut">
+                <svg viewBox="0 0 170 170" width="170" height="170">
+                  <g fill="none" stroke-width="19" stroke-linecap="round" transform="rotate(-90 85 85)">
+                    <circle cx="85" cy="85" r="70" stroke="#C2E66E" stroke-dasharray="132 308" stroke-dashoffset="0" />
+                    <circle cx="85" cy="85" r="70" stroke="#FFCA65" stroke-dasharray="110 330" stroke-dashoffset="-132" />
+                    <circle cx="85" cy="85" r="70" stroke="#FFA257" stroke-dasharray="79 361" stroke-dashoffset="-242" />
+                    <circle cx="85" cy="85" r="70" stroke="#FFC79A" stroke-dasharray="66 374" stroke-dashoffset="-321" />
+                    <circle cx="85" cy="85" r="70" stroke="#FFE1C9" stroke-dasharray="31 409" stroke-dashoffset="-387" />
+                    <circle cx="85" cy="85" r="70" stroke="#E9E7E2" stroke-dasharray="22 418" stroke-dashoffset="-418" />
+                  </g>
+                </svg>
+                <div class="donut__label">
+                  <div class="donut__value">$157</div>
+                  <div class="donut__cap">Total Expense</div>
+                </div>
+              </div>
+              <div class="legend">
+                <div class="legend__row"><i class="legend__dot" style="background:#C2E66E"></i><span class="legend__name">Protein</span><span class="legend__amt">$47.10</span><span class="legend__pct">30%</span></div>
+                <div class="legend__row"><i class="legend__dot" style="background:#FFCA65"></i><span class="legend__name">Grains</span><span class="legend__amt">$39.25</span><span class="legend__pct">25%</span></div>
+                <div class="legend__row"><i class="legend__dot" style="background:#FFA257"></i><span class="legend__name">Fruits</span><span class="legend__amt">$28.26</span><span class="legend__pct">18%</span></div>
+                <div class="legend__row"><i class="legend__dot" style="background:#FFC79A"></i><span class="legend__name">Veggies</span><span class="legend__amt">$23.55</span><span class="legend__pct">15%</span></div>
+                <div class="legend__row"><i class="legend__dot" style="background:#FFE1C9"></i><span class="legend__name">Dairy</span><span class="legend__amt">$10.99</span><span class="legend__pct">7%</span></div>
+                <div class="legend__row"><i class="legend__dot" style="background:#E9E7E2"></i><span class="legend__name">Others</span><span class="legend__amt">$7.85</span><span class="legend__pct">5%</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- MOLECULE: Grocery Category -->
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Grocery Category</h2>
+          <span class="card__more">•••</span>
+        </div>
+        <div class="cat-total">Total<b>40 <span>Items</span></b></div>
+        <div class="stack">
+          <i class="stack__seg" style="background:#C2E66E;flex:30"></i>
+          <i class="stack__seg" style="background:#FFCA65;flex:25"></i>
+          <i class="stack__seg" style="background:#FFA257;flex:20"></i>
+          <i class="stack__seg" style="background:#FFC79A;flex:15"></i>
+          <i class="stack__seg" style="background:#FFE1C9;flex:5"></i>
+          <i class="stack__seg" style="background:#E9E7E2;flex:5"></i>
+        </div>
+        <div class="cat-legend">
+          <div class="legend__row"><i class="legend__dot" style="background:#C2E66E"></i><span class="legend__name">Grains</span><span class="legend__amt">12 items</span><span class="legend__pct">30%</span></div>
+          <div class="legend__row"><i class="legend__dot" style="background:#FFC79A"></i><span class="legend__name">Fruits</span><span class="legend__amt">6 items</span><span class="legend__pct">15%</span></div>
+          <div class="legend__row"><i class="legend__dot" style="background:#FFCA65"></i><span class="legend__name">Veggies</span><span class="legend__amt">10 items</span><span class="legend__pct">25%</span></div>
+          <div class="legend__row"><i class="legend__dot" style="background:#FFE1C9"></i><span class="legend__name">Dairy</span><span class="legend__amt">2 items</span><span class="legend__pct">5%</span></div>
+          <div class="legend__row"><i class="legend__dot" style="background:#FFA257"></i><span class="legend__name">Protein</span><span class="legend__amt">8 items</span><span class="legend__pct">20%</span></div>
+          <div class="legend__row"><i class="legend__dot" style="background:#E9E7E2"></i><span class="legend__name">Others</span><span class="legend__amt">2 items</span><span class="legend__pct">5%</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ORGANISM: GroceryTable -->
+    <section class="table-card">
+      <div class="table-toolbar">
+        <h2 class="card__title">Grocery List</h2>
+        <span class="header__spacer"></span>
+        <label class="search-bar search-bar--sm" style="width:210px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+          <input placeholder="Search item" value="{{ query }}" onChange="{{ onQuery }}" />
+        </label>
+        <button class="btn btn--sm btn--ghost">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18l-7 8v6l-4-2v-4z" /></svg>
+          Filter
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+        <button class="btn btn--sm btn--primary-green">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+          Add Item
+        </button>
+      </div>
+
+      <div class="tabs">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+          <div class="{{ t.cls }}" onClick="{{ t.onSelect }}">{{ t.name }}</div>
+        </sc-for>
+        <span class="header__spacer"></span>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0 8px">
+          <span style="font-size:11.5px;color:var(--color-muted)">Sort by:</span>
+          <button class="select-pill" onClick="{{ cycleSort }}">{{ sort }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <table class="gtable">
+        <thead>
+          <tr>
+            <th>Item Name <span>⇅</span></th>
+            <th>Category <span>⇅</span></th>
+            <th>Qty <span>⇅</span></th>
+            <th>Calories <span>⇅</span></th>
+            <th>Cost <span>⇅</span></th>
+            <th>Actual <span>⇅</span></th>
+            <th>Status <span>⇅</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="10">
+            <tr>
+              <td>
+                <span class="gt-item">
+                  <span class="gt-item__thumb"><image-slot id="gl-item-{{ r.slot }}" shape="circle" placeholder=" "></image-slot></span>
+                  {{ r.name }}
+                </span>
+              </td>
+              <td><span class="pill {{ r.catClass }}">{{ r.category }}</span></td>
+              <td>
+                <!-- ATOM: Stepper -->
+                <span class="gt-qty">
+                  <span class="gt-qty__box">
+                    <input value="{{ r.qty }}" readOnly="{{ true }}" />
+                    <button class="gt-qty__btn" onClick="{{ r.dec }}">−</button>
+                    <button class="gt-qty__btn" onClick="{{ r.inc }}">+</button>
+                  </span>
+                  <span class="gt-qty__unit">{{ r.unit }}</span>
+                </span>
+              </td>
+              <td class="gt-cal">{{ r.calories }} <span>kcal</span></td>
+              <td>{{ r.cost }}</td>
+              <td>{{ r.actual }}</td>
+              <td>
+                <sc-if value="{{ r.purchased }}" hint-placeholder-val="{{ true }}">
+                  <span class="pill pill--green">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M5 13l4 4 10-10" /></svg>
+                    Purchased
+                  </span>
+                </sc-if>
+                <sc-if value="{{ r.pending }}" hint-placeholder-val="{{ false }}">
+                  <span class="pill pill--outline">Pending</span>
+                </sc-if>
+              </td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <span>Showing</span>
+        <button class="select-pill" onClick="{{ cyclePageSize }}">{{ pageSize }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+        <span>out of 40</span>
+        <span class="pagination__spacer"></span>
+        <div class="pagination__pages">
+          <button class="pagination__page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+          <sc-for list="{{ pages }}" as="p" hint-placeholder-count="4">
+            <button class="{{ p.cls }}" onClick="{{ p.onSelect }}">{{ p.n }}</button>
+          </sc-for>
+          <button class="pagination__page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>Copyright © 2024 Peterdraw</span>
+      <a href="./Grocery List.dc.html">Privacy Policy</a>
+      <a href="./Grocery List.dc.html">Term and conditions</a>
+      <a href="./Grocery List.dc.html">Contact</a>
+      <span class="page-footer__spacer"></span>
+      <span class="page-footer__social">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-3H13V9c0-1 .3-1.5 1.6-1.5H17V4.6c-.4 0-1.6-.1-2.9-.1-2.7 0-4.1 1.5-4.1 4.3V11H7v3h3v8z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.5l4.3 6L17 3h4l-6.8 8.6L21.5 21H17l-4.6-6.4L6.8 21H3l7.3-9.1z" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17" cy="7" r="1" fill="currentColor" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2A2.7 2.7 0 0 0 19.7 5C18 4.6 12 4.6 12 4.6s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7.2C2 9 2 12 2 12s0 3 .4 4.8A2.7 2.7 0 0 0 4.3 19c1.7.4 7.7.4 7.7.4s6 0 7.7-.4a2.7 2.7 0 0 0 1.9-2.2C22 15 22 12 22 12s0-3-.4-4.8zM10 15.5v-7l6 3.5z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3A1.8 1.8 0 1 0 4.5 6.6 1.8 1.8 0 0 0 4.5 3zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.6-1.1 2-1.9 3.6-1.9 2.8 0 4.5 1.7 4.5 5V21h-3v-7c0-1.7-.7-2.6-2.1-2.6-1.3 0-2 .9-2 2.6v7H9z" /></svg>
+      </span>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1500}}">
+const CAT_CLASS = {
+  Grains: 'pill--green', Veggies: 'pill--yellow', Protein: 'pill--orange',
+  Fruits: 'pill--orange', Dairy: 'pill--yellow', Others: 'pill--grey'
+};
+
+class Component extends DCLogic {
+  state = {
+    mealPlanOpen: true,
+    tab: 'All Categories',
+    sort: 'Newest',
+    monthsRange: 'Last 8 Months',
+    weekRange: 'This Week',
+    pageSize: 10,
+    page: 1,
+    query: '',
+    qty: [500, 1, 200, 1, 3, 300, 3, 1, 500, 500]
+  };
+
+  data = [
+    { name: 'Oats', category: 'Grains', unit: 'gr', calories: 1900, cost: '$0.60', actual: '$3', purchased: true },
+    { name: 'Almond Butter', category: 'Others', unit: 'Jar', calories: 1600, cost: '$5', actual: '-', purchased: false },
+    { name: 'Berries', category: 'Fruits', unit: 'gr', calories: 120, cost: '$2', actual: '$4', purchased: true },
+    { name: 'Chicken Breast', category: 'Protein', unit: 'kg', calories: 1650, cost: '$8', actual: '$8', purchased: true },
+    { name: 'Avocado', category: 'Fruits', unit: 'units', calories: 720, cost: '$2', actual: '-', purchased: false },
+    { name: 'Spinach', category: 'Veggies', unit: 'gr', calories: 65, cost: '$1', actual: '$3', purchased: true },
+    { name: 'Sweet Potatoes', category: 'Veggies', unit: 'units', calories: 360, cost: '$1', actual: '-', purchased: false },
+    { name: 'Greek Yogurt', category: 'Dairy', unit: 'tub', calories: 600, cost: '$4', actual: '$4', purchased: true },
+    { name: 'Quinoa', category: 'Grains', unit: 'gr', calories: 1800, cost: '$1', actual: '-', purchased: false },
+    { name: 'Brown Rice', category: 'Grains', unit: 'g', calories: 1800, cost: '$0.80', actual: '$4', purchased: true }
+  ];
+
+  bump(i, d) {
+    this.setState(s => {
+      const q = s.qty.slice();
+      q[i] = Math.max(1, q[i] + d);
+      return { qty: q };
+    });
+  }
+
+  renderVals() {
+    const tabNames = ['All Categories', 'Grains', 'Fruits', 'Veggies', 'Protein', 'Dairy', 'Others'];
+    const sorts = ['Newest', 'Oldest', 'Cost', 'Calories'];
+    const monthsOpts = ['Last 8 Months', 'This Year', 'Last 3 Months'];
+    const weekOpts = ['This Week', 'This Month', 'This Year'];
+    const sizes = [10, 20, 40];
+    const q = this.state.query.trim().toLowerCase();
+
+    const rows = this.data
+      .map((r, i) => Object.assign({}, r, {
+        slot: i,
+        qty: this.state.qty[i],
+        catClass: CAT_CLASS[r.category] || 'pill--grey',
+        pending: !r.purchased,
+        inc: () => this.bump(i, r.unit === 'gr' || r.unit === 'g' ? 50 : 1),
+        dec: () => this.bump(i, r.unit === 'gr' || r.unit === 'g' ? -50 : -1)
+      }))
+      .filter(r => this.state.tab === 'All Categories' || r.category === this.state.tab)
+      .filter(r => !q || r.name.toLowerCase().indexOf(q) >= 0);
+
+    const bars = [
+      { name: 'Feb', v: 300 }, { name: 'Mar', v: 335 }, { name: 'Apr', v: 390 },
+      { name: 'May', v: 530 }, { name: 'Jun', v: 420 }, { name: 'Jul', v: 405 },
+      { name: 'Aug', v: 455 }, { name: 'Sep', v: 480 }
+    ];
+
+    return {
+      mealPlanOpen: this.state.mealPlanOpen,
+      toggleMealPlan: () => this.setState(s => ({ mealPlanOpen: !s.mealPlanOpen })),
+      tabs: tabNames.map(name => ({
+        name,
+        cls: 'tab' + (this.state.tab === name ? ' is-active' : ''),
+        onSelect: () => this.setState({ tab: name })
+      })),
+      sort: this.state.sort,
+      cycleSort: () => this.setState(s => ({ sort: sorts[(sorts.indexOf(s.sort) + 1) % sorts.length] })),
+      monthsRange: this.state.monthsRange,
+      cycleMonths: () => this.setState(s => ({ monthsRange: monthsOpts[(monthsOpts.indexOf(s.monthsRange) + 1) % monthsOpts.length] })),
+      weekRange: this.state.weekRange,
+      cycleWeek: () => this.setState(s => ({ weekRange: weekOpts[(weekOpts.indexOf(s.weekRange) + 1) % weekOpts.length] })),
+      pageSize: this.state.pageSize,
+      cyclePageSize: () => this.setState(s => ({ pageSize: sizes[(sizes.indexOf(s.pageSize) + 1) % sizes.length] })),
+      pages: [1, 2, 3, 4].map(n => ({
+        n,
+        cls: 'pagination__page' + (this.state.page === n ? ' is-active' : ''),
+        onSelect: () => this.setState({ page: n })
+      })),
+      query: this.state.query,
+      onQuery: e => this.setState({ query: e.target.value }),
+      rows,
+      months: bars.map(b => ({
+        name: b.name,
+        h: Math.round(b.v / 600 * 168) + 'px',
+        peak: b.v === 530,
+        barClass: 'bars__bar' + (b.v === 530 ? ' is-peak' : '')
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

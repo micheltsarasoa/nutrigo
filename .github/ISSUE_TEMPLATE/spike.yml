@@ -1,0 +1,16 @@
+name: Spike
+description: Time-boxed research that ends with a decision (often an ADR)
+title: "spike: "
+labels: ["type:spike"]
+body:
+  - type: textarea
+    id: question
+    attributes: { label: Question to answer }
+    validations: { required: true }
+  - type: input
+    id: timebox
+    attributes: { label: Time box, placeholder: "4h" }
+    validations: { required: true }
+  - type: textarea
+    id: output
+    attributes: { label: Expected output, value: "ADR / spec update / recommendation comment" }

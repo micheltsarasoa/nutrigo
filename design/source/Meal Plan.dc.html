@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./nutrigo.css" />
+<script src="./image-slot.js"></script>
+<style>
+/* ===== PAGE: Meal Plan ===== */
+.app{width:1600px;grid-template-columns:252px minmax(0,1fr)}
+.week-nav{display:flex;align-items:center;gap:8px}
+.week-nav__label{font-size:14px;font-weight:700;min-width:150px;text-align:center}
+.week-nav__label span{color:var(--color-muted);font-weight:500}
+.week-nav button{display:grid;place-items:center;width:32px;height:32px;border-radius:var(--radius-sm);
+  background:var(--color-surface);box-shadow:inset 0 0 0 1px var(--color-line);color:var(--color-muted)}
+.week-nav button:hover{background:var(--color-green-light);color:var(--color-ink)}
+.week-nav svg{width:14px;height:14px}
+/* ORGANISM: MealPlanGrid */
+.plan{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);
+  padding:var(--space-5);overflow-x:auto}
+.plan__grid{display:grid;grid-template-columns:104px repeat(7,minmax(0,1fr));gap:10px;min-width:1100px}
+.plan__dayhead{padding:10px 8px;border-radius:var(--radius-md);text-align:center;cursor:pointer}
+.plan__dayhead:hover{background:var(--color-green-light)}
+.plan__dayhead.is-today{background:var(--color-green-base)}
+.plan__dow{font-size:10.5px;color:var(--color-muted)}
+.plan__daynum{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.plan__dayhead.is-today .plan__dow{color:#5F7F12}
+.plan__momentcell{display:flex;flex-direction:column;gap:6px;justify-content:center;
+  padding:12px 6px;border-top:1px solid var(--color-line)}
+.plan__momentname{font-size:12.5px;font-weight:700}
+.plan__momentkcal{font-size:10.5px;color:var(--color-muted)}
+.plan__cell{border-top:1px solid var(--color-line);padding:12px 0}
+/* MOLECULE: MealMiniCard */
+.meal-mini{background:var(--color-subtle);border-radius:var(--radius-md);padding:7px;transition:.16s;cursor:pointer}
+.meal-mini:hover{background:var(--color-green-light)}
+.meal-mini__media{height:58px;border-radius:var(--radius-xs);overflow:hidden;background:#EDEAE4}
+.meal-mini__title{font-size:10.5px;font-weight:600;line-height:1.35;margin-top:6px}
+.meal-mini__kcal{font-size:9.5px;color:var(--color-muted);margin-top:3px}
+.meal-add{display:grid;place-items:center;height:100%;min-height:96px;border-radius:var(--radius-md);
+  border:1px dashed #DEDACF;color:var(--color-faint);background:none;width:100%}
+.meal-add:hover{border-color:var(--color-green-base);color:var(--color-ink);background:var(--color-green-light)}
+.meal-add svg{width:18px;height:18px}
+/* mobile variant */
+.mobile-strip{display:flex;gap:28px;align-items:flex-start;margin-top:8px}
+.phone{width:360px;flex:none;background:var(--color-surface);border-radius:32px;padding:10px;
+  box-shadow:0 18px 50px rgba(31,41,55,.12)}
+.phone__screen{background:var(--color-cream);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.phone__bar{display:flex;align-items:center;gap:10px}
+.phone__title{flex:1;text-align:center;font-size:14px;font-weight:700}
+.phone__burger{display:grid;place-items:center;width:30px;height:30px;color:var(--color-muted)}
+.phone__burger svg{width:17px;height:17px}
+.phone-card{background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:14px}
+.phone-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.phone-day{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:var(--radius-xs);font-size:12px}
+.phone-day.is-today{background:var(--color-green-base);font-weight:700}
+.phone-day small{font-size:9px;color:var(--color-muted)}
+</style>
+</helmet>
+
+<div class="app">
+
+  <!-- ORGANISM: Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-label="Nutrigo">
+        <path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65" />
+        <path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E" />
+      </svg>
+      <span class="sidebar__wordmark">Nutrigo</span>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="./Meal Plan.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3" /><path d="M8 3v3M16 3v3M3 10h18" /></svg>
+        Calendar
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z" /></svg>
+        Messages
+        <span class="nav-link__badge">6</span>
+      </a>
+      <a class="nav-link" href="./Healthy Menu.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21" /><path d="M19 3v18" /></svg>
+        Healthy Menu
+      </a>
+      <div class="nav-link is-open" onClick="{{ toggleMealPlan }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 12l5-3" /></svg>
+        Meal Plan
+        <span class="nav-link__chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+        </span>
+      </div>
+      <sc-if value="{{ mealPlanOpen }}" hint-placeholder-val="{{ true }}">
+        <div class="nav-sub">
+          <a class="nav-link is-active" href="./Meal Plan.dc.html">Meal Plan</a>
+          <a class="nav-link" href="./Grocery List.dc.html">Grocery List</a>
+        </div>
+      </sc-if>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+        Food Diary
+      </a>
+      <a class="nav-link" href="./Progress.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 4-6" /></svg>
+        Progress
+      </a>
+      <a class="nav-link" href="./Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="13" cy="4.5" r="1.8" /><path d="M10 21l2.5-6 3 2.5L18 21M6 10l5-2 4 2 4 1" /></svg>
+        Exercises
+      </a>
+      <a class="nav-link" href="./Health Insights.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" /></svg>
+        Health Insights
+      </a>
+    </nav>
+    <div class="sidebar__spacer"></div>
+    <div class="promo-banner">
+      <image-slot id="mp-promo" class="promo-banner__art" style="width:100%;height:74px" shape="rounded" radius="10" fit="contain" placeholder="Veggies 3D"></image-slot>
+      <p class="promo-banner__text">Start your health journey with a <strong>FREE 1-month</strong> access to Nutrigo!</p>
+      <button class="promo-banner__cta">Claim Now!</button>
+    </div>
+    <a class="sidebar__logout" href="./Dashboard.dc.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9" /></svg>
+      Logout
+    </a>
+  </aside>
+
+  <main class="app__main">
+    <header class="header">
+      <div class="header__titles"><h1 class="header__title">Meal Plan</h1></div>
+      <div class="header__spacer"></div>
+      <div class="week-nav">
+        <button onClick="{{ prevWeek }}" aria-label="Previous week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+        <span class="week-nav__label">{{ weekLabel }}</span>
+        <button onClick="{{ nextWeek }}" aria-label="Next week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></button>
+      </div>
+      <button class="header__icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 15V10a6 6 0 1 0-12 0v5l-1.5 3h15z" /><path d="M10 21h4" /></svg>
+        <span class="dot"></span>
+      </button>
+      <div class="user-menu">
+        <span class="avatar avatar--md"><image-slot id="mp-avatar" shape="circle" style="width:40px;height:40px" placeholder="Avatar"></image-slot></span>
+        <div>
+          <div class="user-menu__name">Adam Vasylenko</div>
+          <div class="user-menu__role">Member</div>
+        </div>
+      </div>
+      <a class="btn btn--primary-green" href="./Healthy Menu.dc.html">Add Meal</a>
+    </header>
+
+    <!-- ORGANISM: MealPlanGrid -->
+    <section class="plan">
+      <div class="plan__grid">
+        <div></div>
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="7">
+          <div class="{{ d.cls }}" onClick="{{ d.onSelect }}">
+            <div class="plan__dow">{{ d.dow }}</div>
+            <div class="plan__daynum">{{ d.num }}</div>
+          </div>
+        </sc-for>
+
+        <sc-for list="{{ moments }}" as="m" hint-placeholder-count="4">
+          <div class="plan__momentcell">
+            <span class="pill {{ m.pillClass }}">{{ m.name }}</span>
+            <span class="plan__momentkcal">{{ m.kcal }} kcal</span>
+          </div>
+          <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="7">
+            <div class="plan__cell">
+              <sc-if value="{{ c.has }}" hint-placeholder-val="{{ true }}">
+                <article class="meal-mini">
+                  <div class="meal-mini__media"><image-slot id="mp-{{ c.slot }}" shape="rect" placeholder=" "></image-slot></div>
+                  <div class="meal-mini__title">{{ c.title }}</div>
+                  <div class="meal-mini__kcal">{{ c.kcal }} kcal</div>
+                </article>
+              </sc-if>
+              <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
+                <button class="meal-add" aria-label="Add meal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+                </button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- Mobile variant -->
+    <section>
+      <div class="card__head" style="margin-bottom:12px">
+        <h2 class="section-title">Mobile variant</h2>
+        <span style="font-size:11.5px;color:var(--color-muted)">Simplified day view · 360 px</span>
+      </div>
+      <div class="mobile-strip">
+        <div class="phone">
+          <div class="phone__screen">
+            <div class="phone__bar">
+              <svg width="22" height="22" viewBox="0 0 26 26"><path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65" /><path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E" /></svg>
+              <span class="phone__title">Meal Plan</span>
+              <span class="phone__burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg></span>
+            </div>
+            <div class="phone-card">
+              <div class="calendar__head" style="margin-bottom:10px">
+                <div class="calendar__month">September <span>2028</span></div>
+                <div class="calendar__nav" style="display:flex;gap:6px">
+                  <button style="width:26px;height:26px;border-radius:6px;background:var(--color-subtle);color:var(--color-muted);display:grid;place-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+                  <button style="width:26px;height:26px;border-radius:6px;background:var(--color-subtle);color:var(--color-muted);display:grid;place-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></button>
+                </div>
+              </div>
+              <div class="phone-days">
+                <div class="phone-day"><small>Sun</small>3</div>
+                <div class="phone-day"><small>Mon</small>4</div>
+                <div class="phone-day is-today"><small>Tue</small>5</div>
+                <div class="phone-day"><small>Wed</small>6</div>
+                <div class="phone-day"><small>Thu</small>7</div>
+                <div class="phone-day"><small>Fri</small>8</div>
+                <div class="phone-day"><small>Sat</small>9</div>
+              </div>
+              <div class="meal-group">
+                <div class="meal-group__head">
+                  <span class="meal-check meal-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10" /></svg></span>
+                  <span class="pill pill--outline">Breakfast</span>
+                  <span class="pill pill--green">300 kcal</span>
+                </div>
+                <div class="meal-item">
+                  <div class="meal-item__media"><image-slot id="mp-m1" shape="rect" placeholder=" "></image-slot></div>
+                  <div style="min-width:0">
+                    <div class="meal-item__title">Scrambled Eggs with Spinach &amp; Whole Grain Toast</div>
+                    <div class="meal-item__macros"><span>C 25g</span><span>P 20g</span><span>F 12g</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-group">
+                <div class="meal-group__head">
+                  <span class="meal-check meal-check--todo"></span>
+                  <span class="pill pill--outline">Lunch</span>
+                  <span class="pill pill--green">450 kcal</span>
+                </div>
+                <div class="meal-item">
+                  <div class="meal-item__media"><image-slot id="mp-m2" shape="rect" placeholder=" "></image-slot></div>
+                  <div style="min-width:0">
+                    <div class="meal-item__title">Grilled Chicken Salad with Avocado and Quinoa</div>
+                    <div class="meal-item__macros"><span>C 40g</span><span>P 35g</span><span>F 20g</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-group">
+                <div class="meal-group__head">
+                  <span class="meal-check meal-check--todo"></span>
+                  <span class="pill pill--outline">Snack</span>
+                  <span class="pill pill--green">200 kcal</span>
+                </div>
+                <div class="meal-item">
+                  <div class="meal-item__media"><image-slot id="mp-m3" shape="rect" placeholder=" "></image-slot></div>
+                  <div style="min-width:0">
+                    <div class="meal-item__title">Greek Yogurt with Mixed Berries and Almonds</div>
+                    <div class="meal-item__macros"><span>C 18g</span><span>P 12g</span><span>F 10g</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="meal-group">
+                <div class="meal-group__head">
+                  <span class="meal-check meal-check--todo is-orange"></span>
+                  <span class="pill pill--outline">Dinner</span>
+                  <span class="pill pill--green">500 kcal</span>
+                </div>
+                <div class="meal-item">
+                  <div class="meal-item__media"><image-slot id="mp-m4" shape="rect" placeholder=" "></image-slot></div>
+                  <div style="min-width:0">
+                    <div class="meal-item__title">Grilled Chicken with Sweet Potato and Green Beans</div>
+                    <div class="meal-item__macros"><span>C 45g</span><span>P 35g</span><span>F 20g</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12.5px;color:var(--color-muted);line-height:1.7;max-width:320px">
+          The mobile plan drops the seven-day grid for a single selected day. The week strip stays at the top;
+          meals collapse into the same Breakfast / Lunch / Snack / Dinner groups used in the dashboard aside.
+        </p>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>Copyright © 2024 Peterdraw</span>
+      <a href="./Meal Plan.dc.html">Privacy Policy</a>
+      <a href="./Meal Plan.dc.html">Term and conditions</a>
+      <a href="./Meal Plan.dc.html">Contact</a>
+      <span class="page-footer__spacer"></span>
+      <span class="page-footer__social">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-3H13V9c0-1 .3-1.5 1.6-1.5H17V4.6c-.4 0-1.6-.1-2.9-.1-2.7 0-4.1 1.5-4.1 4.3V11H7v3h3v8z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.5l4.3 6L17 3h4l-6.8 8.6L21.5 21H17l-4.6-6.4L6.8 21H3l7.3-9.1z" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17" cy="7" r="1" fill="currentColor" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2A2.7 2.7 0 0 0 19.7 5C18 4.6 12 4.6 12 4.6s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7.2C2 9 2 12 2 12s0 3 .4 4.8A2.7 2.7 0 0 0 4.3 19c1.7.4 7.7.4 7.7.4s6 0 7.7-.4a2.7 2.7 0 0 0 1.9-2.2C22 15 22 12 22 12s0-3-.4-4.8zM10 15.5v-7l6 3.5z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3A1.8 1.8 0 1 0 4.5 6.6 1.8 1.8 0 0 0 4.5 3zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.6-1.1 2-1.9 3.6-1.9 2.8 0 4.5 1.7 4.5 5V21h-3v-7c0-1.7-.7-2.6-2.1-2.6-1.3 0-2 .9-2 2.6v7H9z" /></svg>
+      </span>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1300}}">
+const PLAN = {
+  Breakfast: ['Scrambled Eggs with Spinach', 'Oatmeal with Almond Butter', 'Greek Yogurt Parfait', 'Blueberry Protein Smoothie', 'Avocado Toast with Poached Egg', 'Smoothie Bowl with Chia Seeds', 'Chia Pudding with Strawberries'],
+  Lunch: ['Grilled Chicken Salad', 'Grilled Chicken Wrap', 'Quinoa and Kale Bowl', 'Tuna Salad with Chickpeas', 'Grilled Shrimp Tacos', 'Mediterranean Couscous Salad', 'Trail Mix with Dried Fruit'],
+  Snack: ['Mixed Berries and Almonds', 'Honey Roasted Nuts', 'Dark Chocolate and Walnuts', '', 'Hummus with Carrot Sticks', '', 'Apple with Peanut Butter'],
+  Dinner: ['Grilled Chicken with Sweet Potato', 'Baked Chicken with Quinoa', 'Roasted Brussels Sprouts', 'Grilled Salmon with Asparagus', 'Roasted Chicken with Green Beans', 'Roasted Veggie Bowl with Lentils', 'Lemon Cod with Broccoli']
+};
+const KCAL = { Breakfast: 300, Lunch: 450, Snack: 200, Dinner: 500 };
+const PILL = { Breakfast: 'pill--green', Lunch: 'pill--yellow', Snack: 'pill--grey', Dinner: 'pill--orange' };
+
+class Component extends DCLogic {
+  state = { mealPlanOpen: true, activeDay: 5, weekStart: 3 };
+
+  renderVals() {
+    const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const start = this.state.weekStart;
+    const days = dows.map((dow, i) => {
+      const num = start + i;
+      return {
+        dow, num,
+        cls: 'plan__dayhead' + (this.state.activeDay === num ? ' is-today' : ''),
+        onSelect: () => this.setState({ activeDay: num })
+      };
+    });
+
+    const moments = Object.keys(PLAN).map(name => ({
+      name,
+      kcal: KCAL[name],
+      pillClass: PILL[name],
+      cells: PLAN[name].map((title, i) => ({
+        slot: name.toLowerCase() + '-' + i,
+        title,
+        kcal: KCAL[name],
+        has: !!title,
+        empty: !title
+      }))
+    }));
+
+    return {
+      mealPlanOpen: this.state.mealPlanOpen,
+      toggleMealPlan: () => this.setState(s => ({ mealPlanOpen: !s.mealPlanOpen })),
+      weekLabel: 'September ' + start + '–' + (start + 6) + ', 2028',
+      prevWeek: () => this.setState(s => ({ weekStart: Math.max(1, s.weekStart - 7) })),
+      nextWeek: () => this.setState(s => ({ weekStart: s.weekStart + 7 })),
+      days, moments
+    };
+  }
+}
+</script>
+</body>
+</html>

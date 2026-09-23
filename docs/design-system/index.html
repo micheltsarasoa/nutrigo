@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NutriGo Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Components are rendered with the exact CSS exported from Claude Design (read-only source). -->
+<link rel="stylesheet" href="../../design/source/nutrigo.css">
+<style>
+/* Page chrome only. Everything inside .demo uses the design's own classes. */
+.ds{max-width:1200px;margin:0 auto;padding:40px 16px 96px;display:flex;flex-direction:column;gap:56px}
+.ds-head{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.ds-head h1{font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.ds-head h1 em{font-style:normal;color:var(--color-orange-base)}
+.ds-lead{color:var(--color-muted);max-width:640px;line-height:1.6;margin-top:6px}
+.ds-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:0;z-index:5;background:var(--color-cream);padding:10px 0;border-bottom:1px solid var(--color-line)}
+nav.toc a{font-size:12.5px;font-weight:600;padding:6px 10px;border-radius:var(--radius-sm);background:var(--color-surface);box-shadow:inset 0 0 0 1px var(--color-line)}
+section.block{display:flex;flex-direction:column;gap:18px;scroll-margin-top:60px}
+.label{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--color-muted)}
+.label::after{content:"";flex:1;height:1px;background:var(--color-line)}
+h2.h{font-size:24px;font-weight:700;letter-spacing:-.02em}
+h3.sub{font-size:16px;font-weight:700;margin-top:6px}
+p.note{font-size:13px;color:var(--color-muted);line-height:1.6;max-width:760px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.grid--wide{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.tile{background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);padding:20px;min-width:0}
+.tile__title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:14px;flex-wrap:wrap}
+.tile__foot{font-size:11.5px;color:var(--color-muted);margin-top:12px;line-height:1.5}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fam{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-card)}
+.sw{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding:16px 18px;min-height:74px;font-size:12px;font-weight:600}
+.sw--tall{min-height:120px}
+.sw b{display:block;font-size:17px}
+.sw code{font-size:11.5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.chipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.chip{border-radius:var(--radius-lg);overflow:hidden;background:var(--color-surface);box-shadow:var(--shadow-card)}
+.chip i{display:block;height:48px}
+.chip div{padding:8px 10px 10px;font-size:11.5px}
+.chip div span{display:block;color:var(--color-muted)}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--color-surface);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card)}
+.t th{text-align:left;padding:10px 12px;font-size:11.5px;color:var(--color-muted);font-weight:600;border-bottom:1px solid var(--color-line);background:var(--color-subtle)}
+.t td{padding:9px 12px;border-bottom:1px solid var(--color-line);vertical-align:middle}
+.t tr:last-child td{border-bottom:0}
+.scroll{overflow-x:auto;border-radius:var(--radius-lg)}
+.sample{display:inline-grid;place-items:center;min-width:92px;height:30px;padding:0 10px;border-radius:6px;font-weight:600;font-size:12px}
+.badge-in{background:var(--color-green-light);color:var(--color-ink)}
+.badge-out{background:#F3F3F1;color:var(--color-ink);text-decoration:line-through}
+.badge-new{background:var(--color-yellow-light);color:var(--color-ink)}
+.ok{font-weight:700}
+.bad{font-weight:700;color:#B42318}
+.scale-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px 20px;align-items:baseline}
+.scale-row span:first-child{font-size:11.5px;color:var(--color-muted)}
+.bar-demo{height:10px;border-radius:3px;background:var(--color-orange-medium)}
+.icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px}
+.icons div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;background:var(--color-surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);font-size:10.5px;color:var(--color-muted);text-align:center}
+.icons svg{width:22px;height:22px;color:var(--color-ink)}
+.phone{width:360px;max-width:100%;background:var(--color-surface);border-radius:32px;padding:10px;box-shadow:0 18px 50px rgba(31,41,55,.12)}
+.phone__screen{background:var(--color-cream);border-radius:24px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.tabbar{display:flex;justify-content:space-between;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:8px 10px}
+.tabbar span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--color-muted);padding:4px 6px;border-radius:10px;min-width:52px;min-height:44px;justify-content:center}
+.tabbar span.is-active{background:var(--color-green-light);color:var(--color-ink);font-weight:600}
+.tabbar svg{width:18px;height:18px}
+ul.list{margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--color-ink)}
+ul.list li span{color:var(--color-muted)}
+@media (max-width:640px){.ds-head h1{font-size:28px}.scale-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="ds">
+
+<header>
+  <div class="ds-head">
+    <svg width="52" height="52" viewBox="0 0 26 26" aria-label="NutriGo logo"><path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65"/><path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E"/></svg>
+    <div>
+      <h1>NutriGo <em>Design System</em></h1>
+      <p class="ds-lead">A living reference built from the Claude Design export in <code>design/source/</code>. Every component on this page uses the exported CSS, so what you see is what the design specifies. Tokens: <code>docs/design-system/tokens.json</code>. Charts: <a href="dataviz.html"><b>dataviz.html</b></a>.</p>
+      <div class="ds-meta">
+        <span class="pill pill--outline">Source export 2026-09-23</span>
+        <span class="pill pill--green">Light theme only</span>
+        <span class="pill pill--yellow">Contrast: known issues kept (ADR-0008)</span>
+        <span class="pill pill--grey">Mobile layouts: derived, pending validation</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#colour">Colour</a><a href="#semantic">Semantic colour</a><a href="#contrast">Contrast</a><a href="#type">Type</a><a href="#space">Space &amp; shape</a><a href="#icons">Icons &amp; logo</a><a href="#atoms">Atoms</a><a href="#molecules">Molecules</a><a href="#organisms">Organisms</a><a href="#layout">Layout &amp; mobile</a><a href="#inventory">Inventory</a><a href="#removed">Removed</a><a href="#issues">Issues</a>
+</nav>
+
+<!-- ============ COLOUR ============ -->
+<section class="block" id="colour">
+  <div class="label">01 · Colour</div>
+  <h2 class="h">Three families of three tints, plus warm neutrals</h2>
+  <div class="grid">
+    <div class="fam">
+      <div class="sw sw--tall" style="background:var(--color-green-base)"><span><b>Lime green</b>Grains · success · primary CTA</span><code>--color-green-base #C2E66E</code></div>
+      <div class="sw" style="background:var(--color-green-medium)"><span>medium</span><code>#DFF9A2</code></div>
+      <div class="sw" style="background:var(--color-green-light)"><span>light</span><code>#EDFFC4</code></div>
+    </div>
+    <div class="fam">
+      <div class="sw sw--tall" style="background:var(--color-yellow-base)"><span><b>Sunny yellow</b>Veggies · carbs · to-do</span><code>--color-yellow-base #FFCA65</code></div>
+      <div class="sw" style="background:var(--color-yellow-medium)"><span>medium</span><code>#FFE6B5</code></div>
+      <div class="sw" style="background:var(--color-yellow-light)"><span>light</span><code>#FFF1D6</code></div>
+    </div>
+    <div class="fam">
+      <div class="sw sw--tall" style="background:var(--color-orange-base)"><span><b>Vibrant orange</b>Protein · calories ring · emphasis</span><code>--color-orange-base #FFA257</code></div>
+      <div class="sw" style="background:var(--color-orange-medium)"><span>medium</span><code>#FFE1C9</code></div>
+      <div class="sw" style="background:var(--color-orange-light)"><span>light</span><code>#FFF2E8</code></div>
+    </div>
+  </div>
+  <h3 class="sub">Neutrals</h3>
+  <div class="chipgrid">
+    <div class="chip"><i style="background:#FBF8F3;box-shadow:inset 0 -1px 0 #F0EDE7"></i><div>Page cream<span>--color-cream</span></div></div>
+    <div class="chip"><i style="background:#FFFFFF;box-shadow:inset 0 -1px 0 #F0EDE7"></i><div>Card surface<span>--color-surface</span></div></div>
+    <div class="chip"><i style="background:#F8F6F1"></i><div>Subtle fill<span>--color-subtle</span></div></div>
+    <div class="chip"><i style="background:#F0EDE7"></i><div>Hairline<span>--color-line</span></div></div>
+    <div class="chip"><i style="background:#EEEEEE"></i><div>Track<span>--color-track</span></div></div>
+    <div class="chip"><i style="background:#9CA3AF"></i><div>Faint (decorative)<span>--color-faint</span></div></div>
+    <div class="chip"><i style="background:#6B7280"></i><div>Text secondary<span>--color-muted</span></div></div>
+    <div class="chip"><i style="background:#1F2937"></i><div>Text primary<span>--color-ink</span></div></div>
+  </div>
+  <h3 class="sub">Derived tokens (hard-coded in the export, promoted to tokens)</h3>
+  <p class="note">The export uses 16 raw colours inside components. Rule 6 in CLAUDE.md forbids raw values, so each gets a token name in <code>tokens.json</code> (status <code>derived</code>).</p>
+  <div class="chipgrid">
+    <div class="chip"><i style="background:#B4DD57"></i><div>green-hover<span>#B4DD57</span></div></div>
+    <div class="chip"><i style="background:#6F9018"></i><div>green-on-light<span>#6F9018</span></div></div>
+    <div class="chip"><i style="background:#8CB531"></i><div>green-icon<span>#8CB531</span></div></div>
+    <div class="chip"><i style="background:#5F7F12"></i><div>green-deep<span>#5F7F12</span></div></div>
+    <div class="chip"><i style="background:#B77A09"></i><div>yellow-on-light<span>#B77A09</span></div></div>
+    <div class="chip"><i style="background:#E0A02F"></i><div>yellow-icon<span>#E0A02F</span></div></div>
+    <div class="chip"><i style="background:#F8923E"></i><div>orange-hover<span>#F8923E</span></div></div>
+    <div class="chip"><i style="background:#D97426"></i><div>orange-on-light<span>#D97426</span></div></div>
+    <div class="chip"><i style="background:#D9812F"></i><div>orange-link-hover<span>#D9812F</span></div></div>
+    <div class="chip"><i style="background:#FFC79A"></i><div>orange-soft (charts)<span>#FFC79A</span></div></div>
+    <div class="chip"><i style="background:#F3F3F1"></i><div>grey-fill<span>#F3F3F1</span></div></div>
+    <div class="chip"><i style="background:#E2E1E4"></i><div>chip-grey (fat)<span>#E2E1E4</span></div></div>
+    <div class="chip"><i style="background:#E9E7E2"></i><div>chart-other<span>#E9E7E2</span></div></div>
+    <div class="chip"><i style="background:#EDEAE4"></i><div>media placeholder<span>#EDEAE4</span></div></div>
+    <div class="chip"><i style="background:#FAF5F2"></i><div>rail<span>#FAF5F2</span></div></div>
+  </div>
+</section>
+
+<!-- ============ SEMANTIC ============ -->
+<section class="block" id="semantic">
+  <div class="label">02 · Semantic colour</div>
+  <h2 class="h">One meaning, one colour, everywhere</h2>
+  <p class="note">The export is inconsistent: recipe-card pills colour carbs green and protein yellow, and the Dashboard's macro bars are all green. The mapping below is taken from the <b>Design System page</b> (stat chips) and confirmed by Healthy Menu and Recipe Details, so it is canonical. The other variants are treated as design bugs.</p>
+  <div class="grid grid--wide">
+    <div class="tile">
+      <div class="tile__title">Macros</div>
+      <div class="row">
+        <span class="stat-chip stat-chip--green"><span><span class="stat-chip__label">Calories</span><span class="stat-chip__value">450 kcal</span></span></span>
+        <span class="stat-chip stat-chip--yellow"><span><span class="stat-chip__label">Carbs</span><span class="stat-chip__value">40 g</span></span></span>
+        <span class="stat-chip stat-chip--orange"><span><span class="stat-chip__label">Protein</span><span class="stat-chip__value">35 g</span></span></span>
+        <span class="stat-chip" style="background:#E2E1E4"><span><span class="stat-chip__label">Fat</span><span class="stat-chip__value">12 g</span></span></span>
+      </div>
+      <p class="tile__foot">Units are always <b>g</b>, not "gr" (the export mixes both).</p>
+    </div>
+    <div class="tile">
+      <div class="tile__title">Meal slots (order: breakfast, lunch, snack, dinner)</div>
+      <div class="row">
+        <span class="pill pill--solid-green">Breakfast</span>
+        <span class="pill pill--solid-yellow">Lunch</span>
+        <span class="pill pill--grey">Snack</span>
+        <span class="pill pill--solid-orange" style="color:var(--color-ink)">Dinner</span>
+      </div>
+      <p class="tile__foot">Snack is neutral grey (Meal Plan). The Healthy Menu's green Snack pill is a deviation.</p>
+    </div>
+    <div class="tile">
+      <div class="tile__title">Food categories (grocery aisles)</div>
+      <div class="row">
+        <span class="pill" style="background:#C2E66E">Grains</span>
+        <span class="pill" style="background:#FFCA65">Veggies</span>
+        <span class="pill" style="background:#FFA257">Protein</span>
+        <span class="pill" style="background:#FFC79A">Fruits</span>
+        <span class="pill" style="background:#FFE1C9">Dairy</span>
+        <span class="pill" style="background:#E9E7E2">Others</span>
+      </div>
+      <p class="tile__foot">From the Design System roles and the Grocery Category legend. The Expense Breakdown donut labels green as "Protein", which is a deviation.</p>
+    </div>
+    <div class="tile">
+      <div class="tile__title">Status</div>
+      <div class="row">
+        <span class="meal-check meal-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg></span><span style="font-size:12px">Eaten / purchased</span>
+        <span class="meal-check meal-check--todo"></span><span style="font-size:12px">Planned</span>
+        <span class="meal-check meal-check--todo is-orange"></span><span style="font-size:12px">Next meal</span>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <span class="pill pill--green"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg>Purchased</span>
+        <span class="pill pill--outline">Pending</span>
+      </div>
+      <p class="tile__foot">A status is never shown by colour alone: it always has an icon or a label.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTRAST ============ -->
+<section class="block" id="contrast">
+  <div class="label">03 · Contrast</div>
+  <h2 class="h">Known WCAG 2.2 AA failures, kept for now</h2>
+  <p class="note">Measured on 2026-09-23. On the owner's decision these stay as designed until the token values are changed (ADR-0008). Fixing them means changing <b>token values only</b>; no component changes. The last column shows the fix that already passes.</p>
+  <div class="scroll"><table class="t">
+    <thead><tr><th>Where</th><th>Sample</th><th>Ratio</th><th>AA</th><th>Passing alternative</th></tr></thead>
+    <tbody>
+      <tr><td>Orange button, solid orange pill</td><td><span class="sample" style="background:#FFA257;color:#fff">Claim now</span></td><td>1.99</td><td class="bad">Fail</td><td><span class="sample" style="background:#FFA257;color:#1F2937">Ink text</span> 7.38</td></tr>
+      <tr><td>White icon on green / yellow badge</td><td><span class="sample" style="background:#C2E66E;color:#fff">icon</span></td><td>1.42 / 1.51</td><td class="bad">Fail</td><td><span class="sample" style="background:#C2E66E;color:#1F2937">Ink icon</span> 10.37</td></tr>
+      <tr><td>Faint text (placeholders, axis, dates)</td><td><span class="sample" style="background:#fff;color:#9CA3AF;box-shadow:inset 0 0 0 1px #F0EDE7">Sept 5</span></td><td>2.54</td><td class="bad">Fail</td><td><span class="sample" style="background:#fff;color:#6B7280;box-shadow:inset 0 0 0 1px #F0EDE7">muted</span> 4.83</td></tr>
+      <tr><td>Orange pill text</td><td><span class="sample" style="background:#FFF2E8;color:#D97426">Protein</span></td><td>2.95</td><td class="bad">Fail</td><td>Darken <code>orange-on-light</code> to ≈ #A8520F</td></tr>
+      <tr><td>Green / yellow pill text</td><td><span class="sample" style="background:#EDFFC4;color:#6F9018">Grains</span></td><td>3.47 / 3.24</td><td class="bad">Fail (small text)</td><td>Darken <code>*-on-light</code> by ~20 %</td></tr>
+      <tr><td>Green icon on light green</td><td><span class="sample" style="background:#EDFFC4;color:#8CB531">icon</span></td><td>2.25</td><td class="bad">Fail (UI 3:1)</td><td>Use <code>green-on-light</code></td></tr>
+      <tr><td>Ink on any base colour</td><td><span class="sample" style="background:#C2E66E">Add to plan</span></td><td>7.4 – 10.4</td><td class="ok">Pass</td><td>n/a</td></tr>
+      <tr><td>Muted on cream / white</td><td><span class="sample" style="background:#FBF8F3;color:#6B7280">1950 left</span></td><td>4.56 / 4.83</td><td class="ok">Pass</td><td>n/a</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ TYPE ============ -->
+<section class="block" id="type">
+  <div class="label">04 · Typography</div>
+  <h2 class="h">Poppins carries all type</h2>
+  <div class="row">
+    <span class="pill pill--outline" style="font-weight:400">Regular 400</span>
+    <span class="pill pill--outline" style="font-weight:500">Medium 500</span>
+    <span class="pill pill--outline" style="font-weight:600">SemiBold 600</span>
+    <span class="pill pill--outline" style="font-weight:700">Bold 700</span>
+    <span class="pill pill--outline" style="font-weight:800">ExtraBold 800</span>
+  </div>
+  <div class="tile stack">
+    <div class="scale-row"><span>page · 800 · 26</span><span style="font-size:26px;font-weight:800;letter-spacing:-.02em">Meal Plan</span></div>
+    <div class="scale-row"><span>figure · 800 · 28</span><span style="font-size:28px;font-weight:800;letter-spacing:-.02em">1240 <span style="font-size:15px;font-weight:600">kcal</span></span></div>
+    <div class="scale-row"><span>figure-sm · 800 · 20</span><span style="font-size:20px;font-weight:800">78 <span style="font-size:12px;font-weight:600;color:var(--color-muted)">kg</span></span></div>
+    <div class="scale-row"><span>title · 600 · 16</span><span style="font-size:16px;font-weight:600">Calories Intake</span></div>
+    <div class="scale-row"><span>body · 400 · 14</span><span style="font-size:14px">A lean and balanced meal that's perfect for a post-workout lunch.</span></div>
+    <div class="scale-row"><span>caption · 500 · 12</span><span style="font-size:12px;font-weight:500;color:var(--color-muted)">1950 steps left</span></div>
+    <div class="scale-row"><span>micro · 500 · 11 (desktop only)</span><span style="font-size:11px;font-weight:500;color:var(--color-muted)">Per serving</span></div>
+  </div>
+  <p class="note"><b>Proposed scale.</b> The export uses about 20 sizes between 9.5 and 40 px. They are collapsed into the 7 tokens above. On mobile, nothing a user must read goes below 12 px (the export uses 9–10.5 px on phones). <b>Offline:</b> Poppins is self-hosted as woff2 (5 weights) and precached by the service worker, because Google Fonts is unreachable offline.</p>
+</section>
+
+<!-- ============ SPACE ============ -->
+<section class="block" id="space">
+  <div class="label">05 · Space, radius, elevation</div>
+  <h2 class="h">4-px base, soft cards</h2>
+  <div class="grid">
+    <div class="tile stack">
+      <div class="tile__title">Spacing</div>
+      <div class="scale-row"><span>--space-1 · 4</span><i class="bar-demo" style="width:4px"></i></div>
+      <div class="scale-row"><span>--space-2 · 8</span><i class="bar-demo" style="width:8px"></i></div>
+      <div class="scale-row"><span>--space-3 · 12</span><i class="bar-demo" style="width:12px"></i></div>
+      <div class="scale-row"><span>--space-4 · 16</span><i class="bar-demo" style="width:16px"></i></div>
+      <div class="scale-row"><span>--space-5 · 20</span><i class="bar-demo" style="width:20px"></i></div>
+      <div class="scale-row"><span>--space-6 · 24</span><i class="bar-demo" style="width:24px"></i></div>
+      <div class="scale-row"><span>--space-8 · 32</span><i class="bar-demo" style="width:32px"></i></div>
+      <div class="scale-row"><span>--space-10 · 40</span><i class="bar-demo" style="width:40px"></i></div>
+      <p class="tile__foot">The export also uses 6, 10, 14, 18 and 22 px. In code, snap them to the nearest token.</p>
+    </div>
+    <div class="tile stack">
+      <div class="tile__title">Radius</div>
+      <div class="row">
+        <span style="width:44px;height:44px;background:var(--color-green-light);border-radius:6px"></span>
+        <span style="width:44px;height:44px;background:var(--color-green-light);border-radius:8px"></span>
+        <span style="width:44px;height:44px;background:var(--color-green-light);border-radius:12px"></span>
+        <span style="width:44px;height:44px;background:var(--color-green-light);border-radius:16px"></span>
+        <span style="width:44px;height:44px;background:var(--color-green-light);border-radius:20px"></span>
+        <span style="width:44px;height:44px;background:var(--color-green-light);border-radius:24px"></span>
+      </div>
+      <p class="tile__foot">xs 6 · sm 8 · md 12 · lg 16 · xl 20 (cards) · 2xl 24 · pill 999</p>
+    </div>
+    <div class="tile stack">
+      <div class="tile__title">Elevation</div>
+      <div class="row">
+        <span style="width:90px;height:60px;background:#fff;border-radius:12px;box-shadow:var(--shadow-soft);display:grid;place-items:center;font-size:11px">soft</span>
+        <span style="width:90px;height:60px;background:#fff;border-radius:12px;box-shadow:var(--shadow-card);display:grid;place-items:center;font-size:11px">card</span>
+      </div>
+      <p class="tile__foot">Two levels only. Tooltips use <code>soft</code>; cards use <code>card</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ICONS ============ -->
+<section class="block" id="icons">
+  <div class="label">06 · Icons &amp; logo</div>
+  <h2 class="h">Inline SVG, 24-px grid, 1.9–2 px round strokes</h2>
+  <p class="note">There is no icon library. Icons are inline SVG with <code>stroke="currentColor"</code> so they inherit text colour. They live in one <code>atoms/Icon</code> component keyed by name. Only the in-scope icons are listed.</p>
+  <div class="icons">
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>dashboard</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M8 3v3M16 3v3M3 10h18"/></svg>calendar</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21"/><path d="M19 3v18"/></svg>menu</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>diary</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>items</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5"/></svg>kcal</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 9h14l-1.5 10h-11z"/><path d="M9 9V6h6v3"/></svg>carbs</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 4l6 6-9 9H5v-6z"/><path d="M9 15l3-3"/></svg>protein</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3c3 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 2-5 5-9z"/></svg>fat</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.8 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11"/></svg>cost</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>search</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>filter</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>add</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg>check</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>time</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M10 20V6M15 20v-5M20 20V9"/></svg>difficulty</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5"/></svg>health score</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>steps</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>prev</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>chevron</div>
+  </div>
+  <div class="grid">
+    <div class="tile" style="background:var(--color-green-light);display:grid;place-items:center;min-height:150px"><svg width="72" height="72" viewBox="0 0 26 26"><path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65"/><path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E"/></svg></div>
+    <div class="tile" style="background:#1F2937;display:grid;place-items:center;min-height:150px"><span style="display:flex;align-items:center;gap:12px"><svg width="44" height="44" viewBox="0 0 26 26"><path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65"/><path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E"/></svg><span style="font-size:30px;font-weight:800;letter-spacing:-.03em;color:#fff">Nutrigo</span></span></div>
+    <div class="tile"><div class="tile__title">Logo rules</div><ul class="list"><li>Clear space: half the icon height on all sides</li><li>Minimum 20 px icon, 15 px wordmark</li><li>Never rotate, recolour or stretch it</li><li>PWA icons (192/512 px, maskable) are generated from the mark on a green-light background</li></ul></div>
+  </div>
+</section>
+
+<!-- ============ ATOMS ============ -->
+<section class="block" id="atoms">
+  <div class="label">07 · Atoms</div>
+  <h2 class="h">Built and approved first (Sprint 0)</h2>
+  <div class="grid grid--wide">
+    <div class="tile"><div class="tile__title">Button <code>.btn</code></div>
+      <div class="stack">
+        <div class="row"><button class="btn btn--primary-green">Add to Meal Plan</button><button class="btn btn--primary-orange">Emphasis</button></div>
+        <div class="row"><button class="btn btn--ghost">Filter</button><button class="btn btn--sm btn--primary-green">Add Item</button><button class="btn btn--sm btn--ghost">See All</button></div>
+        <div class="row"><button class="btn btn--primary-green" disabled style="opacity:.5;cursor:not-allowed">Disabled</button><button class="btn btn--primary-green" aria-busy="true">Saving…</button></div>
+      </div>
+      <p class="tile__foot">Variants: primary-green (default primary), primary-orange (emphasis only), ghost · sizes md 40 / sm 32 · block. <b>Missing in design:</b> the disabled, loading and focus-visible states are proposed here and need approval. On mobile, sm buttons get a 44 px hit area.</p></div>
+    <div class="tile"><div class="tile__title">Pill / badge <code>.pill</code></div>
+      <div class="stack">
+        <div class="row"><span class="pill pill--green">Grains</span><span class="pill pill--yellow">Veggies</span><span class="pill pill--orange">Protein</span><span class="pill pill--grey">Others</span><span class="pill pill--outline">Pending</span></div>
+        <div class="row"><span class="pill pill--solid-green">Breakfast</span><span class="pill pill--solid-yellow">Lunch</span><span class="pill pill--solid-orange">Dinner</span></div>
+      </div>
+      <p class="tile__foot">Tone (green, yellow, orange, grey) × style (light, solid, outline). Optional leading icon.</p></div>
+    <div class="tile"><div class="tile__title">Icon badge <code>.icon-badge</code></div>
+      <div class="row">
+        <span class="icon-badge icon-badge--lg icon-badge--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg></span>
+        <span class="icon-badge icon-badge--lg icon-badge--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg></span>
+        <span class="icon-badge icon-badge--lg icon-badge--orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3s5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5"/></svg></span>
+        <span class="icon-badge icon-badge--green-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/></svg></span>
+        <span class="icon-badge icon-badge--yellow-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/></svg></span>
+        <span class="icon-badge icon-badge--orange-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/></svg></span>
+        <span class="icon-badge icon-badge--grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/></svg></span>
+      </div>
+      <p class="tile__foot">Solid: headline KPIs. Light: inside cards. Sizes 28 / 44. Decorative, so <code>aria-hidden</code>.</p></div>
+    <div class="tile"><div class="tile__title">Search field <code>.search-bar</code></div>
+      <div class="stack">
+        <label class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input placeholder="Search menu" aria-label="Search menu"></label>
+        <label class="search-bar search-bar--sm search-bar--filled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input placeholder="Search item" aria-label="Search item"></label>
+      </div>
+      <p class="tile__foot">A native <code>&lt;input type="search"&gt;</code>. <b>Missing in design:</b> the text input for forms (recipe editor, ingredient editor), which is derived from the same shell with a visible label and error state.</p></div>
+    <div class="tile"><div class="tile__title">Progress bar <code>.progress-bar</code></div>
+      <div class="stack">
+        <div class="progress-bar progress-bar--green"><div class="progress-bar__fill" style="width:37%"></div></div>
+        <div class="progress-bar progress-bar--yellow"><div class="progress-bar__fill" style="width:60%"></div></div>
+        <div class="progress-bar progress-bar--orange progress-bar--thin"><div class="progress-bar__fill" style="width:93%"></div></div>
+      </div>
+      <p class="tile__foot">A <code>role="progressbar"</code> with aria-valuenow, always next to a numeric label. Over-target behaviour: see dataviz.</p></div>
+    <div class="tile"><div class="tile__title">Stepper <code>.stepper</code> · rating <code>.star-rating</code></div>
+      <div class="row">
+        <span class="stepper"><button class="stepper__btn" aria-label="Decrease">−</button><span class="stepper__value">2</span><button class="stepper__btn" aria-label="Increase">+</button></span>
+        <span class="star-rating" aria-label="Rated 4 out of 5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" opacity=".3"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.4 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/></svg></span>
+      </div>
+      <p class="tile__foot">Stepper: min/max, keyboard arrows, 44 px targets on mobile (design: 26 px). Rating: your own 1–5, editable as a radio group; no review counts.</p></div>
+    <div class="tile"><div class="tile__title">Meal check <code>.meal-check</code></div>
+      <div class="row"><span class="meal-check meal-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg></span><span class="meal-check meal-check--todo"></span><span class="meal-check meal-check--todo is-orange"></span></div>
+      <p class="tile__foot">A native checkbox visually styled; label "Mark breakfast as eaten". 18 px visual, 44 px hit area.</p></div>
+    <div class="tile"><div class="tile__title">Select pill · tabs · segmented</div>
+      <div class="stack">
+        <div class="row"><button class="select-pill">This Week <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
+        <div class="row" style="gap:4px;background:var(--color-subtle);border-radius:8px;padding:4px;width:max-content"><span style="padding:7px 14px;border-radius:6px;background:var(--color-green-base);font-size:12.5px;font-weight:600">All</span><span style="padding:7px 14px;font-size:12.5px;color:var(--color-muted)">Breakfast</span><span style="padding:7px 14px;font-size:12.5px;color:var(--color-muted)">Lunch</span></div>
+      </div>
+      <p class="tile__foot">Select pill wraps a native <code>&lt;select&gt;</code> (the design cycles values on click). Filter tabs are a <code>role="tablist"</code> or radio group.</p></div>
+    <div class="tile"><div class="tile__title">Nav link <code>.nav-link</code> · card <code>.card</code></div>
+      <div class="stack">
+        <div class="nav-link is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M8 3v3M16 3v3M3 10h18"/></svg>Meal Plan</div>
+        <div class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21"/><path d="M19 3v18"/></svg>Recipes</div>
+        <div class="card" style="padding:16px"><div class="card__head" style="margin-bottom:6px"><span class="card__title" style="font-size:14px">Card title</span><span class="card__more" aria-label="More">•••</span></div><p style="font-size:12px;color:var(--color-muted)">White, 20 px radius, card shadow, 20 px padding.</p></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- ============ MOLECULES ============ -->
+<section class="block" id="molecules">
+  <div class="label">08 · Molecules</div>
+  <h2 class="h">Built from approved atoms only</h2>
+  <div class="grid grid--wide">
+    <div class="tile"><div class="tile__title">MacroBar <span class="pill pill--grey">S3</span></div>
+      <div class="macro" style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:baseline;gap:3px;background:var(--color-subtle);border-radius:8px;padding:6px 9px;min-width:74px"><b style="font-size:14px">120</b><i style="font-style:normal;font-size:10px;color:var(--color-muted)">/325 g</i></div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span style="color:var(--color-muted)">Carbohydrates</span><b>37%</b></div><div class="progress-bar progress-bar--yellow progress-bar--thin"><div class="progress-bar__fill" style="width:37%"></div></div></div>
+      </div>
+      <p class="tile__foot">The fill uses the macro colour (the design shows all green, which is a deviation).</p></div>
+    <div class="tile"><div class="tile__title">MealItem / MealGroup <span class="pill pill--grey">S2–S3</span></div>
+      <div class="meal-group" style="border-top:0;margin-top:0;padding-top:0">
+        <div class="meal-group__head"><span class="meal-check meal-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg></span><span class="pill pill--outline">Breakfast</span><span class="pill pill--green">300 kcal</span></div>
+        <div class="meal-item"><div class="meal-item__media"></div><div><div class="meal-item__title">Scrambled Eggs with Spinach &amp; Whole Grain Toast</div><div class="meal-item__macros"><span>C 25g</span><span>P 20g</span><span>F 12g</span></div></div></div>
+      </div></div>
+    <div class="tile"><div class="tile__title">MealMiniCard · MealAddSlot <span class="pill pill--grey">S2</span></div>
+      <div class="row" style="align-items:stretch">
+        <article style="background:var(--color-subtle);border-radius:12px;padding:7px;width:120px"><div style="height:58px;border-radius:6px;background:#EDEAE4"></div><div style="font-size:10.5px;font-weight:600;margin-top:6px">Grilled Chicken Salad</div><div style="font-size:9.5px;color:var(--color-muted);margin-top:3px">450 kcal</div></article>
+        <button style="width:120px;min-height:96px;border-radius:12px;border:1px dashed #DEDACF;color:var(--color-faint);display:grid;place-items:center" aria-label="Add meal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div></div>
+    <div class="tile"><div class="tile__title">RecipeCard <span class="pill pill--grey">S1</span></div>
+      <article><div style="position:relative;height:120px;border-radius:12px;background:#EDEAE4"><div style="position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between"><span class="pill pill--solid-green">Breakfast</span><span class="pill pill--green">350 kcal</span></div></div>
+        <div class="row" style="gap:6px;margin:10px 0 8px"><span class="pill pill--yellow">C 45g</span><span class="pill pill--orange">P 12g</span><span class="pill pill--grey">F 14g</span></div>
+        <h3 style="font-size:13.5px;font-weight:700">Oatmeal with Almond Butter and Berries</h3></article>
+      <p class="tile__foot">Macro pills recoloured to the canonical mapping.</p></div>
+    <div class="tile"><div class="tile__title">MacroTile (chip block) <span class="pill pill--grey">S1</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+        <div style="background:var(--color-green-base);border-radius:14px;padding:10px 4px"><div style="font-size:11px">Calories</div><div style="font-size:18px;font-weight:700">450</div><div style="font-size:11px">kcal</div></div>
+        <div style="background:var(--color-yellow-base);border-radius:14px;padding:10px 4px"><div style="font-size:11px">Carbs</div><div style="font-size:18px;font-weight:700">40</div><div style="font-size:11px">g</div></div>
+        <div style="background:var(--color-orange-base);border-radius:14px;padding:10px 4px"><div style="font-size:11px">Protein</div><div style="font-size:18px;font-weight:700">35</div><div style="font-size:11px">g</div></div>
+        <div style="background:#E2E1E4;border-radius:14px;padding:10px 4px"><div style="font-size:11px">Fat</div><div style="font-size:18px;font-weight:700">12</div><div style="font-size:11px">g</div></div>
+      </div></div>
+    <div class="tile"><div class="tile__title">KpiCard <span class="pill pill--grey">S4</span></div>
+      <div style="display:flex;align-items:center;gap:14px"><span class="icon-badge icon-badge--lg icon-badge--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg></span><div style="flex:1"><div style="font-size:12px;color:var(--color-muted)">Estimated cost</div><div style="font-size:23px;font-weight:800">€57.40</div></div><span style="font-size:11px;font-weight:600;padding:5px 8px;border-radius:6px;background:var(--color-green-light)">+2.1% vs last week</span></div>
+      <p class="tile__foot">The delta must state its comparison period, and it must use an arrow as well as colour.</p></div>
+    <div class="tile"><div class="tile__title">WeekNav · WeekStrip <span class="pill pill--grey">S2</span></div>
+      <div class="stack">
+        <div class="row"><button class="stepper__btn" aria-label="Previous week">‹</button><b style="font-size:14px">Sep 28 – Oct 4, 2026</b><button class="stepper__btn" aria-label="Next week">›</button></div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px"><span>Mon<br><b>28</b></span><span style="background:var(--color-green-base);border-radius:6px">Tue<br><b>29</b></span><span>Wed<br><b>30</b></span><span>Thu<br><b>1</b></span><span>Fri<br><b>2</b></span><span>Sat<br><b>3</b></span><span>Sun<br><b>4</b></span></div>
+      </div>
+      <p class="tile__foot">Weeks start on <b>Monday</b> (ISO), which changes the design's Sunday start.</p></div>
+    <div class="tile"><div class="tile__title">IngredientRow · RecipeStep · NutritionRow <span class="pill pill--grey">S1</span></div>
+      <div class="stack" style="font-size:13px">
+        <div class="row"><span style="width:28px;height:28px;border-radius:8px;box-shadow:inset 0 0 0 1px #E6DFD9;display:grid;place-items:center;color:var(--color-muted)">1</span><span style="color:var(--color-muted)">200 g turkey breast</span></div>
+        <div class="row" style="align-items:flex-start"><span style="width:28px;height:28px;border-radius:9px;background:var(--color-yellow-medium);display:grid;place-items:center;font-weight:600">2</span><span><b>Cook the brown rice</b><br><span style="color:var(--color-muted)">Simmer ½ cup rice in 1 cup water for 15 minutes.</span></span></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #EEE7E2;padding:8px 0"><span>Fibre</span><b>7 g</b></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- ============ ORGANISMS ============ -->
+<section class="block" id="organisms">
+  <div class="label">09 · Organisms</div>
+  <h2 class="h">Screen sections; props only, no data fetching</h2>
+  <div class="scroll"><table class="t">
+    <thead><tr><th>Organism</th><th>From screen</th><th>Built from</th><th>Sprint</th></tr></thead>
+    <tbody>
+      <tr><td>AppShell (sidebar ≥1200 px / bottom tab bar &lt;1200 px)</td><td>all</td><td>NavLink, Logo, TabBarItem</td><td>S0</td></tr>
+      <tr><td>PageHeader</td><td>all</td><td>title, SearchField, Button, WeekNav</td><td>S0</td></tr>
+      <tr><td>RecipeList (list/grid, filter tabs, sort)</td><td>Healthy Menu</td><td>MenuListItem, FilterTabs, SelectPill, Segmented</td><td>S1</td></tr>
+      <tr><td>RecipeDetail (rail + body + aside)</td><td>Recipe Details</td><td>MetaList, MacroTile, IngredientRow, RecipeStep, NutritionRow, Stepper</td><td>S1</td></tr>
+      <tr><td>RecipeEditor / IngredientEditor (forms)</td><td><i>not in design</i></td><td>TextField, NumberField, Stepper, Button</td><td>S1</td></tr>
+      <tr><td>MealPlanGrid (desktop week)</td><td>Meal Plan</td><td>DayHead, MealMiniCard, MealAddSlot, slot Pill</td><td>S2</td></tr>
+      <tr><td>DayMealsPanel (mobile day view + dashboard aside)</td><td>Meal Plan mobile, Dashboard</td><td>WeekStrip, MealGroup, MealItem, MealCheck</td><td>S2</td></tr>
+      <tr><td>CaloriesCard (ring + eaten/left + macro bars)</td><td>Dashboard</td><td>Ring, MacroBar, IconBadge</td><td>S3</td></tr>
+      <tr><td>GroceryTable / GroceryList (mobile)</td><td>Grocery List</td><td>GroceryRow, Tabs, Stepper, Pill, SearchField</td><td>S4</td></tr>
+      <tr><td>GroceryInsights (KPIs, expense bars, category donut/stack)</td><td>Grocery List</td><td>KpiCard, BarChart, Donut, StackedBar, Legend</td><td>S4</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ LAYOUT ============ -->
+<section class="block" id="layout">
+  <div class="label">10 · Layout &amp; mobile (derived, pending validation)</div>
+  <h2 class="h">Mobile-first, from the design's own mobile rules</h2>
+  <p class="note">The export is desktop-first (1600 px). Only Dashboard and Meal Plan have phone variants. The other phone screens follow the rules those two variants state: <i>"only the grid changes"</i>, one column, the same tokens and atoms, a 5-item tab bar, 44 px hit targets, and secondary content moved behind the menu. Each derived screen is validated in <code>/playground</code> before use.</p>
+  <div class="grid grid--wide">
+    <div class="phone"><div class="phone__screen">
+      <div style="display:flex;align-items:center;gap:10px"><svg width="22" height="22" viewBox="0 0 26 26"><path d="M4 3.5h18a9 9 0 0 1-18 0z" fill="#FFCA65"/><path d="M4 14h18a9 9 0 0 1-18 0z" fill="#C2E66E"/></svg><b style="flex:1;text-align:center;font-size:14px">Grocery List</b><span style="width:22px"></span></div>
+      <div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--color-muted)">Week 40 · 40 items</span><b>€57.40 est.</b></div><div class="progress-bar progress-bar--green" style="margin-top:8px"><div class="progress-bar__fill" style="width:55%"></div></div><div style="font-size:12px;color:var(--color-muted);margin-top:6px">22 of 40 purchased</div></div>
+      <div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span class="pill pill--green">Grains</span><span style="font-size:12px;color:var(--color-muted)">3 items</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-line);min-height:44px"><span class="meal-check meal-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg></span><span style="flex:1;font-size:14px;text-decoration:line-through;color:var(--color-muted)">Oats</span><span style="font-size:12px;color:var(--color-muted)">500 g · €3.00</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;min-height:44px"><span class="meal-check meal-check--todo"></span><span style="flex:1;font-size:14px">Quinoa</span><span style="font-size:12px;color:var(--color-muted)">500 g · ~€1.00</span></div>
+      </div>
+      <div class="tabbar" role="tablist" aria-label="Main">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Today</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v7a2 2 0 0 0 4 0V3M7 10v11M15 3c-1.5 2-1.5 5 0 6.5V21"/><path d="M19 3v18"/></svg>Recipes</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M8 3v3M16 3v3M3 10h18"/></svg>Plan</span>
+        <span class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>Groceries</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 12l5-3"/></svg>Targets</span>
+      </div>
+    </div></div>
+    <div class="tile"><div class="tile__title">Rules <span class="pill pill--yellow">proposed</span></div>
+      <ul class="list">
+        <li><b>&lt;768 px</b>: one column, bottom tab bar, page title in a top bar <span>(from Dashboard Mobile)</span></li>
+        <li><b>768–1199 px</b>: one wider column; cards in 2 columns where they fit</li>
+        <li><b>≥1200 px</b>: 252 px sidebar + main; <b>≥1440 px</b> adds the 340 px aside</li>
+        <li><b>Tab bar (5)</b>: Today · Recipes · Plan · Groceries · Targets. <span>This changes the design's Dashboard · Menu · Plan · Progress · Profile, because Progress and Profile are out of scope</span></li>
+        <li>Tables become grouped lists on mobile (Grocery table → list per category)</li>
+        <li>The 7-day grid becomes WeekStrip + DayMealsPanel <span>(from Meal Plan mobile)</span></li>
+        <li>Hit targets ≥ 44 px, and no reading text &lt; 12 px on mobile</li>
+        <li>Safe-area insets for an installed PWA (<code>env(safe-area-inset-bottom)</code> under the tab bar)</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- ============ INVENTORY ============ -->
+<section class="block" id="inventory">
+  <div class="label">11 · Screen inventory</div>
+  <h2 class="h">What ships, from which export file</h2>
+  <div class="scroll"><table class="t">
+    <thead><tr><th>Export file</th><th>Scope</th><th>App route</th><th>Spec</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Design System.dc.html</td><td><span class="pill badge-in">In</span></td><td>/playground</td><td>SPEC-001</td><td>Tokens, atoms, logo</td></tr>
+      <tr><td>Healthy Menu.dc.html</td><td><span class="pill badge-in">In</span></td><td>/recipes</td><td>SPEC-002</td><td>Your recipe library, not a public menu. No reviews, no "Popular"</td></tr>
+      <tr><td>Recipe Details.dc.html</td><td><span class="pill badge-in">In</span></td><td>/recipes/:id</td><td>SPEC-002</td><td>No reviews; "Eat time" comes from the plan</td></tr>
+      <tr><td><i>(none)</i></td><td><span class="pill badge-new">New</span></td><td>/recipes/new, /ingredients</td><td>SPEC-002</td><td>Editors derived from atoms, validated in playground</td></tr>
+      <tr><td>Meal Plan.dc.html</td><td><span class="pill badge-in">In</span></td><td>/plan/:isoWeek</td><td>SPEC-003</td><td>Monday start; mobile day view included</td></tr>
+      <tr><td>Dashboard.dc.html / Dashboard Mobile.dc.html</td><td><span class="pill badge-in">Partly</span></td><td>/ (Today)</td><td>SPEC-004</td><td>Keeps the calories card, macros and today's meals with check-off. Drops steps, sleep, water, weight, workouts, exercises and activity feed</td></tr>
+      <tr><td>Grocery List.dc.html</td><td><span class="pill badge-in">In</span></td><td>/groceries/:isoWeek</td><td>SPEC-005</td><td>Including estimated/actual cost in EUR; mobile list derived</td></tr>
+      <tr><td>Progress.dc.html</td><td><span class="pill badge-out">Out</span></td><td>n/a</td><td>n/a</td><td>Body/weight tracking out of scope</td></tr>
+      <tr><td>Health Insights.dc.html</td><td><span class="pill badge-out">Out</span></td><td>n/a</td><td>n/a</td><td>Articles/authors out of scope</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ REMOVED ============ -->
+<section class="block" id="removed">
+  <div class="label">12 · Removed patterns</div>
+  <h2 class="h">In the export, deliberately not built</h2>
+  <div class="grid">
+    <div class="tile"><div class="tile__title">Multi-user / marketing</div><ul class="list"><li>Logout, UserMenu, Avatar, "Member" role <span>(no auth, ADR-0002)</span></li><li>PromoBanner "Claim FREE 1-month"</li><li>Footer copyright and social links</li><li>Notification bell + dot</li><li>Messages nav item + badge</li></ul></div>
+    <div class="tile"><div class="tile__title">Social</div><ul class="list"><li>Reviews, "by 125 people"</li><li>Popular Menu</li><li>Top authors, trending tags</li></ul></div>
+    <div class="tile"><div class="tile__title">Out-of-scope tracking</div><ul class="list"><li>Weight ruler + gauge, weight line chart</li><li>Steps hatch bar, sleep bars, water bar</li><li>Workout progress cards, exercises</li><li>Burned calories <span>(no activity data)</span></li></ul></div>
+  </div>
+</section>
+
+<!-- ============ ISSUES ============ -->
+<section class="block" id="issues">
+  <div class="label">13 · Known design issues</div>
+  <h2 class="h">Tracked as <code>design-debt</code>, decided or open</h2>
+  <div class="scroll"><table class="t">
+    <thead><tr><th>#</th><th>Issue</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>D1</td><td>Contrast failures (§03)</td><td>Kept; owner will change token values later (ADR-0008)</td></tr>
+      <tr><td>D2</td><td>Inconsistent macro, slot and category colours</td><td>Canonical mapping §02</td></tr>
+      <tr><td>D3</td><td>~20 font sizes, sub-12 px text on phones</td><td>7-step scale, 12 px mobile minimum (proposed)</td></tr>
+      <tr><td>D4</td><td>16 raw hex values in components</td><td>Promoted to derived tokens</td></tr>
+      <tr><td>D5</td><td>Week starts Sunday, and the Dashboard shows 6 days</td><td>ISO Monday start, 7 days</td></tr>
+      <tr><td>D6</td><td>"gr" and "g" mixed</td><td>Always "g"</td></tr>
+      <tr><td>D7</td><td>Currency shown in $</td><td>EUR</td></tr>
+      <tr><td>D8</td><td>No disabled, loading, focus, empty or error states</td><td>Proposed per component in the playground</td></tr>
+      <tr><td>D9</td><td>No form or editor screens (recipe, ingredient, targets)</td><td>Derived from atoms, validated in the playground</td></tr>
+      <tr><td>D10</td><td>Selects cycle on click, and the week nav is not keyboard-labelled</td><td>Native select / labelled buttons</td></tr>
+      <tr><td>D11</td><td>Chart palette fails colour-blind separation (green↔yellow ΔE 1.2)</td><td>Secondary encoding mandatory; see dataviz</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</main>
+</body>
+</html>

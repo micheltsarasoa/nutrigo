@@ -1,0 +1,28 @@
+name: Story
+description: A user-visible slice of a feature
+title: "story: "
+labels: ["type:story"]
+body:
+  - type: textarea
+    id: story
+    attributes: { label: User story, value: "As the owner, I want … so that …" }
+    validations: { required: true }
+  - type: textarea
+    id: ac
+    attributes:
+      label: Acceptance criteria (Given / When / Then, with IDs from the spec)
+      value: "- SPEC-00X/AC-1: Given … When … Then …"
+    validations: { required: true }
+  - type: input
+    id: spec
+    attributes: { label: Spec, placeholder: docs/specs/SPEC-00X-… }
+    validations: { required: true }
+  - type: checkboxes
+    id: dor
+    attributes:
+      label: Definition of Ready
+      options:
+        - label: Linked to an epic (sub-issue)
+        - label: Spec approved
+        - label: Size S or smaller
+        - label: Dependencies are done or planned in this sprint

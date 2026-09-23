@@ -1,0 +1,44 @@
+name: Deploy to Railway
+
+# Called by release.yml after a release, or run by hand to redeploy / roll back a tag.
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to deploy (e.g. v0.5.0)
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - name: Deploy with Railway CLI
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: npx -y @railway/cli up --ci --service "${{ vars.RAILWAY_SERVICE }}"
+      - name: Smoke check
+        if: vars.PRODUCTION_URL != ''
+        run: |
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            curl -fsS "${{ vars.PRODUCTION_URL }}/api/health" && exit 0
+            sleep 15
+          done
+          echo "Health check failed" && exit 1

@@ -1,0 +1,12 @@
+name: Task
+description: A technical step (≤ 1 day)
+title: "task: "
+labels: ["type:task"]
+body:
+  - type: textarea
+    id: what
+    attributes: { label: What and done-when }
+    validations: { required: true }
+  - type: input
+    id: parent
+    attributes: { label: Parent story or epic, placeholder: "#" }
