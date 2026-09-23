@@ -19,3 +19,4 @@ stateDiagram-v2
 | SPEC-004 Nutrition tracking | S3 | not written |
 | SPEC-005 Shopping list & offline | S4 | not written |
 | SPEC-006 Claude assist | S5 | not written |
+| SPEC-007 Production on Railway | S6 | not written |

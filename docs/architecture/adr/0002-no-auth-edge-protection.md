@@ -1,6 +1,6 @@
 # ADR-0002: No in-app auth; protect at the edge
 
-- Status: Accepted (edge mechanism: **open**, decide before Sprint 4)
+- Status: Accepted (edge mechanism: **open**, decide before Sprint 6, the Railway deployment after v1.0.0)
 - Date: 2026-09-23
 
 ## Context
@@ -14,5 +14,5 @@ The app has **no authentication code**. When it's deployed, access is restricted
 
 ## Consequences
 - There's nothing to test for auth in the app.
-- The PWA's offline cache must survive the edge-auth redirect. Test this in Sprint 4.
+- The PWA's offline cache must survive the edge-auth redirect. Test this in Sprint 6.
 - If the app ever becomes multi-user, supersede this ADR.

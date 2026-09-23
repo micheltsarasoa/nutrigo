@@ -24,7 +24,7 @@ flowchart LR
     tag --> img[Build & push image<br/>ghcr.io/micheltsarasoa/nutrigo:X.Y.Z]
     img --> dep{RAILWAY_ENABLED?}
     dep -- true --> rw[deploy.yml → Railway]
-    dep -- false --> local[Pull the image locally]
+    dep -- false, until v1.1 --> local[Pull the image locally]
     rw --> smoke[Smoke check /health]
 ```
 
@@ -33,7 +33,7 @@ flowchart LR
 1. Every issue in the sprint milestone is Done or moved to the next milestone.
 2. CI is green on `main`.
 3. Review the release-please PR: is the changelog readable, and is the version the expected minor?
-4. From Sprint 4: run the **restore drill**: restore the latest backup locally, then `npm run test:e2e:smoke`.
+4. From Sprint 1: run the **restore drill**: restore the latest backup locally, then `npm run test:e2e:smoke`.
 5. Merge the release PR. This creates the tag, the GitHub Release and the image, and deploys.
 6. Check `/health` on the deployment, then close the milestone.
 
@@ -52,4 +52,4 @@ Branch `fix/…` from `main`, then PR and merge. release-please proposes `X.Y.(Z
 |---|---|---|---|
 | Dev | `localhost:5173` | `./data/dev.db` | on |
 | Local prod-like | `localhost:3000` via compose | `./data/nutrigo.db` | off |
-| Production (S4+) | Railway domain behind edge protection | Railway volume `/data` | off |
+| Production (v1.1.0+, Sprint 6) | Railway domain behind edge protection | Railway volume `/data` | off |

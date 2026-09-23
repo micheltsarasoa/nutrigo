@@ -115,8 +115,8 @@ flowchart LR
 
 | What | How | Where |
 |---|---|---|
-| Local | `sqlite3 data/nutrigo.db ".backup data/backups/$(date +%F).db"` via an npm script | Laptop |
-| Railway | A daily scheduled job runs `.backup`, then uploads it to object storage. Details in ADR-0004 | Off-platform |
-| Restore drill | Once per release from Sprint 4 on: restore the latest backup into a local container and run the smoke e2e | Checklist in `docs/process/release.md` |
+| Local (from Sprint 1) | `sqlite3 data/nutrigo.db ".backup data/backups/$(date +%F).db"` via an npm script, daily, keeping 30 | Laptop + copy to a second disk or cloud folder |
+| Railway (from v1.1.0) | A daily scheduled job runs `.backup`, then uploads it to object storage. Details in ADR-0004 | Off-platform |
+| Restore drill | Once per release from Sprint 1 on: restore the latest backup into a local container and run the smoke e2e | Checklist in `docs/process/release.md` |
 
 Pragmas set at connection: `journal_mode=WAL`, `foreign_keys=ON`, `busy_timeout=5000`.

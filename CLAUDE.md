@@ -15,7 +15,7 @@ A personal, single-user, mobile-first PWA to plan weekly meals, manage recipes &
 | Database | SQLite via `better-sqlite3` + Drizzle ORM / drizzle-kit migrations |
 | Contract | Zod schemas in `packages/shared`, used by both web and api |
 | Tests | Vitest, Testing Library, Playwright, axe-core |
-| Deploy | Docker → local compose, then Railway (SQLite on a volume) |
+| Deploy | Docker → local compose up to v1.0.0; Railway (SQLite on a volume) from v1.1.0 |
 | Auth | **None**, single user. Protection is at the edge (see ADR-0002) |
 
 Repository layout (npm workspaces):

@@ -62,8 +62,9 @@ The initial migration creates only a `meta` table (schema version). Domain table
 - [ ] `CLAUDE.md` commands table filled in
 
 ## 8. Out of scope
-Any domain feature, Railway deployment (S4) and backups (S4).
+Any domain feature, backups (S1) and the Railway deployment (S6, after v1.0.0).
 
 ## 9. Open questions
 - Q1: Does the design system define a dark theme?
 - Q2: Which icon set does the design use (custom SVGs or a library)?
+- Q3: How will the phone reach the local app over HTTPS: Tailscale, mkcert or Cloudflare Tunnel? This is needed for AC-8 (PWA install); see ADR-0004.

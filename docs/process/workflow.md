@@ -30,7 +30,7 @@ Stories and tasks are linked to their epic as GitHub **sub-issues**.
 
 Run `scripts/setup-github.sh` once. It creates:
 - **Project (v2) board "NutriGo"** with a `Stage` field and a `Size` field (and a manual step to add a 2-week `Sprint` iteration field)
-- **Milestones** `Sprint 0 … Sprint 5`, each due on the sprint's last day. The milestone is the sprint's release scope
+- **Milestones** `Sprint 0 … Sprint 6`, each due on the sprint's last day. The milestone is the sprint's release scope
 - **Labels**: type (`type:story`, …), level (`level:atom`, …), `awaiting-validation`, `design-approved`, `tech-debt`, `blocked`, priority (`P0`–`P2`)
 
 ### Board columns (`Stage` field)

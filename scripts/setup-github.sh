@@ -39,8 +39,9 @@ goals=(
   "Recipes & ingredients -> v0.2.0"
   "Weekly meal plan -> v0.3.0"
   "Nutrition tracking, targets, charts, OFF/USDA import -> v0.4.0"
-  "Shopping list, offline PWA, first Railway deploy -> v0.5.0"
-  "Claude-assisted planning, hardening -> v1.0.0"
+  "Shopping list, offline PWA -> v0.5.0"
+  "Claude-assisted planning, hardening -> v1.0.0 (local)"
+  "Production on Railway: volume, edge protection, off-site backups -> v1.1.0"
 )
 existing=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq '.[].title')
 for i in "${!goals[@]}"; do

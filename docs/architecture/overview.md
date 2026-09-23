@@ -79,7 +79,7 @@ sequenceDiagram
 
 ## 5. Deployment
 
-The app runs locally until Sprint 4, then on Railway. The flow is the same in both places: build one image and mount one data directory.
+The app runs locally up to v1.0.0 (Sprints 0–5), then on Railway from v1.1.0 (Sprint 6). The flow is the same in both places: build one image and mount one data directory.
 
 ```mermaid
 flowchart LR

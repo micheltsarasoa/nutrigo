@@ -5,11 +5,12 @@
 | Status | **Draft**: pending the design-system review |
 | Owner | Michel Tsarasoa |
 | Last updated | 2026-09-23 |
-| Target | v1.0.0 at the end of Sprint 5 |
+| Target | v1.0.0 (local) at the end of Sprint 5 · v1.1.0 on Railway at the end of Sprint 6 |
 
 | Revision | Date | Change |
 |---|---|---|
 | 0.1 | 2026-09-23 | First draft from the kickoff Q&A |
+| 0.2 | 2026-09-23 | Railway deployment moved after v1.0.0 (new §5.7, Sprint 6) |
 
 ## 1. Problem
 
@@ -92,7 +93,18 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | A-2 | Estimate the nutrition of an ingredient that isn't in any database | Should |
 | A-3 | The AI never writes data without explicit confirmation | Must |
 
-### 5.6 Nutrition data sources
+### 5.6 Production deployment (Sprint 6, after v1.0.0)
+
+Until v1.0.0 the app runs only locally (Docker Compose).
+
+| ID | Requirement | Priority |
+|---|---|---|
+| D-1 | Deploy to Railway from a release tag, with SQLite on a Railway volume | Must |
+| D-2 | Protect the public URL at the edge (ADR-0002) | Must |
+| D-3 | Daily off-site backup of the production DB, keeping 30 days | Must |
+| D-4 | Move the local data to production once (a one-off import of the local `nutrigo.db`) | Must |
+
+### 5.7 Nutrition data sources
 
 All three sources are used, in this priority order: **manual entry** (always available) → **Open Food Facts / USDA** (import and cache) → **Claude estimate** (fallback, flagged as estimated). Every ingredient stores its `source`.
 
@@ -104,8 +116,8 @@ All three sources are used, in this priority order: **manual entry** (always ava
 | Performance | Lighthouse Performance ≥ 90 on mobile; interactive in < 2 s on 4G |
 | Accessibility | WCAG 2.2 AA; axe checks pass in CI |
 | Privacy | Data stays in the owner's SQLite; only AI prompts go out to the Claude API |
-| Security | No auth in the app. The Railway URL is protected at the edge (ADR-0002); secrets live only in env |
-| Reliability | Daily SQLite backup, and a tested restore procedure |
+| Security | No auth in the app. Up to v1.0 it runs locally only; from v1.1 the Railway URL is protected at the edge (ADR-0002). Secrets live only in env |
+| Reliability | Daily SQLite backup (local from Sprint 1, off-site from v1.1), and a tested restore procedure |
 | Maintainability | Ponytail-minimal code; all changes tested; ADR for each new dependency |
 
 ## 7. User journey (target)
@@ -136,8 +148,10 @@ See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint, 
 | # | Item | Type | Next step |
 |---|---|---|---|
 | Q1 | The design-system page in Claude Design isn't in the repo yet | Open | Export it to `design/source/` |
-| Q2 | How is the Railway URL protected: Cloudflare Access, basic auth at a proxy, or an unguessable URL? | Open | Decide before Sprint 4 (ADR-0002) |
+| Q2 | How is the Railway URL protected: Cloudflare Access, basic auth at a proxy, or an unguessable URL? | Open | Decide before Sprint 6 (ADR-0002) |
 | Q3 | Open Food Facts vs USDA: which is primary for French products? | Open | Spike in Sprint 3 |
 | Q4 | Monthly budget for the Claude API | Open | Set before Sprint 5 |
-| R1 | SQLite on Railway loses data without a volume | Risk | Volume and backups (ADR-0004) |
+| Q5 | How does the phone reach the local app before v1.1? A service worker (offline, install) needs HTTPS, and plain `http://192.168.x.x` won't allow it | Open | Decide in Sprint 0 (options in ADR-0004) |
+| R1 | Before v1.1 all data lives on one laptop | Risk | Local daily backup from Sprint 1 (ADR-0004) |
+| R3 | SQLite on Railway loses data without a volume | Risk | Volume and backups in Sprint 6 (ADR-0004) |
 | R2 | Offline sync conflicts on the shopping list | Risk | Last-write-wins per item, spec in Sprint 4 |
