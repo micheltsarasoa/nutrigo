@@ -1,0 +1,11 @@
+# Docs and exports keep their hand-written formatting; Prettier covers code and config.
+*.md
+design/
+docs/
+.claude/
+.github/
+package-lock.json
+coverage/
+dist/
+playwright-report/
+test-results/

@@ -29,11 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       has_app: ${{ steps.check.outputs.has_app }}
+      has_docker: ${{ steps.check.outputs.has_docker }}
     steps:
       - uses: actions/checkout@v7
       - id: check
         run: |
           if [ -f package.json ]; then echo "has_app=true" >> "$GITHUB_OUTPUT"; else echo "has_app=false" >> "$GITHUB_OUTPUT"; echo "No package.json yet (docs-only repo) - app jobs skipped."; fi
+          if [ -f Dockerfile ]; then echo "has_docker=true" >> "$GITHUB_OUTPUT"; else echo "has_docker=false" >> "$GITHUB_OUTPUT"; echo "No Dockerfile yet (#18) - docker job skipped."; fi
 
   quality:
     name: Lint, typecheck, unit/integration/component tests
@@ -81,7 +83,8 @@ jobs:
   docker:
     name: Docker image builds
     needs: detect
-    if: needs.detect.outputs.has_app == 'true'
+    # Turns on for good once the Dockerfile lands (#18).
+    if: needs.detect.outputs.has_docker == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
