@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft |
+| Status | Approved (2026-09-24) |
 | Sprint | S0 → v0.1.0 |
 | PRD refs | G4, NFRs |
 | Design | Claude Design → "Design System" page, exported to `design/source/Design System.dc.html` |
