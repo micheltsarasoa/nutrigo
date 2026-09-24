@@ -57,6 +57,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
+  --font-tracking-tight: -0.02em;
   --font-size-micro: 11px;
   --font-size-caption: 12px;
   --font-size-body: 14px;
@@ -73,6 +74,9 @@
   --size-icon-sm: 16px;
   --size-icon-md: 18px;
   --size-icon-lg: 20px;
+  --size-logo-sm: 20px;
+  --size-logo-md: 26px;
+  --size-logo-lg: 52px;
   --breakpoint-mobile: 0px;
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1200px;
