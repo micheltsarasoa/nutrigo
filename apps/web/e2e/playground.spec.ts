@@ -53,6 +53,7 @@ const APPROVED = [
   "atom/iconbadge",
   "atom/mealcheck",
   "atom/searchfield",
+  "atom/card",
 ];
 
 for (const slug of APPROVED) {
