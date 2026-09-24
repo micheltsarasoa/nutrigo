@@ -91,6 +91,8 @@
   --size-logo-sm: 20px;
   --size-logo-md: 26px;
   --size-logo-lg: 52px;
+  --size-stepper-button: 26px;
+  --size-stepper-value: 28px;
   --breakpoint-mobile: 0px;
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1200px;
