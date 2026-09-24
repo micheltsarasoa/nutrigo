@@ -43,6 +43,7 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
 const APPROVED = [
   "atom/icon",
   "atom/logo",
+  "atom/progressbar",
   "atom/button",
   "atom/pill",
   "atom/iconbadge",
