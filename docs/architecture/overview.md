@@ -99,7 +99,7 @@ flowchart LR
 | Auth | None in the app; protection at the edge (ADR-0002) |
 | Logging | No logging library. The API writes unexpected errors to stderr, which Railway captures. There is no request logging (CLAUDE.md rule 8) |
 | Errors | The API returns `{ error: { code, message, fields? } }` with the right HTTP status; the web app maps codes to UI states |
-| Config | Env vars only: `DATABASE_PATH`, `PORT`, `ANTHROPIC_API_KEY` (S5). They're validated with Zod at boot |
+| Config | Env vars only: `DATABASE_PATH`, `PORT`, `WEB_ROOT` (the web build the API serves; set in the Docker image) and the AI keys from S5 (ADR-0010). They're validated with Zod at boot |
 | Offline | The service worker caches the app shell, recipes and the current shopping list (details in the Sprint 4 spec) |
 | Time | ISO weeks (`2026-W40`), dates stored as `YYYY-MM-DD` text, Europe/Paris shown in the UI |
 | i18n | UI copy in English for v1, with strings kept in one module so they can be translated later |

@@ -1,0 +1,10 @@
+# Local prod-like run: `docker compose up --build`, then open http://localhost:3000 (ADR-0004).
+services:
+  nutrigo:
+    build: .
+    image: nutrigo:local
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
