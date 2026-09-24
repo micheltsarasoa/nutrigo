@@ -16,6 +16,7 @@ These use the Michael Nygard format. An ADR is **immutable once Accepted**: to c
 | [0009](0009-tailscale-and-cloudflare-access.md) | Tailscale for phone access before v1.1, Cloudflare Access on Railway | Accepted |
 | [0010](0010-ai-provider-choice-and-spend-cap.md) | AI provider chosen in settings (Claude, Mistral, DeepSeek) with a monthly spend cap | Accepted |
 | [0011](0011-nutrition-sources-off-ciqual.md) | Nutrition sources: manual, Open Food Facts, CIQUAL (USDA dropped) | Accepted |
+| [0012](0012-native-routing-and-vite-plugin-pwa.md) | Native routing (no React Router) and `vite-plugin-pwa` for the service worker | Accepted |
 
 ```mermaid
 stateDiagram-v2

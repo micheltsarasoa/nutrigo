@@ -98,6 +98,10 @@ jobs:
           curl -fsS localhost:3000/api/health | tee /dev/stderr | grep -q '"db":"ok"'
           curl -fsS localhost:3000/ | grep -q '<title>NutriGo</title>'
           curl -fsS localhost:3000/recipes | grep -q '<title>NutriGo</title>'
+      - name: The image serves the PWA files (ADR-0012)
+        run: |
+          curl -fsSI localhost:3000/sw.js | grep -qi '^content-type: text/javascript'
+          curl -fsSI localhost:3000/manifest.webmanifest | grep -qi '^content-type: application/manifest+json'
       - name: Container logs
         if: always()
         run: docker compose logs
