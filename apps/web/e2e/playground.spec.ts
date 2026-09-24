@@ -47,6 +47,7 @@ const APPROVED = [
   "atom/button",
   "atom/pill",
   "atom/iconbadge",
+  "atom/searchfield",
 ];
 
 for (const slug of APPROVED) {
