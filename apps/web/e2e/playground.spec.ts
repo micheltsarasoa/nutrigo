@@ -20,7 +20,9 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
 }) => {
   await page.goto("/playground");
   // The playground is a lazy chunk: wait for it to render before reading the links.
-  await expect(page.getByRole("heading", { level: 1, name: "Playground" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Playground" }),
+  ).toBeVisible();
   const pages = await page
     .locator("main li a")
     .evaluateAll((links) => links.map((a) => a.getAttribute("href")!));

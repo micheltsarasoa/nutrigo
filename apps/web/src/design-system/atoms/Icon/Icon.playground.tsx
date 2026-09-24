@@ -10,7 +10,8 @@ const row: CSSProperties = {
 };
 const grid: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(calc(var(--size-control) * 2), 1fr))",
+  gridTemplateColumns:
+    "repeat(auto-fill, minmax(calc(var(--size-control) * 2), 1fr))",
   gap: "var(--space-4)",
 };
 const cell: CSSProperties = {
