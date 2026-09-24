@@ -97,12 +97,12 @@ gh api -X PATCH "repos/$REPO" -F allow_squash_merge=true -F allow_merge_commit=f
 # release-please opens PRs with GITHUB_TOKEN.
 gh api -X PUT "repos/$REPO/actions/permissions/workflow" -f default_workflow_permissions=read \
   -F can_approve_pull_request_reviews=true >/dev/null
-# Protect main. 0 approvals (single owner); admins not enforced, because PRs opened by GITHUB_TOKEN
-# (release-please) don't trigger CI, so the owner merges those with "bypass".
+# Protect main. 0 approvals (single owner), enforced for admins too, so a red PR can't be merged (SPEC-001 AC-5).
+# PRs opened by GITHUB_TOKEN (release-please) don't trigger CI: /cut-release closes and reopens that PR to run it.
 gh api -X PUT "repos/$REPO/branches/main/protection" --input - >/dev/null <<'JSON'
 {"required_status_checks":{"strict":false,"contexts":["PR title is a Conventional Commit","Detect app code",
   "Lint, typecheck, unit/integration/component tests","E2E + visual (Playwright)","Docker image builds"]},
- "enforce_admins":false,"required_pull_request_reviews":{"required_approving_review_count":0},
+ "enforce_admins":true,"required_pull_request_reviews":{"required_approving_review_count":0},
  "restrictions":null,"required_linear_history":true,"allow_force_pushes":false,"allow_deletions":false}
 JSON
 echo "  squash-only, Actions may open PRs, main protected"
