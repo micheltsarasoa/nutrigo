@@ -1,0 +1,29 @@
+.bar {
+  height: var(--size-progress-bar);
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-track);
+  overflow: hidden;
+}
+
+.thin {
+  height: var(--size-progress-bar-thin);
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+}
+
+.green .fill {
+  background: var(--color-green-base);
+}
+
+.yellow .fill {
+  background: var(--color-yellow-base);
+}
+
+/* Over the max is always orange, whatever the variant. */
+.orange .fill,
+.over .fill {
+  background: var(--color-orange-base);
+}
