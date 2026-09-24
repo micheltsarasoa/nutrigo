@@ -1,0 +1,82 @@
+.shell {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  background: var(--color-neutral-cream);
+}
+
+.list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.page {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: var(--space-4);
+}
+
+/* ≥ 1200 px: the 252 px sidebar next to the page (.app, .sidebar). */
+.sidebar {
+  display: grid;
+  grid-template-columns: var(--size-sidebar) minmax(0, 1fr);
+}
+
+.side {
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  height: 100dvh;
+  overflow-y: auto;
+  padding: var(--space-6) var(--space-4);
+  background: var(--color-neutral-surface);
+}
+
+.brand {
+  padding: 0 var(--space-3) var(--space-1);
+}
+
+.sidebar .list {
+  flex-direction: column;
+  gap: calc(var(--space-1) / 2);
+}
+
+.sidebar .page {
+  padding: var(--space-6);
+}
+
+/* < 1200 px: the page, then the floating tab bar kept at the bottom of the screen,
+   above the home indicator of an installed PWA. */
+.tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs .page {
+  flex: 1;
+}
+
+.tabbar {
+  position: sticky;
+  bottom: 0;
+  padding: 0 var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+}
+
+.tabbar .list {
+  justify-content: space-between;
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-card);
+}

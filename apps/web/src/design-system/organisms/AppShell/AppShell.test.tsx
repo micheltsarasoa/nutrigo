@@ -14,7 +14,9 @@ const items: NavItem[] = [
 function shell(layout: (typeof APP_SHELL_LAYOUTS)[number], current = "/") {
   return render(
     <AppShell items={items} current={current} layout={layout}>
-      <h1>Page</h1>
+      <main>
+        <h1>Page</h1>
+      </main>
     </AppShell>,
   );
 }
@@ -30,7 +32,7 @@ describe("AppShell", () => {
   });
 
   it.each(APP_SHELL_LAYOUTS)(
-    "%s: one Main navigation with the 5 destinations, and the page in <main>",
+    "%s: one Main navigation with the 5 destinations, then the page",
     (layout) => {
       shell(layout);
       const nav = screen.getByRole("navigation", { name: "Main" });
@@ -46,10 +48,23 @@ describe("AppShell", () => {
         items.map((i) => i.href),
       );
       expect(within(nav).getAllByRole("listitem")).toHaveLength(5);
+      // The page brings its own <main>; the shell doesn't add another.
       const main = screen.getByRole("main");
       expect(within(main).getByRole("heading", { name: "Page" })).toBeTruthy();
+      expect(nav.contains(main)).toBe(false);
     },
   );
+
+  it("takes another name for its navigation", () => {
+    render(
+      <AppShell items={items} current="/" layout="tabs" label="Main, tab bar">
+        <p>Page</p>
+      </AppShell>,
+    );
+    expect(
+      screen.getByRole("navigation", { name: "Main, tab bar" }),
+    ).toBeTruthy();
+  });
 
   it("sidebar: shows the NutriGo lockup; the tab bar doesn't", () => {
     const { unmount } = shell("sidebar");
