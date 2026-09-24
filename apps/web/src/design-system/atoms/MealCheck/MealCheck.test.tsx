@@ -55,14 +55,14 @@ describe("MealCheck", () => {
     expect(box.parentElement!.className).not.toMatch(/next/);
   });
 
-  it("does nothing when disabled", () => {
-    const onChange = vi.fn();
-    render(<MealCheck meal="lunch" disabled onChange={onChange} />);
+  // jsdom still toggles a disabled checkbox on a synthetic click, so this
+  // checks the native attribute and focus instead; browsers do the rest.
+  it("is natively disabled and out of the tab order", () => {
+    render(<MealCheck meal="lunch" disabled />);
     const box = screen.getByRole("checkbox") as HTMLInputElement;
     expect(box.disabled).toBe(true);
-    fireEvent.click(box);
-    expect(onChange).not.toHaveBeenCalled();
-    expect(box.checked).toBe(false);
+    box.focus();
+    expect(document.activeElement).not.toBe(box);
   });
 
   it("has no axe violations in any state", async () => {

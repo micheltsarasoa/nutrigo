@@ -1,0 +1,59 @@
+/*
+ * The label is a 44 px touch target (clicks on it toggle the box); the
+ * negative margin keeps its footprint at 18 px. The box and the icon share
+ * one grid cell.
+ */
+.check {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  padding: calc((var(--size-touch-target) - var(--size-meal-check)) / 2);
+  margin: calc((var(--size-meal-check) - var(--size-touch-target)) / 2);
+  color: var(--color-neutral-surface);
+  cursor: pointer;
+}
+
+.check > * {
+  grid-area: 1 / 1;
+}
+
+/* Taps on the tick reach the box itself. */
+.check svg {
+  pointer-events: none;
+}
+
+.box {
+  appearance: none;
+  width: var(--size-meal-check);
+  height: var(--size-meal-check);
+  margin: 0;
+  border-radius: var(--radius-meal-check);
+  background: var(--color-neutral-surface);
+  box-shadow: inset 0 0 0 var(--size-meal-check-border) var(--status-todo);
+  cursor: inherit;
+  transition: background var(--motion-fast);
+}
+
+.next .box {
+  box-shadow: inset 0 0 0 var(--size-meal-check-border) var(--status-attention);
+}
+
+/* After .next: a checked box is done, next or not. */
+.box:checked {
+  background: var(--status-done);
+  box-shadow: none;
+}
+
+.box:not(:checked) + svg {
+  visibility: hidden;
+}
+
+.box:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.check:has(.box:disabled) {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
