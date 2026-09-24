@@ -1,0 +1,24 @@
+.icon {
+  flex: none;
+  vertical-align: middle;
+}
+
+.xs {
+  width: var(--size-icon-xs);
+  height: var(--size-icon-xs);
+}
+
+.sm {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+}
+
+.md {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+}
+
+.lg {
+  width: var(--size-icon-lg);
+  height: var(--size-icon-lg);
+}
