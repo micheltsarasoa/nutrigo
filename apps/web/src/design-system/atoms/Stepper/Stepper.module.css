@@ -1,0 +1,57 @@
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size-stepper-button);
+  height: var(--size-stepper-button);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: var(--color-neutral-subtle);
+  color: var(--color-neutral-muted);
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+/* A 44 px touch target around the 26 px button. */
+.button::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--size-stepper-button) - var(--size-touch-target)) / 2);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--color-orange-light);
+  color: var(--color-orange-base);
+}
+
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* Above the buttons' touch targets, so a tap on the value focuses it. */
+.value {
+  position: relative;
+  z-index: 1;
+  min-width: var(--size-stepper-value);
+  text-align: center;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-xs);
+}
+
+.value:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}

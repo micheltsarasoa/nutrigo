@@ -36,6 +36,11 @@ describe("Stepper", () => {
     expect(spin.getAttribute("aria-valuemax")).toBe("10");
   });
 
+  it("announces a new value, also after a tap on − or +", () => {
+    const { spin } = setup();
+    expect(spin.getAttribute("aria-live")).toBe("polite");
+  });
+
   it("is one tab stop: the value, not the buttons", () => {
     const { spin, dec, inc } = setup();
     expect(spin.tabIndex).toBe(0);
