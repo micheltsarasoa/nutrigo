@@ -42,6 +42,7 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
 // Add a page here after approval; CI writes the missing Linux baseline on the first run (see docs/testing/strategy.md).
 const APPROVED = [
   "atom/icon",
+  "atom/navlink",
   "atom/logo",
   "atom/button",
   "atom/pill",
