@@ -7,20 +7,20 @@
 
 ## 1. System context
 
-NutriGo is a single deployable used by one person. The only outbound dependencies are nutrition databases and, from Sprint 5, the Claude API.
+NutriGo is a single deployable used by one person. The only outbound dependencies are Open Food Facts and, from Sprint 5, the AI provider chosen in Settings (Anthropic, Mistral or DeepSeek; ADR-0010). CIQUAL, the French generic food table, is bundled in the DB as seed data, so it isn't an outbound dependency and works offline (ADR-0011).
 
 ```mermaid
 C4Context
     title System context: NutriGo
     Person(owner, "Owner", "Plans meals on a phone")
-    System(nutrigo, "NutriGo", "PWA + API + SQLite")
-    System_Ext(off, "Open Food Facts / USDA", "Public nutrition data")
-    System_Ext(claude, "Claude API", "Plan suggestions, nutrient estimates (S5)")
+    System(nutrigo, "NutriGo", "PWA + API + SQLite (CIQUAL bundled)")
+    System_Ext(off, "Open Food Facts", "Branded products, live search")
+    System_Ext(ai, "AI provider", "Anthropic, Mistral or DeepSeek, chosen in Settings: plan suggestions, nutrient estimates (S5)")
     System_Ext(edge, "Edge protection", "Cloudflare Access or proxy auth (ADR-0002)")
     Rel(owner, edge, "HTTPS")
     Rel(edge, nutrigo, "Forwards allowed requests")
     Rel(nutrigo, off, "Imports ingredients", "HTTPS/JSON")
-    Rel(nutrigo, claude, "Prompts", "HTTPS/JSON")
+    Rel(nutrigo, ai, "Prompts", "HTTPS/JSON")
 ```
 
 ## 2. Containers
@@ -107,4 +107,4 @@ flowchart LR
 ## 7. Related documents
 
 - [frontend.md](frontend.md) · [backend.md](backend.md) · [data-model.md](data-model.md)
-- ADRs: [0001 SQLite](adr/0001-sqlite.md) · [0002 No auth](adr/0002-no-auth-edge-protection.md) · [0003 Ponytail](adr/0003-ponytail-minimal-code.md) · [0004 Railway](adr/0004-railway-deployment.md) · [0005 Monorepo, single image](adr/0005-monorepo-single-image.md) · [0006 Playground route](adr/0006-in-app-playground.md) · [0007 Versioning](adr/0007-release-please-semver.md)
+- ADRs: [0001 SQLite](adr/0001-sqlite.md) · [0002 No auth](adr/0002-no-auth-edge-protection.md) · [0003 Ponytail](adr/0003-ponytail-minimal-code.md) · [0004 Railway](adr/0004-railway-deployment.md) · [0005 Monorepo, single image](adr/0005-monorepo-single-image.md) · [0006 Playground route](adr/0006-in-app-playground.md) · [0007 Versioning](adr/0007-release-please-semver.md) · [0010 AI provider and spend cap](adr/0010-ai-provider-choice-and-spend-cap.md) · [0011 Nutrition sources](adr/0011-nutrition-sources-off-ciqual.md)

@@ -22,7 +22,7 @@ flowchart TD
 | Component | `component.yml` | XS–M | "Molecule: MacroBadge" |
 | Task | `task.yml` | XS–M | "Add shopping_item migration" |
 | Bug | `bug.yml` | XS–M | n/a |
-| Spike | `spike.yml` | time box | "OFF vs USDA for French products" |
+| Spike | `spike.yml` | time box | "Service worker cache size for recipe photos" |
 
 Stories and tasks are linked to their epic as GitHub **sub-issues**.
 
