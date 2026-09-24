@@ -50,6 +50,7 @@ const APPROVED = [
   "atom/pill",
   "atom/selectpill",
   "atom/iconbadge",
+  "atom/mealcheck",
   "atom/searchfield",
 ];
 
