@@ -4,6 +4,8 @@
 
 - **SemVer** `MAJOR.MINOR.PATCH`. The whole monorepo shares one version (ADR-0005, ADR-0007).
 - `0.x` until v1.0.0. **Each sprint = one minor** (`0.2.0`, `0.3.0`, …), and **hotfix = patch**.
+- The first release is `0.1.0`, set by `initial-version` in `release-please-config.json`. Without it, release-please starts at `1.0.0`.
+- The release-please PR stays open during the sprint and updates itself. Only `/cut-release` merges it, at the end of the sprint.
 - The version comes from Conventional Commits:
 
 | Commit type | Bump (pre-1.0) | In changelog |
