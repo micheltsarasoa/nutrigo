@@ -21,8 +21,13 @@ describe("App", () => {
 
   it("loads the playground on /playground in dev and preview builds", async () => {
     render(<App path="/playground" />);
+    // The lazy chunk loads every *.playground.tsx; under coverage that takes over findBy's default 1 s.
     expect(
-      await screen.findByRole("heading", { level: 1, name: "Playground" }),
+      await screen.findByRole(
+        "heading",
+        { level: 1, name: "Playground" },
+        { timeout: 5000 },
+      ),
     ).toBeTruthy();
   });
 });
