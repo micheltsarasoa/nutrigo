@@ -61,6 +61,7 @@ stateDiagram-v2
 | Molecule | MacroBar | new | 0 %, typical, 100 %, over, no target |
 | Molecule | MealItem (with check) | extends S2 | planned, eaten, eaten with different servings |
 | Molecule | ServingsPrompt | new | default, custom value, invalid |
+| Molecule | ImportCandidate (name, kcal per 100 g, source badge with the `Pill` atom) | new | CIQUAL, OFF with image, OFF without image, long name, focus |
 | Organism | Ring (chart) | new | 0, typical, 100 %, over, no target, reduced motion |
 | Organism | CaloriesCard | new | the ring states × macro states |
 | Organism | ColumnChart (week trend) | new | empty week, mixed eaten/planned, over-target days |
