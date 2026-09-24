@@ -1,16 +1,29 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Runs against `vite preview` of the production build until the Docker image exists (#18).
+// Two builds from `npm run build`: production (dist/, no playground) and preview (dist-playground/, ADR-0006).
+// They're served with `vite preview` until the Docker image exists (#18).
+export const PROD = "http://localhost:4173";
+export const PREVIEW = "http://localhost:4174";
+const reuseExistingServer = !process.env.CI;
+
 export default defineConfig({
   testDir: "e2e",
   forbidOnly: true,
   reporter: [["html", { open: "never" }], ["list"]],
-  use: { baseURL: "http://localhost:4173" },
-  webServer: {
-    command: "npm run preview -- --port 4173 --strictPort",
-    url: "http://localhost:4173",
-    reuseExistingServer: !process.env.CI,
-  },
+  use: { baseURL: PROD },
+  webServer: [
+    {
+      command: "npm run preview -- --port 4173 --strictPort",
+      url: PROD,
+      reuseExistingServer,
+    },
+    {
+      command:
+        "npm run preview -- --outDir dist-playground --port 4174 --strictPort",
+      url: PREVIEW,
+      reuseExistingServer,
+    },
+  ],
   projects: [
     {
       name: "mobile",

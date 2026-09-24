@@ -1,11 +1,14 @@
 node_modules/
 dist/
+dist-playground/
 coverage/
 playwright-report/
 test-results/
 .env
 .env.*
 !.env.example
+# Not a secret: turns the /playground route on in preview builds (ADR-0006)
+!.env.playground
 data/*.db
 data/*.db-*
 data/backups/

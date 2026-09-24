@@ -39,6 +39,7 @@ export default tseslint.config(
   {
     ignores: [
       "**/dist/",
+      "**/dist-playground/",
       "**/coverage/",
       "**/playwright-report/",
       "**/test-results/",
