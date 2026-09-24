@@ -28,6 +28,7 @@
   --color-neutral-line: #F0EDE7;
   --color-neutral-track: #EEEEEE;
   --color-neutral-grey-fill: #F3F3F1;
+  --color-neutral-outline: #E4E0D8;
   --color-neutral-chip-grey: #E2E1E4;
   --color-neutral-media: #EDEAE4;
   --color-neutral-chart-other: #E9E7E2;
@@ -48,6 +49,7 @@
   --space-6: 24px;
   --space-8: 32px;
   --space-10: 40px;
+  --shadow-outline: inset 0 0 0 1px var(--color-neutral-outline);
   --shadow-soft: 0 2px 16px rgba(31,41,55,.05);
   --shadow-card: 0 1px 2px rgba(31,41,55,.04), 0 8px 24px rgba(31,41,55,.04);
   --shadow-phone: 0 18px 50px rgba(31,41,55,.12);
@@ -70,6 +72,7 @@
   --size-aside: 340px;
   --size-control: 40px;
   --size-control-sm: 32px;
+  --size-pill: 26px;
   --size-icon-xs: 12px;
   --size-icon-sm: 16px;
   --size-icon-md: 18px;
