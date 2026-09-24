@@ -44,6 +44,7 @@ const APPROVED = [
   "atom/icon",
   "atom/logo",
   "atom/button",
+  "atom/starrating",
   "atom/pill",
   "atom/iconbadge",
 ];
