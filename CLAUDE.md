@@ -42,6 +42,7 @@ Keep this table up to date. The API runs its TypeScript directly on Node 24 (typ
 | E2E | `npm run build` then `npm run test:e2e` (first time: `npx -w @nutrigo/web playwright install chromium`) |
 | DB migration | `npm run db:generate` then `npm run db:migrate` (the API also migrates at boot) |
 | Local prod-like run | `docker compose up --build`, then http://localhost:3000 (data in `./data`) |
+| Open it on the phone | `tailscale serve --bg 3000`, then `https://<laptop>.<tailnet>.ts.net` ([guide](docs/guides/phone-access.md)); stop with `tailscale serve reset` |
 
 Before saying a task is done, run lint, typecheck and tests. Say so if any of them fail.
 

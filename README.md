@@ -17,6 +17,7 @@ A personal, mobile-first PWA to plan weekly meals, manage recipes, track nutriti
 | [Workflow](docs/process/workflow.md) | Sprints, board, Definition of Ready and Definition of Done |
 | [Release](docs/process/release.md) | Versioning, changelog, deployment |
 | [Testing](docs/testing/strategy.md) | Test pyramid, tools, CI gates |
+| [Phone access](docs/guides/phone-access.md) | Open and install the local app on the phone over Tailscale |
 | [Design system](docs/design-system/) | Tokens, components, data-visualisation rules |
 
 ## First-time setup
