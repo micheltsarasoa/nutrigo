@@ -45,6 +45,7 @@ export default tseslint.config(
       "**/test-results/",
       "design/",
       "docs/",
+      ".claude/worktrees/",
     ],
   },
   js.configs.recommended,
