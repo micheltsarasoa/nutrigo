@@ -1,0 +1,11 @@
+**/node_modules
+**/dist
+**/dist-playground
+**/coverage
+**/playwright-report
+**/test-results
+.git
+.claude
+data
+design
+docs

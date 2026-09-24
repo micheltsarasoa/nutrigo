@@ -21,3 +21,12 @@ describe("parseEnv", () => {
     expect(() => parseEnv({ PORT: "abc" })).toThrow();
   });
 });
+
+describe("parseEnv WEB_ROOT", () => {
+  it("is unset by default and read when given", () => {
+    expect(parseEnv({}).WEB_ROOT).toBeUndefined();
+    expect(parseEnv({ WEB_ROOT: "/app/apps/web/dist" }).WEB_ROOT).toBe(
+      "/app/apps/web/dist",
+    );
+  });
+});

@@ -9,7 +9,11 @@ const { version } = JSON.parse(
   readFileSync(new URL("../../../package.json", import.meta.url), "utf8"),
 );
 const env = parseEnv(process.env);
-const app = createApp({ db: openDb(env.DATABASE_PATH), version });
+const app = createApp({
+  db: openDb(env.DATABASE_PATH),
+  version,
+  webRoot: env.WEB_ROOT,
+});
 
 serve({ fetch: app.fetch, port: env.PORT }, () =>
   console.log(`api on http://localhost:${env.PORT}`),

@@ -7,7 +7,7 @@ Node LTS + Hono + TypeScript, and SQLite through Drizzle.
 ```
 apps/api/src/
 ├── index.ts            Boot: validate env, run migrations, start server, serve web build
-├── env.ts              Zod-validated env (DATABASE_PATH, PORT, ANTHROPIC_API_KEY?)
+├── env.ts              Zod-validated env (DATABASE_PATH, PORT, WEB_ROOT?, AI keys from S5)
 ├── db/
 │   ├── schema.ts       Drizzle tables (source of truth for data-model.md)
 │   ├── client.ts       better-sqlite3 + WAL mode + foreign_keys=ON
