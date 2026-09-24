@@ -59,6 +59,7 @@ Before saying a task is done, run lint, typecheck and tests. Say so if any of th
 9. **Conventional Commits** (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`, `ci:`). PR titles follow the same format because PRs are squash-merged. Versions and the changelog come from them (release-please).
 10. **Never** skip, disable or `.only` a test to get green. Never commit secrets. The AI keys (`ANTHROPIC_API_KEY`, `MISTRAL_API_KEY`, `DEEPSEEK_API_KEY`; ADR-0010) and `RAILWAY_TOKEN` live in env / GitHub secrets, never in the DB or settings.
 11. Mermaid for every diagram in docs. Pick the right diagram type (see [`docs/README.md`](docs/README.md#diagram-conventions)).
+12. **No AI attribution.** Commits get no `Co-Authored-By: Claude …` trailer, and PRs, issues and comments get no "🤖 Generated with Claude Code" footer. Don't write either line into prompts or instructions for other agents either.
 
 ## Workflow for a task
 
