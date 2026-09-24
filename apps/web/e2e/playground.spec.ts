@@ -40,7 +40,13 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
 
 // Playground pages the owner approved (label design-approved) are the visual baselines.
 // Add a page here after approval; CI writes the missing Linux baseline on the first run (see docs/testing/strategy.md).
-const APPROVED = ["atom/icon", "atom/logo", "atom/button", "atom/pill"];
+const APPROVED = [
+  "atom/icon",
+  "atom/logo",
+  "atom/button",
+  "atom/pill",
+  "atom/iconbadge",
+];
 
 for (const slug of APPROVED) {
   test(`visual: /playground/${slug} matches its approved baseline`, async ({

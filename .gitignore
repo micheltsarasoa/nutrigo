@@ -13,3 +13,5 @@ data/*.db
 data/*.db-*
 data/backups/
 .DS_Store
+# Worktrees made by Claude Code subagents
+.claude/worktrees/
