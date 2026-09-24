@@ -1,0 +1,71 @@
+.link {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  color: var(--color-neutral-muted);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+.link:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.link[aria-current="page"] {
+  color: var(--color-neutral-ink);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Long labels end in an ellipsis instead of widening the page. */
+.label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sidebar: icon and label in a row. */
+.sidebar {
+  gap: var(--space-3);
+  height: var(--size-touch-target);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-body);
+}
+
+.sidebar:hover:not([aria-current="page"]) {
+  background: var(--color-green-light);
+  color: var(--color-neutral-ink);
+}
+
+.sidebar[aria-current="page"] {
+  background: var(--color-green-base);
+}
+
+/* Tab bar item: icon above a short label, 44 px minimum touch target. */
+.tab {
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: var(--size-touch-target);
+  min-height: var(--size-touch-target);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-caption);
+}
+
+.tab:hover:not([aria-current="page"]) {
+  background: var(--color-neutral-subtle);
+  color: var(--color-neutral-ink);
+}
+
+.tab[aria-current="page"] {
+  background: var(--color-green-light);
+}
