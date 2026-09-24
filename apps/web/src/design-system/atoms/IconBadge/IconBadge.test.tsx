@@ -16,12 +16,15 @@ describe("IconBadge", () => {
     ]);
   });
 
-  it.each(ICON_BADGE_VARIANTS)("draws the icon in the %s variant", (variant) => {
-    const { container } = render(<IconBadge variant={variant} icon="kcal" />);
-    const badge = container.firstElementChild!;
-    expect(badge.getAttribute("class")).toContain(variant);
-    expect(badge.querySelector("svg")).not.toBeNull();
-  });
+  it.each(ICON_BADGE_VARIANTS)(
+    "draws the icon in the %s variant",
+    (variant) => {
+      const { container } = render(<IconBadge variant={variant} icon="kcal" />);
+      const badge = container.firstElementChild!;
+      expect(badge.getAttribute("class")).toContain(variant);
+      expect(badge.querySelector("svg")).not.toBeNull();
+    },
+  );
 
   it("is decorative: hidden from assistive tech", () => {
     const { container } = render(<IconBadge variant="green" icon="kcal" />);
@@ -38,8 +41,8 @@ describe("IconBadge", () => {
       </>,
     );
     const [sm, lg] = container.children;
-    expect(sm.getAttribute("class")).toMatch(/sm/);
-    expect(lg.getAttribute("class")).toMatch(/lg/);
+    expect(sm!.getAttribute("class")).toMatch(/sm/);
+    expect(lg!.getAttribute("class")).toMatch(/lg/);
   });
 
   it("has no axe violations", async () => {
