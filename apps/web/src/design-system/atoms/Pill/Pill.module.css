@@ -1,0 +1,52 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--size-pill);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.green {
+  background: var(--color-green-light);
+  color: var(--color-green-on-light);
+}
+
+.yellow {
+  background: var(--color-yellow-light);
+  color: var(--color-yellow-on-light);
+}
+
+.orange {
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+}
+
+.grey {
+  background: var(--color-neutral-grey-fill);
+  color: var(--color-neutral-muted);
+}
+
+.solid-green {
+  background: var(--color-green-base);
+  color: var(--color-neutral-ink);
+}
+
+.solid-yellow {
+  background: var(--color-yellow-base);
+  color: var(--color-neutral-ink);
+}
+
+.solid-orange {
+  background: var(--color-orange-base);
+  color: var(--color-neutral-surface);
+}
+
+.outline {
+  background: var(--color-neutral-surface);
+  color: var(--color-neutral-muted);
+  box-shadow: var(--shadow-outline);
+}
