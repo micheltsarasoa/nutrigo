@@ -14,6 +14,8 @@ function webBuild() {
     "<!doctype html><h1>NutriGo shell</h1>",
   );
   writeFileSync(join(root, "assets", "app-123.js"), "console.log('app')");
+  writeFileSync(join(root, "sw.js"), "self.skipWaiting()");
+  writeFileSync(join(root, "manifest.webmanifest"), '{"name":"NutriGo"}');
   return root;
 }
 
@@ -31,6 +33,18 @@ describe("serving the web build (ADR-0005: one image serves web + api)", () => {
     const res = await app(webBuild()).request("/assets/app-123.js");
     expect(res.status).toBe(200);
     expect(await res.text()).toBe("console.log('app')");
+  });
+
+  it("serves the PWA files with their types and doesn't cache sw.js for long (ADR-0012)", async () => {
+    const sw = await app(webBuild()).request("/sw.js");
+    expect(sw.headers.get("content-type")).toMatch(/^text\/javascript/);
+    expect(sw.headers.get("cache-control") ?? "").not.toMatch(
+      /immutable|max-age=[1-9]/,
+    );
+    const manifest = await app(webBuild()).request("/manifest.webmanifest");
+    expect(manifest.headers.get("content-type")).toBe(
+      "application/manifest+json",
+    );
   });
 
   it("falls back to index.html for client-side routes", async () => {

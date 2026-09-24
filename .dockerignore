@@ -9,3 +9,5 @@
 data
 design
 docs
+# The web build reads the PWA colours from the design tokens (vite.config.ts, ADR-0012).
+!docs/design-system/tokens.json

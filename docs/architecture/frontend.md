@@ -15,9 +15,10 @@ apps/web/src/
 ├── playground/             /playground route: one demo per component (dev + preview builds only)
 ├── api/                    Typed fetch wrappers built on the shared Zod schemas
 ├── lib/                    Tiny helpers (no business rules; those live in packages/shared)
-├── app.tsx                 Router + layout
-└── sw.ts                   Service worker (vite-plugin-pwa)
+└── app.tsx                 Route matching + layout
 ```
+
+There's no `sw.ts`. `vite-plugin-pwa` generates the manifest and `dist/sw.js` at build time from `vite.config.ts`, and the icons live in `apps/web/public/` (ADR-0012).
 
 Each component lives in its own folder:
 
@@ -83,7 +84,7 @@ stateDiagram-v2
 | Server data | Thin `api/` wrappers + React's `use`/Suspense or a small hook. TanStack Query only if caching pain shows up (needs an ADR) | Ponytail: no dependency until there's a real need |
 | Forms | Native `<form>` + `FormData` + the shared Zod schema | The platform already does this |
 | Global UI state | None at first; React context if needed | YAGNI |
-| Routing | React Router (data routers) | Standard, small |
+| Routing | History API + a tiny path matcher in the app (ADR-0012) | 5 routes don't need a router; add React Router with a new ADR if loaders are needed |
 | Offline | Service worker cache + IndexedDB queue for shopping-list writes | Spec in Sprint 4 |
 
 ## 6. Navigation
