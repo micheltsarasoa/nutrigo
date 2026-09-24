@@ -26,6 +26,8 @@ function click(target: Element, init: MouseEventInit = {}) {
 
 describe("router", () => {
   const stop = interceptLinks();
+  // jsdom has no scrolling.
+  vi.stubGlobal("scrollTo", vi.fn());
 
   afterEach(() => {
     document.body.replaceChildren();
@@ -37,6 +39,7 @@ describe("router", () => {
     const unsubscribe = subscribe(listener);
     navigate("/recipes");
     expect(location.pathname).toBe("/recipes");
+    expect(scrollTo).toHaveBeenCalledWith(0, 0);
     expect(listener).toHaveBeenCalledOnce();
     unsubscribe();
   });
