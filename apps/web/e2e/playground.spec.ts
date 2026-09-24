@@ -54,6 +54,7 @@ const APPROVED = [
   "atom/mealcheck",
   "atom/searchfield",
   "atom/card",
+  "organism/appshell",
 ];
 
 for (const slug of APPROVED) {
