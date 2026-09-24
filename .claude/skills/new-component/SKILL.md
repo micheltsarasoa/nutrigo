@@ -18,4 +18,4 @@ Follow `docs/process/coding-policy.md` §2 exactly. Do not skip or reorder steps
 4. **Playground**: `<Name>.playground.tsx` exporting `{ title, level, states }` with every state from the issue (default, focus, disabled, loading, empty, error, long content). Check it at 390 px.
 5. **Verify**: run lint, typecheck and tests.
 6. **Hand off**: open or update the PR with label `awaiting-validation`. Tell the owner the exact URL, `/playground/<level>/<name>`, and **stop**. Do not integrate the component into anything until the owner adds `design-approved`.
-7. After approval: add the Playwright screenshot baseline for the playground page in the same PR, then merge.
+7. After approval: add the Playwright screenshot baseline for the playground page in the same PR (`docs/testing/strategy.md`, "Adding a visual baseline"), then merge.

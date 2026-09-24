@@ -21,10 +21,20 @@ flowchart TB
 | Unit | `packages/shared/**/*.test.ts` | Vitest | `test` |
 | API integration | `apps/api/**/*.test.ts` | Vitest, a fresh SQLite file per test file, migrations applied | `test` |
 | Component | `apps/web/src/**/*.test.tsx` | Vitest (jsdom), Testing Library, `axe-core` via `src/axe.ts` (all rules except `color-contrast`, ADR-0008) | `test` |
-| Visual | `apps/web/e2e/playground.spec.ts` | Playwright screenshots of `/playground/*` at 390 px and 1280 px | `e2e` |
+| Visual | `apps/web/e2e/playground.spec.ts` | Playwright screenshots of each **approved** `/playground/*` page at 390 px and 1280 px. Compared in CI only (Linux baselines) | `e2e` |
 | E2E | `apps/web/e2e/*.spec.ts` | Playwright against the built app (`vite preview` until the Docker image exists, #18), axe injected from `axe-core` | `e2e` |
 | Performance/PWA | n/a | Lighthouse CI | `lighthouse` (from S1) |
 | Migrations | `apps/api/db/migrations.test.ts` | Apply all migrations to an empty DB and to the previous release's fixture | `test` |
+
+### Adding a visual baseline
+
+Baselines are Linux renders, because fonts draw differently on Windows and macOS. Locally, `ignoreSnapshots` turns the comparison off.
+
+1. After the owner adds `design-approved`, add the page's slug (e.g. `atom/icon`) to `APPROVED` in `apps/web/e2e/playground.spec.ts` and push.
+2. The `e2e` job fails with "A snapshot doesn't exist" and writes the baseline. Download the `playwright-report` artifact: `gh run download <run-id> -n playwright-report -D <tmp>`.
+3. Copy `<tmp>/e2e/playground.spec.ts-snapshots/*.png` into `apps/web/e2e/playground.spec.ts-snapshots/`, commit and push. CI goes green.
+
+A later visual change fails the job; the artifact then holds the new render and a diff. If the owner approves the change, replace the PNG the same way.
 
 External services (OFF, USDA, Claude) are **always mocked** in CI with recorded fixtures. A separate weekly `contract` workflow can call the real APIs later if needed.
 

@@ -37,3 +37,21 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
     await expectNoAxeViolations(page);
   }
 });
+
+// Playground pages the owner approved (label design-approved) are the visual baselines.
+// Add a page here after approval; CI writes the missing Linux baseline on the first run (see docs/testing/strategy.md).
+const APPROVED = ["atom/icon"];
+
+for (const slug of APPROVED) {
+  test(`visual: /playground/${slug} matches its approved baseline`, async ({
+    page,
+  }) => {
+    await page.goto(`/playground/${slug}`);
+    await expect(
+      page.getByRole("link", { name: "All components" }),
+    ).toBeVisible();
+    await expect(page).toHaveScreenshot(`${slug.replace("/", "-")}.png`, {
+      fullPage: true,
+    });
+  });
+}
