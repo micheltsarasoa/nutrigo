@@ -71,10 +71,10 @@ stateDiagram-v2
 ## 4. The /playground route
 
 - URL: `/playground` (index) → `/playground/<level>/<name>`.
-- It's built into dev builds and **preview** builds. In production it's excluded by `import.meta.env.VITE_PLAYGROUND !== 'true'`.
+- It's on in the dev server and in **preview** builds (`vite build --mode playground`, which reads `apps/web/.env.playground`: `VITE_PLAYGROUND=true`). `npm run build` makes both `dist/` (production) and `dist-playground/` (preview). In production the check is a constant `false`, so the playground chunk isn't even in the bundle, and `/playground` shows "Page not found" (SPEC-001 AC-4).
 - Each `*.playground.tsx` exports `{ title, level, states: Record<string, ReactNode> }`, and the index page discovers them with `import.meta.glob`. There's no registry to maintain by hand.
 - It shows every state: default, hover/focus, disabled, loading, empty, error, long content, and dark mode if the design system has one.
-- Mobile first: the preview frame defaults to a 390 px width.
+- Mobile first: the owner reviews on the phone itself (the dev server over Tailscale), so there's no simulated device frame.
 
 ## 5. State and data
 

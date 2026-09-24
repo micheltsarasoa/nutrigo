@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --mode playground --outDir dist-playground",
     "preview": "vite preview",
     "tokens": "node scripts/build-tokens.ts",
     "typecheck": "tsc -p .",

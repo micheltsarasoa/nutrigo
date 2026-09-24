@@ -8,6 +8,6 @@ import "./design-system/global.css";
 // index.html always has #root.
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <App path={location.pathname} />
   </StrictMode>,
 );
