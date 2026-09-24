@@ -78,7 +78,10 @@ jobs:
         if: failure()
         with:
           name: playwright-report
-          path: apps/web/playwright-report/
+          # The snapshot folders carry any baseline CI just wrote (a newly approved component).
+          path: |
+            apps/web/playwright-report/
+            apps/web/e2e/*-snapshots/
 
   docker:
     name: Docker image builds

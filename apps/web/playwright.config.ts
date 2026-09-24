@@ -9,6 +9,8 @@ const reuseExistingServer = !process.env.CI;
 export default defineConfig({
   testDir: "e2e",
   forbidOnly: true,
+  // Baselines are Linux renders made in CI; other OSes draw fonts differently, so only CI compares them.
+  ignoreSnapshots: !process.env.CI,
   reporter: [["html", { open: "never" }], ["list"]],
   use: { baseURL: PROD },
   webServer: [
