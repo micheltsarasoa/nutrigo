@@ -54,12 +54,13 @@ export function AppShell({
 
   return layout === "sidebar" ? (
     <div className={`${styles.shell} ${styles.sidebar}`}>
-      <div className={styles.side}>
+      {/* The banner landmark, so the lockup isn't content outside every landmark. */}
+      <header className={styles.side}>
         <div className={styles.brand}>
           <Logo wordmark />
         </div>
         {nav}
-      </div>
+      </header>
       {page}
     </div>
   ) : (

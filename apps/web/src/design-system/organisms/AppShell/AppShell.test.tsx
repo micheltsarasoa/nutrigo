@@ -66,9 +66,13 @@ describe("AppShell", () => {
     ).toBeTruthy();
   });
 
-  it("sidebar: shows the NutriGo lockup; the tab bar doesn't", () => {
+  it("sidebar: shows the NutriGo lockup in the banner landmark; the tab bar doesn't", () => {
     const { unmount } = shell("sidebar");
-    expect(screen.getByText("NutriGo")).toBeTruthy();
+    const banner = screen.getByRole("banner");
+    expect(within(banner).getByText("NutriGo")).toBeTruthy();
+    expect(
+      within(banner).getByRole("navigation", { name: "Main" }),
+    ).toBeTruthy();
     unmount();
     shell("tabs");
     expect(screen.queryByText("NutriGo")).toBeNull();
