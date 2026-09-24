@@ -17,6 +17,7 @@ erDiagram
     PLAN_WEEK ||--o| SHOPPING_LIST : "generates"
     SHOPPING_LIST ||--|{ SHOPPING_ITEM : contains
     INGREDIENT ||--o{ SHOPPING_ITEM : "refers to"
+    CIQUAL_FOOD ||..o{ INGREDIENT : "copied into (no FK)"
 
     INGREDIENT {
         integer id PK
@@ -39,6 +40,20 @@ erDiagram
         real price_pack_qty "nullable, e.g. 500"
         text price_pack_unit "nullable, g|ml|piece"
         text updated_at
+    }
+    CIQUAL_FOOD {
+        integer alim_code PK "CIQUAL food code"
+        text name "alim_nom_fr"
+        text name_search "lower case, no accents"
+        text group_name "alim_grp_nom_fr"
+        text subgroup_name "alim_ssgrp_nom_fr"
+        real kcal_100g
+        real carbs_100g
+        real protein_100g
+        real fat_100g
+        real fibre_100g "nullable"
+        real sugars_100g "nullable"
+        real sodium_mg_100g "nullable"
     }
     RECIPE {
         integer id PK
@@ -158,7 +173,10 @@ erDiagram
 | `targets` is a single-row table with `CHECK (id = 1)` | The simplest way to store settings |
 | `settings` is also a single-row table, stored in the DB rather than in the browser | The laptop and phone share one locale, source switches and AI choice (SPEC-008). API keys are **not** stored here; they stay in env (ADR-0010) |
 | `ai_usage.cost_micro_eur` in integer millionths of a euro | One AI call often costs less than a cent. It's still integer money, and the estimate is frozen so price-table updates don't rewrite past months (SPEC-008, owner-approved) |
-| `ingredient.source` has `ciqual`, not `usda` | USDA dropped; CIQUAL bundled (ADR-0011). The `ciqual_food` seed table is added when SPEC-004 is revised |
+| `ingredient.source` has `ciqual`, not `usda` | USDA dropped; CIQUAL bundled (ADR-0011) |
+| `ciqual_food` is read-only seed data, shipped in a migration | CIQUAL has no API. A local table works offline; a new CIQUAL release is a new migration (SPEC-004 §6) |
+| An import copies CIQUAL values into `ingredient`, with no foreign key | CIQUAL updates don't rewrite the owner's ingredients or their edits; `external_id` keeps the `alim_code` |
+| `ciqual_food.name_search` is stored lower case without accents | SQLite's `LIKE` ignores case for ASCII only, so "epeautre" must find "Épeautre" |
 | Dates are ISO text; weeks are ISO (Monday start) | SQLite has no date type; ISO strings sort correctly |
 | `ON DELETE RESTRICT` from recipe_ingredient to ingredient | You can't delete an ingredient that a recipe uses (the API returns 409) |
 | `ON DELETE CASCADE` from recipe to its ingredients, steps, tools and tags | Their rows have no meaning without the recipe |

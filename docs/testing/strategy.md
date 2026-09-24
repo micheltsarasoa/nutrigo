@@ -36,7 +36,7 @@ Baselines are Linux renders, because fonts draw differently on Windows and macOS
 
 A later visual change fails the job; the artifact then holds the new render and a diff. If the owner approves the change, replace the PNG the same way.
 
-External services (OFF, USDA, Claude) are **always mocked** in CI with recorded fixtures. A separate weekly `contract` workflow can call the real APIs later if needed.
+External services (Open Food Facts and the AI providers: Anthropic, Mistral, DeepSeek) are **always mocked** in CI with recorded fixtures, one set per provider (ADR-0010). CIQUAL isn't a service: it's bundled in the DB (ADR-0011), so integration tests seed a few `ciqual_food` rows and e2e uses the real seed. A separate weekly `contract` workflow can call the real APIs later if needed.
 
 ## 3. Coverage gates
 
