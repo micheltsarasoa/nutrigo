@@ -6,7 +6,9 @@ COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
-RUN npm ci
+# better-sqlite3 ships prebuilt binaries for every platform, but npm would still run node-gyp (because of
+# its binding.gyp) and slim images have no compiler. No other production package has an install script.
+RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build -w @nutrigo/web && npm prune --omit=dev
 
