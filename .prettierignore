@@ -9,3 +9,5 @@ coverage/
 dist/
 playwright-report/
 test-results/
+# Generated from docs/design-system/tokens.json
+apps/web/src/design-system/tokens.css
