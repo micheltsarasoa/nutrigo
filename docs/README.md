@@ -15,6 +15,8 @@ docs/
 │   ├── coding-policy.md       How code is written
 │   ├── workflow.md            Agile workflow, board, Definition of Ready and Definition of Done
 │   └── release.md             SemVer, release-please, deployment, rollback
+├── guides/
+│   └── phone-access.md        Open and install the local app on the phone (Tailscale)
 ├── testing/strategy.md        What is tested, how, and CI gates
 └── design-system/             HTML design system + data-visualisation rules
 ```
