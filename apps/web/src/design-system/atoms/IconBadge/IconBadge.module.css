@@ -1,0 +1,52 @@
+.badge {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+}
+
+.sm {
+  width: var(--size-badge-sm);
+  height: var(--size-badge-sm);
+  border-radius: var(--radius-sm);
+}
+
+.lg {
+  width: var(--size-badge-lg);
+  height: var(--size-badge-lg);
+  border-radius: var(--radius-md);
+}
+
+.green {
+  background: var(--color-green-base);
+  color: var(--color-neutral-surface);
+}
+
+.yellow {
+  background: var(--color-yellow-base);
+  color: var(--color-neutral-surface);
+}
+
+.orange {
+  background: var(--color-orange-base);
+  color: var(--color-neutral-surface);
+}
+
+.green-light {
+  background: var(--color-green-light);
+  color: var(--color-green-icon);
+}
+
+.yellow-light {
+  background: var(--color-yellow-light);
+  color: var(--color-yellow-icon);
+}
+
+.orange-light {
+  background: var(--color-orange-light);
+  color: var(--color-orange-base);
+}
+
+.grey {
+  background: var(--color-neutral-grey-fill);
+  color: var(--color-neutral-faint);
+}
