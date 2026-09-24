@@ -46,6 +46,7 @@ const APPROVED = [
   "atom/progressbar",
   "atom/button",
   "atom/pill",
+  "atom/selectpill",
   "atom/iconbadge",
   "atom/searchfield",
 ];
