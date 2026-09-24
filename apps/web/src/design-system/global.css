@@ -1,0 +1,8 @@
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-neutral-ink);
+  background: var(--color-neutral-cream);
+}

@@ -1,5 +1,8 @@
 {
-  "ignoreFiles": ["apps/web/src/design-system/tokens.css"],
+  "ignoreFiles": [
+    "apps/web/src/design-system/tokens.css",
+    "apps/web/src/design-system/fonts.css"
+  ],
   "rules": {
     "color-no-hex": true,
     "color-named": "never",
@@ -18,7 +21,9 @@
     "unit-disallowed-list": [
       ["px", "rem", "em", "pt"],
       {
-        "ignoreMediaFeatureNames": { "px": ["min-width", "max-width", "width"] }
+        "ignoreMediaFeatureNames": {
+          "px": ["min-width", "max-width", "width"]
+        }
       }
     ],
     "declaration-property-value-allowed-list": {
