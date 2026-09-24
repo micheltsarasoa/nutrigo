@@ -1,0 +1,66 @@
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-1) / 2);
+  color: var(--color-yellow-base);
+  vertical-align: middle;
+}
+
+.star {
+  flex: none;
+  width: var(--size-icon-xs);
+  height: var(--size-icon-xs);
+}
+
+.empty {
+  opacity: var(--opacity-star-rating-empty);
+}
+
+/* Editable: a bare fieldset, a visible legend, 44 px targets with bigger stars. */
+.group {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-ink);
+}
+
+.editable {
+  gap: 0;
+}
+
+.option {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size-touch-target);
+  height: var(--size-touch-target);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.option .star {
+  width: var(--size-icon-lg);
+  height: var(--size-icon-lg);
+}
+
+/* The native radio covers its star: invisible, but still clicked and focused. */
+.input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.option:has(:focus-visible) {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: calc(var(--focus-offset) * -1);
+}

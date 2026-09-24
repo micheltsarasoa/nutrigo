@@ -58,6 +58,7 @@
   --focus-width: 2px;
   --focus-offset: 2px;
   --opacity-disabled: 0.5;
+  --opacity-star-rating-empty: 0.3;
   --font-family-sans: 'Poppins', system-ui, -apple-system, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
