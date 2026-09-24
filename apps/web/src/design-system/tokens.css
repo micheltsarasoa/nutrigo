@@ -69,6 +69,10 @@
   --size-aside: 340px;
   --size-control: 40px;
   --size-control-sm: 32px;
+  --size-icon-xs: 12px;
+  --size-icon-sm: 16px;
+  --size-icon-md: 18px;
+  --size-icon-lg: 20px;
   --breakpoint-mobile: 0px;
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1200px;
