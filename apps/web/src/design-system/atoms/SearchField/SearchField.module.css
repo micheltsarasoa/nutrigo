@@ -1,0 +1,46 @@
+.field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-hairline);
+  color: var(--color-neutral-faint);
+  cursor: text;
+}
+
+/* The export has no focus style (issue D8); the ring goes on the whole field. */
+.field:focus-within {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.md {
+  height: var(--size-field);
+  padding: 0 var(--space-4);
+}
+
+.sm {
+  height: var(--size-field-sm);
+  padding: 0 var(--space-3);
+}
+
+.filled {
+  background: var(--color-neutral-subtle);
+  box-shadow: none;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-ink);
+}
+
+.input::placeholder {
+  color: var(--color-neutral-faint);
+}
