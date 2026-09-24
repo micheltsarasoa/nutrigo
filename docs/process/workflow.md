@@ -32,7 +32,7 @@ Run `scripts/setup-github.sh` once. It creates:
 - **Project (v2) board "NutriGo"**: the stages below in the built-in `Status` field (GitHub's built-in workflows only set `Status`), plus `Size`, `Level` and a 2-week `Sprint` iteration field
 - **Milestones** `Sprint 0 … Sprint 6`, each due on the sprint's last day. The milestone is the sprint's release scope
 - **Labels**: type (`type:story`, …), level (`level:atom`, …), `awaiting-validation`, `design-approved`, `tech-debt`, `blocked`, priority (`P0`–`P2`)
-- **Repo settings**: squash merge only (PR title = commit title), branches deleted after merge, Actions allowed to open PRs (release-please), and `main` protected (PR required with 0 approvals, CI checks, linear history). Admins can bypass, which is needed for release-please PRs because GitHub doesn't run CI on PRs opened by `GITHUB_TOKEN`
+- **Repo settings**: squash merge only (PR title = commit title), branches deleted after merge, Actions allowed to open PRs (release-please), and `main` protected (PR required with 0 approvals, CI checks, linear history), enforced for admins too, so nobody can merge a red PR. GitHub doesn't run CI on PRs opened by `GITHUB_TOKEN`, so `/cut-release` closes and reopens the release-please PR to run it (release.md §3)
 
 Two steps have no API. See **Board setup (browser)** below.
 
@@ -133,4 +133,4 @@ gitGraph
 ```
 
 - Branch names: `feat/<issue>-slug`, `fix/…`, `docs/…`, `refactor/…`, `chore/…`, `test/…`, `ci/…`.
-- `main` is protected: a PR, green CI and linear history are required, and force pushes are blocked.
+- `main` is protected, admins included: a PR, green CI and linear history are required, and force pushes are blocked.

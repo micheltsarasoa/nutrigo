@@ -34,7 +34,7 @@ flowchart LR
 
 1. Every issue in the sprint milestone is Done or moved to the next milestone.
 2. CI is green on `main`.
-3. Review the release-please PR: is the changelog readable, and is the version the expected minor?
+3. Review the release-please PR: is the changelog readable, and is the version the expected minor? It has no CI yet, because GitHub doesn't run workflows on PRs opened by `GITHUB_TOKEN`: close and reopen it as the owner, then wait for the 5 checks to pass. `main`'s protection blocks the merge until they do, admins included.
 4. From Sprint 1: run the **restore drill**: restore the latest backup locally, then `npm run test:e2e:smoke`.
 5. Merge the release PR. This creates the tag, the GitHub Release and the image, and deploys.
 6. Check `/health` on the deployment, then close the milestone.
