@@ -64,7 +64,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | AppShell | – (#62, #65) | main | `done` |
 | AppShell: settings entry | #108 | – | `later` |
 | RecipeList | #103 | #143 | `done` |
-| RecipeDetail | #104 | #146 | `awaiting-validation` |
+| RecipeDetail | #104 | #146 | `done` |
 | RecipeEditor | #105 | – | `later` |
 | IngredientEditor | #106 | – | `later` |
 | SettingsDialog | #107 | – | `later` |
