@@ -1,0 +1,49 @@
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: var(--space-3) var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  color: var(--color-neutral-ink);
+  text-align: center;
+}
+
+.kcal {
+  background: var(--color-green-base);
+}
+
+.carbs {
+  background: var(--color-yellow-base);
+}
+
+.protein {
+  background: var(--color-orange-base);
+}
+
+.fat {
+  background: var(--color-neutral-chip-grey);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: var(--size-badge-sm);
+  height: var(--size-badge-sm);
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-neutral-surface);
+}
+
+.label,
+.unit {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.value {
+  max-width: 100%;
+  font-size: var(--font-size-figure-sm);
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}

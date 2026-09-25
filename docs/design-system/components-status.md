@@ -48,7 +48,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 |---|---|---|---|
 | MenuListItem | #93 | – | `later` |
 | MetaRow | #94 | – | `later` |
-| MacroTile | #95 | `feat/95-macrotile` | `draft` |
+| MacroTile | #95 | `feat/95-macrotile`, #129 | `awaiting-validation` |
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
 | ToolItem | #98 | – | `later` |
