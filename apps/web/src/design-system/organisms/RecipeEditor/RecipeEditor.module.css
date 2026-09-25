@@ -1,0 +1,143 @@
+/* The layout follows the form's own width, not the screen's. */
+.editor {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--space-5);
+  color: var(--color-neutral-ink);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-figure);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Phone: one column. Wide: two, with name, description and rating across both. */
+.fields {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@container (min-width: 600px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.servings {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--size-field);
+  align-self: end;
+}
+
+.rating {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-rail);
+}
+
+.legend {
+  float: left;
+  padding: 0;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-muted);
+}
+
+/* Ingredient, quantity and unit on one row when there is room. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.grow {
+  flex: 2 1 calc(var(--size-aside) / 2);
+}
+
+.short {
+  flex: 1 1 var(--size-media-thumb);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.alert {
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.dialog {
+  max-width: calc(var(--size-aside) - var(--space-5));
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-phone);
+  color: var(--color-neutral-ink);
+}
+
+.dialogTitle {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.dialog p {
+  margin: 0 0 var(--space-5);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+}
