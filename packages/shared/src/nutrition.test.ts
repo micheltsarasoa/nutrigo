@@ -146,7 +146,7 @@ describe("healthScore", () => {
     expect(healthScore({ ...base, ...change }, categories)).toBe(score);
   });
 
-  it("clamps to 0–10", () => {
+  it("stays within 0–10 at the extremes", () => {
     const best = { ...base, kcal: 500, protein: 40, fibre: 8, fat: 5 };
     expect(healthScore(best, ["grains", "veggies", "protein"])).toBe(10);
     const worst = { ...base, kcal: 900, fat: 60, sugars: 40, sodiumMg: 2000 };
