@@ -37,7 +37,8 @@
   outline: 0;
   background: none;
   font: inherit;
-  font-size: var(--font-size-body);
+  /* 16 px so iOS Safari doesn't zoom in on focus (#123). */
+  font-size: var(--font-size-title);
   color: var(--color-neutral-ink);
 }
 
