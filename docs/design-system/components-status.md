@@ -23,7 +23,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
-| Icon | #19, #130 | `feat/130-prep-cook-icons` adds prep and cook | `done` (new icons `awaiting-validation`) |
+| Icon | #19, #130 | main; #131 adds prep and cook | `done` |
 | Logo | #20 | main | `done` |
 | Button | #21 | main | `done` |
 | Pill | #22 | main | `done` |
@@ -47,7 +47,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
 | MenuListItem | #93 | – | `later` |
-| MetaRow | #94 | #128; #131 switches prep and cook to their icons | `done` (icon switch `awaiting-validation`) |
+| MetaRow | #94 | #128; #131 switches prep and cook to their icons | `done` |
 | MacroTile | #95 | – | `later` |
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
