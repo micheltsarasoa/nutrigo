@@ -81,47 +81,11 @@ const FULL: RecipeDetailData = {
   ],
 };
 
-const MINIMAL: RecipeDetailData = {
-  ...FULL,
-  title: "Apple and peanut butter",
-  mealType: "snack",
-  description: null,
-  photo: null,
-  prepTime: "5 min",
-  cookTime: null,
-  difficulty: null,
-  healthScore: 6,
-  rating: null,
-  macros: { kcal: "210", carbs: "24", protein: "6", fat: "11" },
-  nutrition: [
-    { label: "Fibre", value: "4 g" },
-    { label: "Sugars", value: null },
-    { label: "Sodium", value: null },
-  ],
-  ingredients: [],
-  steps: [],
-  tools: [],
-  notes: [],
-};
-
-function Live({
-  recipe = FULL,
-  start = BASE,
-}: {
-  recipe?: RecipeDetailData;
-  start?: number;
-}) {
+function Live({ start = BASE }: { start?: number }) {
   const [servings, setServings] = useState(start);
-  const ingredients =
-    recipe === FULL
-      ? scaled(servings)
-      : [
-          { quantity: "1 piece", name: "apple" },
-          { quantity: "20 g", name: "peanut butter" },
-        ];
   return (
     <RecipeDetail
-      recipe={{ ...recipe, ingredients }}
+      recipe={{ ...FULL, ingredients: scaled(servings) }}
       servings={servings}
       onServingsChange={setServings}
       onBack={() => {}}
@@ -142,9 +106,6 @@ export default {
   states: {
     "full recipe (2 columns from 900 px; change the servings: ingredients scale, nutrition per serving doesn't; press Tab for the focus ring★)":
       <Live />,
-    "minimal (no steps, tools or notes; no photo, description or rating)": (
-      <Live recipe={MINIMAL} />
-    ),
     "servings changed (3 of 2)": <Live start={3} />,
     loading: (
       <RecipeDetail
