@@ -54,7 +54,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | ToolItem | #98 | #133, #136 | `done` |
 | NoteItem | #99 | #135 | `done` |
 | NutritionRow | #100 | #132, #134 | `done` |
-| PhotoOrPlaceholder | #101 | `feat/101-photoorplaceholder`, #139 | `awaiting-validation` |
+| PhotoOrPlaceholder | #101 | `feat/101-photoorplaceholder`, #139 | `done` (on merge) |
 | SettingRow | #102 | – | `later` |
 
 ## Organisms
