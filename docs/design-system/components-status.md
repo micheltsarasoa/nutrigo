@@ -51,7 +51,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MacroTile | #95 | `feat/95-macrotile`, #129 | `done` (on merge) |
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
-| ToolItem | #98 | `feat/98-toolitem`, #133 | `awaiting-validation` |
+| ToolItem | #98 | #133, #136 | `done` (on merge) |
 | NoteItem | #99 | – | `later` |
 | NutritionRow | #100 | #132; baseline #134 | `done` (on merge) |
 | PhotoOrPlaceholder | #101 | – | `later` |
