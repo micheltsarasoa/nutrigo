@@ -30,6 +30,7 @@ Plan the week, Monday to Sunday, by putting recipes into four slots per day: bre
 | AC-9 | A slot with 2 recipes (e.g. a main and a side) | I view it | Both cards are stacked in `position` order; slot kcal = sum |
 | AC-10 | A 390 px screen | I open `/plan/2026-W40` | I see the week strip (Mon–Sun) and the selected day's 4 slot groups; tapping a day switches the view with no page reload |
 | AC-11 | The grid on desktop | I use only the keyboard | Every slot and card can be reached; Enter opens the add or actions sheet |
+| AC-12 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted (moved here from SPEC-002/AC-8) |
 
 ## 4. UI
 | Route | Desktop ≥1200 px | Mobile <768 px |
@@ -76,6 +77,7 @@ sequenceDiagram
 | POST | `/api/plans/:isoWeek/entries` | `{ date, slot, recipeId, servings }` | 201 `MealEntry` | 400 (date outside week), 404 recipe |
 | PATCH | `/api/plans/:isoWeek/entries/:id` | `{ date?, slot?, servings?, position? }` | `MealEntry` | 400, 404 |
 | DELETE | `/api/plans/:isoWeek/entries/:id` | n/a | 204 | 404 |
+| DELETE | `/api/recipes/:id` (SPEC-002, extended here) | n/a | 204 | 404, **409 (planned, AC-12)** |
 | POST | `/api/plans/:isoWeek/copy-from/:otherWeek` | `{ mode: "replace" \| "merge" }` | `Plan` | 400, 404 |
 
 Moving a meal to another week uses DELETE + POST. Duplicating uses a POST with the same data.
@@ -101,7 +103,7 @@ Drag and drop (a later improvement; actions menu for now), eaten check-off (SPEC
 | Unit | ISO week functions around year boundaries (2026 has a W53 because it starts on a Thursday; 2026-12-31 → 2026-W53; 2027-W01), DST changes, `copyWeek` |
 | Integration | All routes; copy replace vs merge; date outside the week → 400 |
 | Component | All components above, with mobile and desktop playground frames |
-| E2E | AC-1 … AC-11, with the clock fixed at 2026-09-30 |
+| E2E | AC-1 … AC-12, with the clock fixed at 2026-09-30 |
 
 ## 10. Open questions
 - Should the desktop grid also show daily kcal totals under each day header? The design doesn't have them; proposal: yes, as a caption line.
