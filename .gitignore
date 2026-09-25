@@ -12,6 +12,8 @@ test-results/
 data/*.db
 data/*.db-*
 data/backups/
+# Per-project SQLite DBs for the e2e API servers (apps/web/playwright.config.ts)
+apps/web/.e2e-data/
 .DS_Store
 # Worktrees made by Claude Code subagents
 .claude/worktrees/

@@ -3,6 +3,8 @@ import {
   AppShell,
   type NavItem,
 } from "./design-system/organisms/AppShell/index.ts";
+import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
+import { useSettings } from "./use-settings.ts";
 
 // Dev and preview builds only (ADR-0006). In production this is a constant false,
 // so the bundler drops the playground chunk entirely.
@@ -29,6 +31,8 @@ const ROUTES: [RegExp, string][] = [
 
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
 export function App({ path, wide }: { path: string; wide: boolean }) {
+  // Before the /playground return, so the hook always runs.
+  const { shellProps, dialogProps } = useSettings();
   if (path.startsWith("/playground")) {
     return PlaygroundPage ? (
       <Suspense>
@@ -41,13 +45,17 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
   return (
-    <AppShell
-      items={NAV}
-      current={title ? path : ""}
-      layout={wide ? "sidebar" : "tabs"}
-    >
-      {title ? <Placeholder title={title} /> : <NotFound />}
-    </AppShell>
+    <>
+      <AppShell
+        items={NAV}
+        current={title ? path : ""}
+        layout={wide ? "sidebar" : "tabs"}
+        {...shellProps}
+      >
+        {title ? <Placeholder title={title} /> : <NotFound />}
+      </AppShell>
+      <SettingsDialog {...dialogProps} />
+    </>
   );
 }
 
