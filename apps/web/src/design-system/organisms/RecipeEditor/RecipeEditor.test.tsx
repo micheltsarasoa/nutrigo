@@ -295,9 +295,13 @@ describe("RecipeEditor", () => {
     layout();
     fireEvent.pointerMove(handle, { clientY: 260, pointerId: 1 });
     fireEvent.pointerUp(handle, { clientY: 260, pointerId: 1 });
-    fireEvent.click(handle);
+    fireEvent.click(handle, { detail: 1 });
     expect(titles()).toEqual(["B", "C", "A"]);
     expect(screen.queryByRole("button", { name: /^Move/ })).toBeNull();
+    // A tap (no move) opens the buttons, even when no click follows it.
+    fireEvent.pointerDown(handle, { clientY: 250, button: 0, pointerId: 2 });
+    fireEvent.pointerUp(handle, { clientY: 250, pointerId: 2 });
+    expect(screen.getAllByRole("button", { name: /^Move/ })).toHaveLength(2);
   });
 
   it("sets the servings and rating, and clears the rating", () => {
