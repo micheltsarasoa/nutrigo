@@ -44,7 +44,7 @@ describe("IngredientInput", () => {
   });
 
   it("SPEC-002 AC-2: rejects a negative value and a missing kcal", () => {
-    const { kcal100g: _, ...noKcal } = oats;
+    const noKcal = { ...oats, kcal100g: undefined };
     expect(
       fields(IngredientInput.safeParse({ ...noKcal, fat100g: -1 })),
     ).toEqual(["kcal100g", "fat100g"]);
