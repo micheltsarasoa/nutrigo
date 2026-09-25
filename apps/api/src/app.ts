@@ -3,6 +3,8 @@ import { Hono, type MiddlewareHandler } from "hono";
 import { apiError } from "@nutrigo/shared";
 import type { Db } from "./db/client.ts";
 import { meta } from "./db/schema.ts";
+import { ingredientRoutes } from "./routes/ingredients.ts";
+import { recipeRoutes } from "./routes/recipes.ts";
 
 export function createApp({
   db,
@@ -24,6 +26,9 @@ export function createApp({
       return c.json({ status: "error", db: "error", version }, 503);
     }
   });
+
+  app.route("/api/ingredients", ingredientRoutes(db));
+  app.route("/api/recipes", recipeRoutes(db));
 
   if (webRoot) {
     // One image serves web + api (ADR-0005): built files first, then index.html for client-side routes.

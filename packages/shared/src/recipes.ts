@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Nutrition } from "./nutrition.ts";
 
 // SPEC-002 §5 and data-model.md. JSON is camelCase; the DB stays snake_case.
 export const MealType = z.enum(["breakfast", "lunch", "snack", "dinner"]);
@@ -99,3 +100,18 @@ export const RecipeSummary = z.object({
   totalMin: z.number().nullable(),
 });
 export type RecipeSummary = z.infer<typeof RecipeSummary>;
+
+// GET /api/recipes. Each sort puts the best first and missing values last.
+export const RecipeSort = z.enum(["name", "kcal", "health", "time", "rating"]);
+export type RecipeSort = z.infer<typeof RecipeSort>;
+export const RecipeQuery = z.object({
+  q: z.string().optional(),
+  mealType: MealType.optional(),
+  sort: RecipeSort.default("name"),
+});
+
+export type RecipeDetail = Recipe & {
+  nutritionPerServing: Nutrition;
+  healthScore: number;
+  totalMin: number | null;
+};

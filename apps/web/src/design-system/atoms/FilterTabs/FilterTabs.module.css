@@ -1,0 +1,61 @@
+/* On a narrow screen the bar scrolls inside itself instead of widening the page.
+   The scroll box clips, so its vertical padding makes room for the 44 px tap area. */
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  width: fit-content;
+  max-width: 100%;
+  padding: calc((var(--size-touch-target) - var(--size-control-sm)) / 2)
+    var(--space-1);
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background: var(--color-neutral-subtle);
+  scrollbar-width: none;
+}
+
+/* The tap area reaches 44 px tall around the 32 px tab. */
+.tab {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  height: var(--size-control-sm);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-xs);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--size-control-sm) - var(--size-touch-target)) / 2) 0;
+}
+
+.tab:hover {
+  color: var(--color-neutral-ink);
+}
+
+.tab:has(:checked) {
+  background: var(--color-green-base);
+  color: var(--color-neutral-ink);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Inset, because the bar clips anything drawn outside it. */
+.tab:has(:focus-visible) {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+.radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
