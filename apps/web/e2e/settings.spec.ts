@@ -93,12 +93,18 @@ test("SPEC-008 AC-11: at 390 px Settings is a full-screen sheet, focus stays ins
     expect(height ?? 0).toBeGreaterThanOrEqual(40);
   }
 
+  // The modal makes the page behind it inert: Tab cycles through the dialog and the
+  // browser's own UI (reported as <body>), never onto the page.
   for (let i = 0; i < 6; i++) {
     await page.keyboard.press("Tab");
     expect(
-      await page.evaluate(() =>
-        document.querySelector("dialog")?.contains(document.activeElement),
-      ),
+      await page.evaluate(() => {
+        const el = document.activeElement;
+        return (
+          el === document.body ||
+          !!document.querySelector("dialog")?.contains(el)
+        );
+      }),
     ).toBe(true);
   }
 
