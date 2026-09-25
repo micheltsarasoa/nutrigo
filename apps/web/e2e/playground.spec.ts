@@ -47,6 +47,7 @@ const APPROVED = [
   "atom/navlink",
   "atom/select",
   "atom/logo",
+  "molecule/settingrow",
   "atom/iconbutton",
   "atom/progressbar",
   "atom/button",
