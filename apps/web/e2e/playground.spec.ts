@@ -57,6 +57,7 @@ const APPROVED = [
   "atom/selectpill",
   "atom/iconbadge",
   "atom/mealcheck",
+  "molecule/noteitem",
   "atom/searchfield",
   "atom/card",
   "molecule/macrotile",
