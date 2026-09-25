@@ -23,7 +23,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
-| Icon | #19, #130 | `feat/130-prep-cook-icons` adds prep and cook | `done` (new icons `draft`) |
+| Icon | #19, #130 | `feat/130-prep-cook-icons` adds prep and cook | `done` (new icons `awaiting-validation`) |
 | Logo | #20 | main | `done` |
 | Button | #21 | main | `done` |
 | Pill | #22 | main | `done` |

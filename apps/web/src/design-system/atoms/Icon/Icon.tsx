@@ -96,6 +96,12 @@ const ICONS = {
       <circle cx="12" cy="12" r="3" />
     </>,
   ],
+  // Recipe Details .meta-row: Prep Time and Cook Time (#130).
+  prep: [2, <path d="M14 4l6 6-9 9H5v-6z" />],
+  cook: [
+    2,
+    <path d="M4 10h16v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3zM8 10V7M16 10V7" />,
+  ],
 } satisfies Record<string, [number, ReactNode]>;
 
 export type IconName = keyof typeof ICONS;
