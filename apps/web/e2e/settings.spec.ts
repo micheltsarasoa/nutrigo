@@ -22,7 +22,9 @@ test("SPEC-008 AC-1: Settings opens with fr-FR and shows 1 240 kcal · 57,40 €
   await expect(
     dialog.getByRole("combobox", { name: "Number and money format" }),
   ).toHaveValue("fr-FR");
-  await expect(dialog.getByText("Example: 1\u202F240 kcal · 57,40\u00A0€")).toBeVisible();
+  await expect(
+    dialog.getByText("Example: 1\u202F240 kcal · 57,40\u00A0€"),
+  ).toBeVisible();
 });
 
 test("SPEC-008 AC-2: saving en-IE closes Settings and survives a reload", async ({
