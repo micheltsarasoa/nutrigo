@@ -6,7 +6,7 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-xl);
-  background: var(--color-neutral-surface);
+  background: var(--color-neutral-cream);
   box-shadow: var(--shadow-phone);
   color: var(--color-neutral-ink);
 }
