@@ -1,0 +1,119 @@
+/* Modal on desktop; a full-screen sheet below 768 px (docs/design-system §07). */
+.dialog {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--size-aside);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-phone);
+  color: var(--color-neutral-ink);
+}
+
+@media (max-width: 767.98px) {
+  .dialog {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+.form {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--space-5);
+  width: 100%;
+  padding: var(--space-6);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-figure-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.status {
+  margin: 0;
+  color: var(--color-neutral-muted);
+}
+
+.cardTitle {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--font-tracking-card-title);
+}
+
+.alert {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.alert p {
+  margin: 0;
+}
+
+/* The select, matching the Select atom's tokens, minus its own label/id: the
+   accessible name here comes from SettingRow so the field isn't labelled twice. */
+.selectBox {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  width: var(--size-sidebar);
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+  .selectBox {
+    width: 100%;
+  }
+}
+
+.select {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: var(--size-field);
+  padding: 0 calc(var(--space-4) + var(--size-icon-xs) + var(--space-2)) 0
+    var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-hairline);
+  font: inherit;
+  font-size: var(--font-size-title);
+  color: var(--color-neutral-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.select + svg {
+  position: absolute;
+  top: 50%;
+  right: var(--space-4);
+  translate: 0 -50%;
+  color: var(--color-neutral-muted);
+  pointer-events: none;
+}
+
+.select:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
