@@ -49,7 +49,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MenuListItem | #93 | – | `later` |
 | MetaRow | #94 | #128; #131 switches prep and cook to their icons | `done` |
 | MacroTile | #95 | #129 | `done` |
-| IngredientRow | #96 | `feat/96-ingredientrow`, #138 | `awaiting-validation` |
+| IngredientRow | #96 | `feat/96-ingredientrow`, #138 | `done` (on merge) |
 | RecipeStep | #97 | #137 | `done` |
 | ToolItem | #98 | #133, #136 | `done` |
 | NoteItem | #99 | #135 | `done` |
