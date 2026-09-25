@@ -581,41 +581,52 @@ function Lines<T extends { key: number }>({
                   )}
                 </svg>
               </button>
+              <button
+                type="button"
+                className={styles.bin}
+                aria-label={`Remove ${noun} ${i + 1}`}
+                onClick={() => onChange(items.filter((_, j) => j !== i))}
+              >
+                {/* The Icon set has no bin either. */}
+                <svg
+                  className={styles.binIcon}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  focusable="false"
+                  aria-hidden
+                >
+                  <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" />
+                </svg>
+              </button>
               <fieldset className={styles.item}>
                 <legend className={styles.legend}>{`${Noun} ${i + 1}`}</legend>
                 {render(item, i)}
-                <div className={styles.tools}>
-                  {open === item.key && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        aria-label={`Move up ${noun} ${i + 1}`}
-                        disabled={i === 0}
-                        onClick={() => reorder(i, i - 1)}
-                      >
-                        Move up
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        aria-label={`Move down ${noun} ${i + 1}`}
-                        disabled={i === items.length - 1}
-                        onClick={() => reorder(i, i + 1)}
-                      >
-                        Move down
-                      </Button>
-                    </>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    aria-label={`Remove ${noun} ${i + 1}`}
-                    onClick={() => onChange(items.filter((_, j) => j !== i))}
-                  >
-                    Remove
-                  </Button>
-                </div>
+                {open === item.key && (
+                  <div className={styles.tools}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label={`Move up ${noun} ${i + 1}`}
+                      disabled={i === 0}
+                      onClick={() => reorder(i, i - 1)}
+                    >
+                      Move up
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label={`Move down ${noun} ${i + 1}`}
+                      disabled={i === items.length - 1}
+                      onClick={() => reorder(i, i + 1)}
+                    >
+                      Move down
+                    </Button>
+                  </div>
+                )}
               </fieldset>
             </li>
           ))}

@@ -65,25 +65,42 @@
   list-style: none;
 }
 
+/* The grip sits in the top-left corner and the bin in the top-right, on the
+   legend's row; the fields fill the box below them. */
 .row {
-  display: flex;
+  position: relative;
   border-radius: var(--radius-lg);
   background: var(--color-neutral-rail);
 }
 
 .dragging {
-  position: relative;
   box-shadow: var(--shadow-card);
 }
 
-/* The whole left edge is the handle; touch on it drags instead of scrolling. */
-.grip {
-  flex: none;
+.grip,
+.bin {
+  position: absolute;
+  top: 0;
+  display: grid;
+  place-items: center;
   width: var(--size-touch-target);
+  height: var(--size-touch-target);
   padding: 0;
   border: 0;
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   background: none;
+  cursor: pointer;
+}
+
+.grip:focus-visible,
+.bin:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+/* Touch on the grip drags instead of scrolling. */
+.grip {
+  left: 0;
+  border-radius: var(--radius-lg) 0 var(--radius-lg) 0;
   color: var(--color-neutral-faint);
   cursor: grab;
   touch-action: none;
@@ -92,11 +109,6 @@
 .grip:hover,
 .grip[aria-expanded="true"] {
   color: var(--color-neutral-ink);
-}
-
-.grip:focus-visible {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: calc(var(--focus-width) * -1);
 }
 
 .dragging .grip {
@@ -108,18 +120,33 @@
   height: var(--size-icon-md);
 }
 
+.bin {
+  right: 0;
+  border-radius: 0 var(--radius-lg) 0 var(--radius-lg);
+  color: var(--status-danger);
+}
+
+.binIcon {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+}
+
 .item {
   display: grid;
-  flex: 1;
   gap: var(--space-3);
   min-inline-size: 0;
   margin: 0;
-  padding: var(--space-4) var(--space-4) var(--space-4) 0;
+  padding: var(--size-touch-target) var(--space-4) var(--space-4);
   border: 0;
 }
 
 .legend {
-  float: left;
+  position: absolute;
+  top: 0;
+  left: var(--size-touch-target);
+  display: flex;
+  align-items: center;
+  height: var(--size-touch-target);
   padding: 0;
   font-size: var(--font-size-caption);
   font-weight: var(--font-weight-semibold);
