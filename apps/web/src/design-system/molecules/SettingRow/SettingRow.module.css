@@ -1,0 +1,38 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  align-items: center;
+  padding: var(--space-3) 0;
+}
+
+/* Wraps the control below once the text can't keep this width beside it. */
+.text {
+  flex: 1 1 calc(var(--size-aside) * 0.75);
+  min-width: 0;
+}
+
+.control {
+  flex: 0 1 auto;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-ink);
+}
+
+.help,
+.error {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-caption);
+}
+
+.help {
+  color: var(--color-neutral-muted);
+}
+
+.error {
+  color: var(--color-orange-on-light);
+}
