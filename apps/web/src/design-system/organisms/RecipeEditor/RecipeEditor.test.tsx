@@ -260,6 +260,14 @@ describe("RecipeEditor", () => {
     expect(screen.queryByRole("button", { name: /^Move/ })).toBeNull();
   });
 
+  it("removes a line with its bin, an icon-only button", () => {
+    setup({ recipe: turkey });
+    const bin = screen.getByRole("button", { name: "Remove step 1" });
+    expect(bin.textContent).toBe("");
+    fireEvent.click(bin);
+    expect(titles()).toEqual(["Serve"]);
+  });
+
   it("moves a line with the arrow keys on its grip, keeping focus on it", () => {
     setup({ recipe: turkey });
     const handle = grip("step 1");
