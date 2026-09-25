@@ -8,14 +8,21 @@ export async function parseBody<T extends z.ZodType>(
   schema: T,
 ): Promise<{ data: z.infer<T> } | { error: Response }> {
   const result = schema.safeParse(await c.req.json().catch(() => undefined));
-  if (result.success) return { data: result.data };
-  const fields = Object.fromEntries(
-    result.error.issues.map((i) => [i.path.join("."), i.code]),
-  );
-  return {
-    error: c.json(apiError("VALIDATION_FAILED", "Invalid input", fields), 400),
-  };
+  return result.success
+    ? { data: result.data }
+    : { error: validationFailed(c, result.error) };
 }
+
+/** 400 with one field error per Zod issue (backend.md §3). */
+export const validationFailed = (c: Context, error: z.ZodError) =>
+  c.json(
+    apiError(
+      "VALIDATION_FAILED",
+      "Invalid input",
+      Object.fromEntries(error.issues.map((i) => [i.path.join("."), i.code])),
+    ),
+    400,
+  );
 
 /** The `:id` param as a positive integer, or null (then the route answers 404). */
 export function idParam(c: Context) {

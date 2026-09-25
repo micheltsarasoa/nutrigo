@@ -1,3 +1,10 @@
+import type {
+  Category,
+  Difficulty,
+  MealType,
+  Source,
+  Unit,
+} from "@nutrigo/shared";
 import { sql } from "drizzle-orm";
 import {
   check,
@@ -18,8 +25,8 @@ export const meta = sqliteTable("meta", {
 export const ingredient = sqliteTable("ingredient", {
   id: integer("id").primaryKey(),
   name: text("name").notNull().unique(),
-  category: text("category").notNull(),
-  source: text("source").notNull(),
+  category: text("category").$type<Category>().notNull(),
+  source: text("source").$type<Source>().notNull(),
   externalId: text("external_id"),
   kcal100g: real("kcal_100g").notNull(),
   carbs100g: real("carbs_100g").notNull(),
@@ -28,7 +35,7 @@ export const ingredient = sqliteTable("ingredient", {
   fibre100g: real("fibre_100g"),
   sugars100g: real("sugars_100g"),
   sodiumMg100g: real("sodium_mg_100g"),
-  defaultUnit: text("default_unit").notNull(),
+  defaultUnit: text("default_unit").$type<Unit>().notNull(),
   gramsPerUnit: real("grams_per_unit"),
   updatedAt: text("updated_at").notNull(),
 });
@@ -39,9 +46,9 @@ export const recipe = sqliteTable(
     id: integer("id").primaryKey(),
     name: text("name").notNull(),
     description: text("description"),
-    mealType: text("meal_type").notNull(),
+    mealType: text("meal_type").$type<MealType>().notNull(),
     servings: integer("servings").notNull(),
-    difficulty: text("difficulty"),
+    difficulty: text("difficulty").$type<Difficulty>(),
     prepMin: integer("prep_min"),
     cookMin: integer("cook_min"),
     rating: integer("rating"),
@@ -62,7 +69,7 @@ export const recipeIngredient = sqliteTable(
       .notNull()
       .references(() => ingredient.id, { onDelete: "restrict" }),
     quantity: real("quantity").notNull(),
-    unit: text("unit").notNull(),
+    unit: text("unit").$type<Unit>().notNull(),
     position: integer("position").notNull(),
   },
   (t) => [
