@@ -1,0 +1,140 @@
+/* The layout follows the recipe's own width, not the screen's. */
+.frame {
+  container-type: inline-size;
+}
+
+/* Phone: one column in source order, except the nutrition facts go last (SPEC-002 §4). */
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  color: var(--color-neutral-ink);
+}
+
+.nutrition {
+  order: 1;
+}
+
+.card {
+  margin: 0;
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-rail);
+}
+
+/* Wide: the rail and aside cards float in a left column; the recipe text flows beside it. */
+@container (min-width: 900px) {
+  .detail {
+    display: flow-root;
+  }
+
+  .side {
+    float: left;
+    clear: left;
+    box-sizing: border-box;
+    width: var(--size-aside);
+    margin-bottom: var(--space-5);
+  }
+
+  .main {
+    margin-inline-start: calc(var(--size-aside) + var(--space-8));
+    margin-bottom: var(--space-8);
+  }
+}
+
+.hero {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-figure);
+  font-weight: var(--font-weight-bold);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+
+.description {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.servings {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-4);
+  border-bottom: thin solid var(--color-neutral-line);
+}
+
+.servingsLabel,
+.cardTitle,
+.blockTitle {
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.cardTitle {
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tools {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(calc(var(--size-aside) / 2), 1fr)
+  );
+}
+
+.table {
+  width: 100%;
+  margin-top: var(--space-2);
+  border-collapse: collapse;
+}
+
+.message {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-10) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-subtle);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+  text-align: center;
+}
+
+.message p {
+  margin: 0;
+}
+
+.messageTitle {
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-ink);
+}
