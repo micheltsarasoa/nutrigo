@@ -142,7 +142,8 @@ type Props = {
 };
 
 // Derived (SPEC-002 §4, editor flow). A native form, validated with RecipeInput;
-// props only: the page saves and navigates.
+// props only: the page saves and navigates. Plain h2s instead of Card titles,
+// which would turn every card into a landmark.
 export function RecipeEditor({
   recipe,
   ingredients,
@@ -211,7 +212,8 @@ export function RecipeEditor({
     <form ref={form} className={styles.editor} noValidate onSubmit={submit}>
       <h1 className={styles.title}>{recipe ? "Edit recipe" : "New recipe"}</h1>
 
-      <Card title="Recipe">
+      <Card>
+        <h2 className={styles.cardTitle}>Recipe</h2>
         <div className={styles.fields}>
           <span className={styles.wide}>
             <Field
@@ -296,7 +298,8 @@ export function RecipeEditor({
         </div>
       </Card>
 
-      <Card title="Ingredients">
+      <Card>
+        <h2 className={styles.cardTitle}>Ingredients</h2>
         <Lines
           noun="ingredient"
           items={draft.ingredients}
@@ -352,7 +355,8 @@ export function RecipeEditor({
         />
       </Card>
 
-      <Card title="Steps">
+      <Card>
+        <h2 className={styles.cardTitle}>Steps</h2>
         <Lines
           noun="step"
           items={draft.steps}
@@ -383,7 +387,8 @@ export function RecipeEditor({
         />
       </Card>
 
-      <Card title="Tools">
+      <Card>
+        <h2 className={styles.cardTitle}>Tools</h2>
         <Lines
           noun="tool"
           items={draft.tools}
@@ -402,7 +407,8 @@ export function RecipeEditor({
         />
       </Card>
 
-      <Card title="Notes">
+      <Card>
+        <h2 className={styles.cardTitle}>Notes</h2>
         <Field
           label="Notes"
           multiline
