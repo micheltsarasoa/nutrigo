@@ -1,5 +1,5 @@
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { axeViolations } from "../../../axe.ts";
 import { AppShell, APP_SHELL_LAYOUTS, type NavItem } from "./AppShell.tsx";
 
@@ -25,6 +25,20 @@ const activeLink = () =>
   screen
     .getAllByRole("link")
     .filter((a) => a.getAttribute("aria-current") === "page");
+
+// The settings entry (SPEC-008 §4 Q-A): a button in the banner, outside the nav.
+function shellWithSettings(
+  layout: (typeof APP_SHELL_LAYOUTS)[number],
+  props: { onSettings?: () => void; settingsOpen?: boolean } = {},
+) {
+  return render(
+    <AppShell items={items} current="/" layout={layout} {...props}>
+      <main>
+        <h1>Page</h1>
+      </main>
+    </AppShell>,
+  );
+}
 
 describe("AppShell", () => {
   it("has the tab-bar and sidebar layouts", () => {
@@ -105,4 +119,100 @@ describe("AppShell", () => {
     const { container } = shell(layout, "/plan/2026-W40");
     expect(await axeViolations(container)).toEqual([]);
   });
+});
+
+describe("AppShell settings entry", () => {
+  it("without onSettings, neither layout has a Settings button, and tabs still has no banner", () => {
+    const { unmount } = shellWithSettings("sidebar");
+    expect(screen.queryByRole("button", { name: "Settings" })).toBeNull();
+    unmount();
+
+    shellWithSettings("tabs");
+    expect(screen.queryByRole("button", { name: "Settings" })).toBeNull();
+    expect(screen.queryByRole("banner")).toBeNull();
+  });
+
+  it.each(APP_SHELL_LAYOUTS)(
+    "%s: with onSettings, exactly one Settings button in the banner, not in Main nav, nav keeps its 5 items",
+    (layout) => {
+      shellWithSettings(layout, { onSettings: vi.fn() });
+
+      const buttons = screen.getAllByRole("button", { name: "Settings" });
+      expect(buttons).toHaveLength(1);
+      const button = screen.getByRole("button", { name: "Settings" });
+      expect(button.getAttribute("aria-haspopup")).toBe("dialog");
+      expect(button.getAttribute("aria-expanded")).toBe("false");
+
+      const banner = screen.getByRole("banner");
+      expect(within(banner).getByRole("button", { name: "Settings" })).toBe(
+        button,
+      );
+
+      const nav = screen.getByRole("navigation", { name: "Main" });
+      expect(
+        within(nav).queryByRole("button", { name: "Settings" }),
+      ).toBeNull();
+      expect(within(nav).getAllByRole("listitem")).toHaveLength(5);
+      expect(within(nav).getAllByRole("link")).toHaveLength(5);
+    },
+  );
+
+  it("tabs: the banner comes before the page content in document order, and still no NutriGo text", () => {
+    shellWithSettings("tabs", { onSettings: vi.fn() });
+
+    const banner = screen.getByRole("banner");
+    const main = screen.getByRole("main");
+    expect(
+      banner.compareDocumentPosition(main) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(screen.queryByText("NutriGo")).toBeNull();
+  });
+
+  it("sidebar: the Settings button comes after the nav inside the banner", () => {
+    shellWithSettings("sidebar", { onSettings: vi.fn() });
+
+    const banner = screen.getByRole("banner");
+    const nav = within(banner).getByRole("navigation", { name: "Main" });
+    const button = within(banner).getByRole("button", { name: "Settings" });
+    expect(
+      nav.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("calls onSettings once when the Settings button is clicked", () => {
+    const onSettings = vi.fn();
+    shellWithSettings("tabs", { onSettings });
+
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    expect(onSettings).toHaveBeenCalledTimes(1);
+  });
+
+  it("settingsOpen sets aria-expanded to true", () => {
+    shellWithSettings("tabs", { onSettings: vi.fn(), settingsOpen: true });
+
+    expect(
+      screen
+        .getByRole("button", { name: "Settings" })
+        .getAttribute("aria-expanded"),
+    ).toBe("true");
+  });
+
+  it("the Settings button is focusable", () => {
+    shellWithSettings("tabs", { onSettings: vi.fn() });
+
+    const button = screen.getByRole("button", { name: "Settings" });
+    button.focus();
+    expect(document.activeElement).toBe(button);
+  });
+
+  it.each(APP_SHELL_LAYOUTS)(
+    "%s: with onSettings and settingsOpen, has no axe violations",
+    async (layout) => {
+      const { container } = shellWithSettings(layout, {
+        onSettings: vi.fn(),
+        settingsOpen: true,
+      });
+      expect(await axeViolations(container)).toEqual([]);
+    },
+  );
 });

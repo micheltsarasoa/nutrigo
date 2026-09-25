@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
+import { useState } from "react";
 import type { Demo } from "../../../playground/types.ts";
+import { SettingsDialog } from "../SettingsDialog/index.ts";
 import { AppShell, type NavItem } from "./AppShell.tsx";
 
 // The app's 5 destinations (frontend.md §6). Groceries and Targets use the closest icons for now.
@@ -16,6 +18,9 @@ const phone: CSSProperties = {
   maxWidth: "var(--size-aside)",
   boxShadow: "var(--shadow-hairline)",
 };
+// overflow: hidden makes the frame the tab bar's scroll container, so the sticky bar
+// stays at the bottom of its own frame wherever the frame is on the page.
+const phoneStill: CSSProperties = { ...phone, overflow: "hidden" };
 const desktopScroll: CSSProperties = { overflowX: "auto" };
 const desktop: CSSProperties = { minWidth: "var(--breakpoint-desktop)" };
 const block: CSSProperties = {
@@ -31,6 +36,44 @@ const page = (lines: number) =>
       Page content {i + 1}
     </p>
   ));
+
+// A 1280 px frame that scrolls on its own on a narrow screen.
+const wide: CSSProperties = { overflowX: "auto" };
+const wideFrame: CSSProperties = {
+  minWidth: "calc(var(--breakpoint-desktop) + var(--space-10) * 2)",
+};
+
+// Holds the dialog's open state, so the button and the dialog it opens can be
+// tried together, as the page will wire them.
+function Live({
+  layout,
+  label,
+}: {
+  layout: "tabs" | "sidebar";
+  label: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <AppShell
+        items={items}
+        current={layout === "tabs" ? "#plan" : "#today"}
+        layout={layout}
+        label={label}
+        onSettings={() => setOpen(true)}
+        settingsOpen={open}
+      >
+        {page(2)}
+      </AppShell>
+      <SettingsDialog
+        open={open}
+        settings={{ locale: "fr-FR" }}
+        onSave={() => setOpen(false)}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
 
 export default {
   title: "AppShell",
@@ -64,5 +107,49 @@ export default {
           </div>
         </div>
       ),
+    "tab bar with settings: the button at the right of the top bar; press it to open Settings":
+      (
+        <div style={phoneStill}>
+          <Live layout="tabs" label="Main, tab bar with settings" />
+        </div>
+      ),
+    "sidebar with settings, 1280 px: the button at the bottom of the sidebar; press it to open Settings":
+      (
+        <div style={wide}>
+          <div style={wideFrame}>
+            <Live layout="sidebar" label="Main, sidebar with settings" />
+          </div>
+        </div>
+      ),
+    "settings active: its dialog is open (both layouts, static)": (
+      <>
+        <div style={phoneStill}>
+          <AppShell
+            items={items}
+            current="#plan"
+            layout="tabs"
+            label="Main, tab bar settings active"
+            onSettings={() => {}}
+            settingsOpen
+          >
+            {page(2)}
+          </AppShell>
+        </div>
+        <div style={desktopScroll}>
+          <div style={desktop}>
+            <AppShell
+              items={items}
+              current="#today"
+              layout="sidebar"
+              label="Main, sidebar settings active"
+              onSettings={() => {}}
+              settingsOpen
+            >
+              {page(2)}
+            </AppShell>
+          </div>
+        </div>
+      </>
+    ),
   },
 } satisfies Demo;

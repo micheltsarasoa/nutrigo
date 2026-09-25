@@ -47,6 +47,11 @@
   padding: 0 var(--space-3) var(--space-1);
 }
 
+.settings {
+  margin-top: auto;
+  padding: 0 var(--space-3);
+}
+
 .sidebar .list {
   flex-direction: column;
   gap: calc(var(--space-1) / 2);
@@ -61,6 +66,12 @@
 .tabs {
   display: flex;
   flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-4) var(--space-4) 0;
 }
 
 .tabs .page {

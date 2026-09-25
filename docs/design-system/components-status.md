@@ -62,7 +62,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
 | AppShell | – (#62, #65) | main | `done` |
-| AppShell: settings entry | #108 | – | `later` |
+| AppShell: settings entry | #108 | #151 | `done` |
 | RecipeList | #103 | #143 | `done` |
 | RecipeDetail | #104 | #146 | `done` |
 | RecipeEditor | #105 | #147 | `done` |
