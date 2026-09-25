@@ -55,6 +55,7 @@ const APPROVED = [
   "organism/recipedetail",
   "atom/button",
   "molecule/ingredientrow",
+  "organism/recipeeditor",
   "atom/segmented",
   "molecule/photoorplaceholder",
   "atom/starrating",

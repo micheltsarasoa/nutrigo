@@ -19,6 +19,7 @@
   --color-orange-on-light: #D97426;
   --color-orange-link-hover: #D9812F;
   --color-orange-soft: #FFC79A;
+  --color-red-base: #DC2626;
   --color-neutral-ink: #1F2937;
   --color-neutral-muted: #6B7280;
   --color-neutral-faint: #9CA3AF;
@@ -122,4 +123,5 @@
   --status-done: var(--color-green-base);
   --status-todo: var(--color-yellow-base);
   --status-attention: var(--color-orange-base);
+  --status-danger: var(--color-red-base);
 }

@@ -1,0 +1,220 @@
+/* The layout follows the form's own width, not the screen's. */
+.editor {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--space-5);
+  color: var(--color-neutral-ink);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-figure);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Phone: one column. Wide: two, with name, description and rating across both. */
+.fields {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@container (min-width: 600px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.cardTitle {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--font-tracking-card-title);
+}
+
+.label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.servings {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--size-field);
+  align-self: end;
+}
+
+.rating {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+/* The grip sits in the top-left corner and the bin in the top-right, on the
+   legend's row; the fields fill the box below them. */
+.row {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-rail);
+}
+
+.dragging {
+  box-shadow: var(--shadow-card);
+}
+
+.grip,
+.bin {
+  position: absolute;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: var(--size-touch-target);
+  height: var(--size-touch-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.grip:focus-visible,
+.bin:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+/* Touch on the grip drags instead of scrolling. */
+.grip {
+  left: 0;
+  border-radius: var(--radius-lg) 0 var(--radius-lg) 0;
+  color: var(--color-neutral-faint);
+  cursor: grab;
+  touch-action: none;
+}
+
+.grip:hover,
+.grip[aria-expanded="true"] {
+  color: var(--color-neutral-ink);
+}
+
+.dragging .grip {
+  cursor: grabbing;
+}
+
+.dots {
+  width: var(--size-icon-xs);
+  height: var(--size-icon-md);
+}
+
+.bin {
+  right: 0;
+  border-radius: 0 var(--radius-lg) 0 var(--radius-lg);
+  color: var(--status-danger);
+}
+
+.binIcon {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+}
+
+.item {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--size-touch-target) var(--space-4) var(--space-4);
+  border: 0;
+}
+
+.legend {
+  position: absolute;
+  top: 0;
+  left: var(--size-touch-target);
+  display: flex;
+  align-items: center;
+  height: var(--size-touch-target);
+  padding: 0;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-muted);
+}
+
+/* Ingredient, quantity and unit on one row when there is room. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.grow {
+  flex: 2 1 calc(var(--size-aside) / 2);
+}
+
+.short {
+  flex: 1 1 var(--size-media-thumb);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Rows 12 px apart, so the small buttons' 44 px touch targets don't overlap. */
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-2);
+}
+
+.alert {
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.dialog {
+  max-width: calc(var(--size-aside) - var(--space-5));
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-phone);
+  color: var(--color-neutral-ink);
+}
+
+.dialogTitle {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.dialog p {
+  margin: 0 0 var(--space-5);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+}
