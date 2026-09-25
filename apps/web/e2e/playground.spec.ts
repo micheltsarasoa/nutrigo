@@ -57,6 +57,7 @@ const APPROVED = [
   "atom/mealcheck",
   "atom/searchfield",
   "atom/card",
+  "atom/filtertabs",
   "organism/appshell",
 ];
 
