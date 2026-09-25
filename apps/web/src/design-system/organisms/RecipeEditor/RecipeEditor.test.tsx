@@ -56,6 +56,12 @@ const save = () =>
 const type = (el: HTMLElement, value: string) =>
   fireEvent.change(el, { target: { value } });
 const group = (name: string) => screen.getByRole("group", { name });
+const grip = (line: string) =>
+  screen.getByRole("button", { name: `Reorder ${line}` });
+const titles = () =>
+  screen
+    .getAllByRole<HTMLInputElement>("textbox", { name: "Title" })
+    .map((t) => t.value);
 const error = (field: HTMLElement) =>
   document.getElementById(
     field.getAttribute("aria-describedby")?.split(" ").at(-1) ?? "",
@@ -150,6 +156,7 @@ describe("RecipeEditor", () => {
     const second = group("Ingredient 2");
     type(within(second).getByRole("combobox", { name: "Ingredient" }), "1");
     type(within(second).getByRole("spinbutton", { name: "Quantity" }), "200");
+    fireEvent.click(grip("ingredient 1"));
     expect(
       screen
         .getByRole<HTMLButtonElement>("button", {
@@ -157,6 +164,7 @@ describe("RecipeEditor", () => {
         })
         .hasAttribute("disabled"),
     ).toBe(true);
+    fireEvent.click(grip("ingredient 2"));
     fireEvent.click(
       screen.getByRole("button", { name: "Move up ingredient 2" }),
     );
@@ -181,6 +189,7 @@ describe("RecipeEditor", () => {
       within(group("Step 3")).getByRole("textbox", { name: "Title" }),
       "Rest",
     );
+    fireEvent.click(grip("step 1"));
     fireEvent.click(screen.getByRole("button", { name: "Move down step 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove tool 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Add tool" }));
@@ -235,6 +244,60 @@ describe("RecipeEditor", () => {
       error(within(group("Step 1")).getByRole("textbox", { name: "Title" })),
     ).toBe("Enter a title, up to 100 characters.");
     expect(onSave).not.toHaveBeenCalled();
+  });
+
+  it("shows the move buttons only after a tap on a line's grip", () => {
+    setup({ recipe: turkey });
+    expect(screen.queryByRole("button", { name: /^Move/ })).toBeNull();
+    const handle = grip("step 2");
+    expect(handle.getAttribute("aria-expanded")).toBe("false");
+    fireEvent.click(handle);
+    expect(handle.getAttribute("aria-expanded")).toBe("true");
+    expect(
+      screen.getAllByRole("button", { name: /^Move/ }).map((b) => b.ariaLabel),
+    ).toEqual(["Move up step 2", "Move down step 2"]);
+    fireEvent.click(handle);
+    expect(screen.queryByRole("button", { name: /^Move/ })).toBeNull();
+  });
+
+  it("moves a line with the arrow keys on its grip, keeping focus on it", () => {
+    setup({ recipe: turkey });
+    const handle = grip("step 1");
+    handle.focus();
+    fireEvent.keyDown(handle, { key: "ArrowDown" });
+    expect(titles()).toEqual(["Serve", "Grill the turkey"]);
+    expect(document.activeElement).toBe(handle);
+    expect(handle.getAttribute("aria-label")).toBe("Reorder step 2");
+    fireEvent.keyDown(handle, { key: "ArrowDown" });
+    expect(titles()).toEqual(["Serve", "Grill the turkey"]);
+    fireEvent.keyDown(handle, { key: "ArrowUp" });
+    expect(titles()).toEqual(["Grill the turkey", "Serve"]);
+  });
+
+  it("moves a line by dragging its grip, without opening the move buttons", () => {
+    setup({
+      recipe: {
+        ...turkey,
+        steps: ["A", "B", "C"].map((title) => ({ title, body: "" })),
+      },
+    });
+    // jsdom has no layout: each line is 100 px tall, stacked from the top.
+    const lines = group("Step 1").closest("ol")!.children;
+    const layout = () =>
+      [...lines].forEach((li, j) => {
+        li.getBoundingClientRect = () =>
+          ({ top: j * 100, height: 100 }) as DOMRect;
+      });
+    layout();
+    const handle = grip("step 1");
+    fireEvent.pointerDown(handle, { clientY: 50, button: 0, pointerId: 1 });
+    fireEvent.pointerMove(handle, { clientY: 170, pointerId: 1 });
+    layout();
+    fireEvent.pointerMove(handle, { clientY: 260, pointerId: 1 });
+    fireEvent.pointerUp(handle, { clientY: 260, pointerId: 1 });
+    fireEvent.click(handle);
+    expect(titles()).toEqual(["B", "C", "A"]);
+    expect(screen.queryByRole("button", { name: /^Move/ })).toBeNull();
   });
 
   it("sets the servings and rating, and clears the rating", () => {
