@@ -13,6 +13,7 @@ export default defineConfig({
         "**/main.tsx",
         "apps/api/src/index.ts",
         "**/migrations/**",
+        "**/fixtures/**",
       ],
       thresholds: {
         "packages/shared/src/**": { lines: 95, branches: 90 },
