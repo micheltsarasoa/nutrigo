@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { IconName } from "../../atoms/Icon/index.ts";
+import { IconButton } from "../../atoms/IconButton/index.ts";
 import { Logo } from "../../atoms/Logo/index.ts";
 import { NavLink } from "../../atoms/NavLink/index.ts";
 import styles from "./AppShell.module.css";
@@ -17,6 +18,10 @@ type Props = {
   layout: (typeof APP_SHELL_LAYOUTS)[number];
   /** The navigation landmark's name. */
   label?: string;
+  /** Shows the settings IconButton; called when it is pressed. Without it, no button. */
+  onSettings?: () => void;
+  /** The settings dialog is open: the button gets aria-expanded="true". */
+  settingsOpen?: boolean;
   /** The page. Each page renders its own <main>, so the shell never nests one. */
   children: ReactNode;
 };
@@ -29,9 +34,20 @@ export function AppShell({
   current,
   layout,
   label = "Main",
+  onSettings,
+  settingsOpen,
   children,
 }: Props) {
   const variant = layout === "tabs" ? "tab" : "sidebar";
+  const settingsButton = onSettings && (
+    <IconButton
+      icon="settings"
+      label="Settings"
+      aria-haspopup="dialog"
+      aria-expanded={settingsOpen ?? false}
+      onClick={onSettings}
+    />
+  );
   const nav = (
     <nav aria-label={label}>
       <ul className={styles.list}>
@@ -60,11 +76,17 @@ export function AppShell({
           <Logo wordmark />
         </div>
         {nav}
+        {settingsButton && (
+          <div className={styles.settings}>{settingsButton}</div>
+        )}
       </header>
       {page}
     </div>
   ) : (
     <div className={`${styles.shell} ${styles.tabs}`}>
+      {settingsButton && (
+        <header className={styles.topbar}>{settingsButton}</header>
+      )}
       {page}
       <div className={styles.tabbar}>{nav}</div>
     </div>

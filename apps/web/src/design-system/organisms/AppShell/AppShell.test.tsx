@@ -139,7 +139,7 @@ describe("AppShell settings entry", () => {
 
       const buttons = screen.getAllByRole("button", { name: "Settings" });
       expect(buttons).toHaveLength(1);
-      const button = buttons[0];
+      const button = screen.getByRole("button", { name: "Settings" });
       expect(button.getAttribute("aria-haspopup")).toBe("dialog");
       expect(button.getAttribute("aria-expanded")).toBe("false");
 
