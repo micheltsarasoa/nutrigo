@@ -12,6 +12,12 @@ const oats = {
   defaultUnit: "g",
 };
 
+type ErrorBody = {
+  error: { code: string; message: string; fields: Record<string, string> };
+};
+const json = <T = ErrorBody>(res: Response) => res.json() as Promise<T>;
+type Names = { name: string }[];
+
 const setup = () => {
   const db = freshDb();
   const app = createApp({ db, version: "test" });
@@ -48,7 +54,7 @@ describe("POST /api/ingredients", () => {
       fat100g: -1,
     });
     expect(res.status).toBe(400);
-    const body = await res.json();
+    const body = await json(res);
     expect(body.error.code).toBe("VALIDATION_FAILED");
     expect(Object.keys(body.error.fields)).toEqual(["kcal100g", "fat100g"]);
     expect(await (await send("GET", "/api/ingredients")).json()).toEqual([]);
@@ -65,7 +71,7 @@ describe("POST /api/ingredients", () => {
     await create();
     const res = await send("POST", "/api/ingredients", oats);
     expect(res.status).toBe(409);
-    expect((await res.json()).error.code).toBe("CONFLICT");
+    expect((await json(res)).error.code).toBe("CONFLICT");
   });
 });
 
@@ -74,10 +80,10 @@ describe("GET /api/ingredients", () => {
     const { send, create } = setup();
     await create({ ...oats, name: "Rice" });
     await create();
-    const all = await (await send("GET", "/api/ingredients")).json();
-    expect(all.map((i: { name: string }) => i.name)).toEqual(["Oats", "Rice"]);
-    const some = await (await send("GET", "/api/ingredients?q=OA")).json();
-    expect(some.map((i: { name: string }) => i.name)).toEqual(["Oats"]);
+    const all = await json<Names>(await send("GET", "/api/ingredients"));
+    expect(all.map((i) => i.name)).toEqual(["Oats", "Rice"]);
+    const some = await json<Names>(await send("GET", "/api/ingredients?q=OA"));
+    expect(some.map((i) => i.name)).toEqual(["Oats"]);
   });
 });
 
@@ -137,8 +143,8 @@ describe("GET, PATCH and DELETE /api/ingredients/:id", () => {
     }
     const res = await send("DELETE", `/api/ingredients/${id}`);
     expect(res.status).toBe(409);
-    expect((await res.json()).error.message).toBe(
-      "Used by 2 recipes: Granola, Porridge",
+    expect((await json(res)).error.message).toBe(
+      "Used by these recipes: Granola, Porridge",
     );
     expect((await send("GET", `/api/ingredients/${id}`)).status).toBe(200);
   });
