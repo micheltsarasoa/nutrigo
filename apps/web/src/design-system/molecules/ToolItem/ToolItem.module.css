@@ -1,0 +1,26 @@
+.item {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.n {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--size-badge-sm);
+  height: var(--size-badge-sm);
+  border-radius: var(--radius-pill);
+  background: var(--color-orange-base);
+  color: var(--color-neutral-surface);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+}
+
+.name {
+  min-width: 0;
+  padding-top: var(--space-1);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+  overflow-wrap: anywhere;
+}
