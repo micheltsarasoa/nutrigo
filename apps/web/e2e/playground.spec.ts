@@ -52,6 +52,7 @@ const APPROVED = [
   "molecule/settingrow",
   "atom/iconbutton",
   "atom/progressbar",
+  "organism/recipedetail",
   "atom/button",
   "molecule/ingredientrow",
   "atom/segmented",
