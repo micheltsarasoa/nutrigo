@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft |
+| Status | Approved (2026-09-25) |
 | Sprint | S1 → v0.2.0 |
 | PRD refs | R-1 … R-9 |
 | Design | `design/source/Healthy Menu.dc.html` (list) · `design/source/Recipe Details.dc.html` (detail) · editors: derived, not in design |
@@ -27,7 +27,7 @@ Your personal recipe library. You can browse, search and filter recipes and open
 | AC-5 | Recipes of several meal types | I pick the "Lunch" filter tab | Only lunch recipes are shown; "All" restores the full list |
 | AC-6 | A recipe for 2 servings with 200 g turkey | I press + on Total Servings | It shows 3; the quantity becomes 300 g; nutrition **per serving** is unchanged |
 | AC-7 | The recipe list | I switch between list and grid views | The layout changes and the choice is remembered on this device |
-| AC-8 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted |
+| AC-8 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted. **Moved to SPEC-003 (S2)**: it needs the `meal_entry` table; in S1 a recipe deletes freely |
 | AC-9 | An ingredient used in a recipe | I try to delete it | I get a message listing the recipes that use it (409) |
 | AC-10 | A 390 px wide screen | I open the list, the detail page and the editor | Everything fits in one column; no horizontal scroll; tap targets ≥ 44 px |
 
@@ -47,7 +47,7 @@ Mobile (<768 px): the list is a single column of MenuListItem cards. On the deta
 | Level | Component | ✔ | States to show in the playground |
 |---|---|---|---|
 | Atom | Button, Pill, IconBadge, SearchField, Stepper, StarRating, SelectPill, NavLink | S0 | as in SPEC-001 |
-| Atom | TextField, NumberField (with unit suffix), TextArea, Select | new | empty, filled, focus, error, disabled |
+| Atom | Field (text, number with a unit suffix, multi-line: one atom, S1 decision), Select | new | empty, filled, focus, error, disabled |
 | Atom | Segmented (list/grid), FilterTabs | new | each option active; keyboard |
 | Molecule | MenuListItem (list and grid variants) | new | with/without photo, long title, no rating |
 | Molecule | MetaList row | new | each meta type, missing value "–" |
@@ -88,7 +88,7 @@ stateDiagram-v2
 | POST | `/api/recipes/:id/photo` | `multipart/form-data` image ≤ 5 MB (jpeg/png/webp) | `{ photoPath }` | 400, 413 |
 
 ## 6. Data
-The tables `ingredient`, `recipe`, `recipe_ingredient`, `recipe_step`, `recipe_tool`, `tag` and `recipe_tag` are defined in `data-model.md`. Photos are stored in `/data/photos/`, next to the DB, and covered by the backup.
+The tables `ingredient`, `recipe`, `recipe_ingredient`, `recipe_step` and `recipe_tool` are defined in `data-model.md`. Photos are stored in `/data/photos/`, next to the DB, and covered by the backup.
 
 ## 7. Business rules (`packages/shared`)
 | Function | Rule | Example |
@@ -100,7 +100,7 @@ The tables `ingredient`, `recipe`, `recipe_ingredient`, `recipe_step`, `recipe_t
 | `healthScore(nutrition, categories)` (approved, PRD Q8) | Start 5. +2 if protein ≥ 20 g; +1 if fibre ≥ 5 g; +1 if 300 ≤ kcal ≤ 700; +1 if ingredients span ≥ 3 food categories; −1 if sugars > 15 g; −1 if sodium > 800 mg; −1 if fat supplies > 40 % of kcal. Clamp to 0–10. A missing optional nutrient counts as 0 | Turkey, rice, asparagus → 9 |
 
 ## 8. Out of scope
-Reviews and rating counts, Popular and Recommended panels, the featured recipe, importing a recipe from a URL, sharing, Vitamin C and % daily values.
+Tags (no tables, no UI; the meal type covers the filters, S1 decision), reviews and rating counts, Popular and Recommended panels, the featured recipe, importing a recipe from a URL, sharing, Vitamin C and % daily values.
 
 ## 9. Test plan
 | Layer | What |
@@ -108,9 +108,9 @@ Reviews and rating counts, Popular and Recommended panels, the featured recipe, 
 | Unit | `toGrams`, `nutritionPerServing`, `scaleQuantities`, `totalTime`, `healthScore` (a table of cases, edge cases 0 and missing values) |
 | Integration | Every route, happy path and each error code; transactional PATCH (a failure leaves the old recipe intact) |
 | Component | Every molecule and organism listed above, in every state, with axe |
-| E2E | AC-1 … AC-10, run on mobile (390 px) and desktop viewports |
+| E2E | AC-1 … AC-10 (AC-8 in S2), run on mobile (390 px) and desktop viewports |
 
 ## 10. Open questions
 - ~~Q6 (PRD): recipe photo source beyond your own uploads.~~ **Your own uploads are the main source**; the ingredient mosaic and meal-type placeholder stay as fallbacks (resolved 2026-09-23).
 - ~~Q8 (PRD): health-score formula above; approve or change it.~~ **Approved** as written (resolved 2026-09-23).
-- Are tags still needed, given the meal type covers the design's filters? Proposal: keep tags in the data, and hide them in the UI until needed.
+- ~~Are tags still needed, given the meal type covers the design's filters?~~ **No tags in S1**: no tables and no UI. They come back with a tag filter when one is really needed (R-4 is a Should) (resolved 2026-09-24).
