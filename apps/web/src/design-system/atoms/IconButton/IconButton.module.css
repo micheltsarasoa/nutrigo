@@ -1,0 +1,44 @@
+/* 40 px round; the tap area reaches 44 px. */
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-hairline);
+  color: var(--color-neutral-muted);
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--size-control) - var(--size-touch-target)) / 2);
+}
+
+.button:hover:not(:disabled) {
+  color: var(--color-neutral-ink);
+}
+
+.button[aria-expanded="true"] {
+  background: var(--color-green-base);
+  color: var(--color-neutral-ink);
+  box-shadow: none;
+}
+
+.button:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}

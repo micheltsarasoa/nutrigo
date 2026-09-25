@@ -85,6 +85,17 @@ const ICONS = {
   steps: [2, <path d="M4 7h16M4 12h16M4 17h10" />],
   prev: [2.4, <path d="M15 6l-6 6 6 6" />],
   chevron: [2.2, <path d="M6 9l6 6 6-6" />],
+  // Not in the export: drawn for the Settings entry (SPEC-008, owner 2026-09-25).
+  settings: [
+    1.9,
+    <>
+      <path
+        d="M19.2 13.0L21.3 14.1L20.0 17.1L17.8 16.4L16.4 17.8L17.1 20.0L14.1 21.3L13.0 19.2L11.0 19.2L9.9 21.3L6.9 20.0L7.6 17.8L6.2 16.4L4.0 17.1L2.7 14.1L4.8 13.0L4.8 11.0L2.7 9.9L4.0 6.9L6.2 7.6L7.6 6.2L6.9 4.0L9.9 2.7L11.0 4.8L13.0 4.8L14.1 2.7L17.1 4.0L16.4 6.2L17.8 7.6L20.0 6.9L21.3 9.9L19.2 11.0Z"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="3" />
+    </>,
+  ],
 } satisfies Record<string, [number, ReactNode]>;
 
 export type IconName = keyof typeof ICONS;

@@ -4,7 +4,8 @@
   max-width: 100%;
 }
 
-/* A percentage width lets a long option shrink to the container (ending in …) instead of widening the page. */
+/* 16 px text so iOS Safari doesn't zoom in on focus (#123).
+   A percentage width lets a long option shrink to the container (ending in …) instead of widening the page. */
 .select {
   appearance: none;
   min-width: 0;
@@ -17,7 +18,7 @@
   background: var(--color-neutral-surface);
   box-shadow: var(--shadow-hairline);
   font: inherit;
-  font-size: var(--font-size-caption);
+  font-size: var(--font-size-title);
   font-weight: var(--font-weight-medium);
   color: var(--color-neutral-muted);
   white-space: nowrap;
