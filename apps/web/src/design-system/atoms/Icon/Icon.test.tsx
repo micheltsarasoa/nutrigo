@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { axeViolations } from "../../../axe.ts";
 import { Icon, ICON_NAMES, type IconName } from "./Icon.tsx";
 
-// The 20 in-scope icons from docs/design-system/index.html §06.
+// The 20 in-scope icons from docs/design-system/index.html §06, plus settings (SPEC-008, owner 2026-09-25).
 const EXPECTED: IconName[] = [
   "dashboard",
   "calendar",
@@ -25,10 +25,11 @@ const EXPECTED: IconName[] = [
   "steps",
   "prev",
   "chevron",
+  "settings",
 ];
 
 describe("Icon", () => {
-  it("has exactly the 20 in-scope icons", () => {
+  it("has exactly the 21 in-scope icons", () => {
     expect([...ICON_NAMES].sort()).toEqual([...EXPECTED].sort());
   });
 
