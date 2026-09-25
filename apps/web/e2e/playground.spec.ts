@@ -51,6 +51,7 @@ const APPROVED = [
   "atom/progressbar",
   "atom/button",
   "atom/segmented",
+  "molecule/photoorplaceholder",
   "atom/starrating",
   "atom/pill",
   "molecule/metarow",
