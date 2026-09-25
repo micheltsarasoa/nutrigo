@@ -1,0 +1,35 @@
+.label,
+.value {
+  padding: var(--space-3) 0;
+  border-bottom: thin solid var(--color-neutral-line);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-ink);
+}
+
+.row:last-child > * {
+  border-bottom: 0;
+}
+
+.label {
+  font-weight: var(--font-weight-regular);
+  text-align: start;
+}
+
+.value {
+  padding-inline-start: var(--space-3);
+  font-weight: var(--font-weight-bold);
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+
+.head > * {
+  font-size: var(--font-size-figure-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.caption {
+  display: block;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-muted);
+}
