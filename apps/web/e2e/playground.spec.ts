@@ -72,6 +72,7 @@ const APPROVED = [
   "molecule/macrotile",
   "atom/filtertabs",
   "molecule/nutritionrow",
+  "organism/ingredienteditor",
   "organism/appshell",
 ];
 
