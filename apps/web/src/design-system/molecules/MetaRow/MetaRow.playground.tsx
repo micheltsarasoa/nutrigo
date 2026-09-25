@@ -10,8 +10,8 @@ export default {
   states: {
     "each meta type": (
       <dl style={list}>
-        <MetaRow icon="time" label="Prep time" value="10 min" />
-        <MetaRow icon="time" label="Cook time" value="15 min" />
+        <MetaRow icon="prep" label="Prep time" value="10 min" />
+        <MetaRow icon="cook" label="Cook time" value="15 min" />
         <MetaRow icon="difficulty" label="Difficulty" value="Medium" />
         <MetaRow icon="steps" label="Steps" value="5 steps" />
         <MetaRow icon="health-score" label="Health score" value="9/10" />
@@ -19,7 +19,7 @@ export default {
     ),
     "missing value": (
       <dl style={list}>
-        <MetaRow icon="time" label="Cook time" value={null} />
+        <MetaRow icon="cook" label="Cook time" value={null} />
       </dl>
     ),
     "long value": (
