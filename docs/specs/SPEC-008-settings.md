@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft |
+| Status | Approved (2026-09-25; S1 builds the Display section) |
 | Sprint | Staged: S1 locale → S3 nutrition sources → S5 AI provider and spend cap |
 | PRD refs | C-1 … C-4, A-4, A-5, §5.7, §5.9 |
 | Epic | n/a (created after approval) |
@@ -45,7 +45,7 @@ A section appears only once its feature exists (S1: Display; S3: + Nutrition sou
 ### Component inventory (bottom-up)
 | Level | Component | New / existing | States |
 |---|---|---|---|
-| Atom | Button, Icon, Select, NumberField (€ suffix) | S0 / SPEC-002 | as specified there |
+| Atom | Button, Icon, Select, Field (number with a € suffix) | S0 / SPEC-002 | as specified there |
 | Atom | IconButton (settings) | new | default, hover, focus, active (dialog open) |
 | Atom | Switch | new | on, off, focus, disabled |
 | Molecule | SettingRow (label, help text, control) | new | with/without help, error |

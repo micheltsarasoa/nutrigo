@@ -179,6 +179,7 @@ erDiagram
 | `ciqual_food.name_search` is stored lower case without accents | SQLite's `LIKE` ignores case for ASCII only, so "epeautre" must find "Épeautre" |
 | Dates are ISO text; weeks are ISO (Monday start) | SQLite has no date type; ISO strings sort correctly |
 | `ON DELETE RESTRICT` from recipe_ingredient to ingredient | You can't delete an ingredient that a recipe uses (the API returns 409) |
+| `tag` and `recipe_tag` are **not created yet** | S1 decision (SPEC-002 §10): the meal type covers the filters; the tables arrive with a tag filter |
 | `ON DELETE CASCADE` from recipe to its ingredients, steps, tools and tags | Their rows have no meaning without the recipe |
 | `ON DELETE RESTRICT` from meal_entry to recipe | You can't delete a recipe that's in a plan; archive or remove it from the plan first |
 
@@ -198,6 +199,6 @@ flowchart LR
 |---|---|---|
 | Local (from Sprint 1) | `sqlite3 data/nutrigo.db ".backup data/backups/$(date +%F).db"` via an npm script, daily, keeping 30 | Laptop + copy to a second disk or cloud folder |
 | Railway (from v1.1.0) | A daily scheduled job runs `.backup`, then uploads it to object storage. Details in ADR-0004 | Off-platform |
-| Restore drill | Once per release from Sprint 1 on: restore the latest backup into a local container and run the smoke e2e | Checklist in `docs/process/release.md` |
+| Restore drill | Once per release from Sprint 1 on: copy the latest backup over the DB, start the built app with Node and run the smoke e2e (no Docker needed) | Checklist in `docs/process/release.md` |
 
 Pragmas set at connection: `journal_mode=WAL`, `foreign_keys=ON`, `busy_timeout=5000`.
