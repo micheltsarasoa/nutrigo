@@ -1,0 +1,65 @@
+.media {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-media);
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.hero {
+  height: var(--size-media-hero);
+}
+
+.thumb {
+  height: var(--size-media-thumb);
+}
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.mosaic[data-count="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.mosaic[data-count="3"] img:first-child {
+  grid-row: span 2;
+}
+
+.mosaic img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--color-neutral-surface);
+}
+
+.placeholder svg {
+  width: var(--size-badge-lg);
+  height: var(--size-badge-lg);
+}
+
+.breakfast {
+  background: var(--meal-slot-breakfast);
+}
+
+.lunch {
+  background: var(--meal-slot-lunch);
+}
+
+.snack {
+  background: var(--meal-slot-snack);
+  color: var(--color-neutral-faint);
+}
+
+.dinner {
+  background: var(--meal-slot-dinner);
+}
