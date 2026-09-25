@@ -5,6 +5,7 @@ import type { Db } from "./db/client.ts";
 import { meta } from "./db/schema.ts";
 import { ingredientRoutes } from "./routes/ingredients.ts";
 import { recipeRoutes } from "./routes/recipes.ts";
+import { settingsRoutes } from "./routes/settings.ts";
 
 export function createApp({
   db,
@@ -29,6 +30,7 @@ export function createApp({
 
   app.route("/api/ingredients", ingredientRoutes(db));
   app.route("/api/recipes", recipeRoutes(db));
+  app.route("/api/settings", settingsRoutes(db));
 
   if (webRoot) {
     // One image serves web + api (ADR-0005): built files first, then index.html for client-side routes.
