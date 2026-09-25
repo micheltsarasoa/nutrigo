@@ -53,6 +53,7 @@ const APPROVED = [
   "atom/segmented",
   "atom/starrating",
   "atom/pill",
+  "molecule/metarow",
   "atom/selectpill",
   "atom/iconbadge",
   "atom/mealcheck",
