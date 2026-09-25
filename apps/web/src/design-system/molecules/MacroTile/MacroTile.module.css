@@ -25,14 +25,17 @@
   background: var(--color-neutral-chip-grey);
 }
 
+/* Owner 2026-09-25: the icon takes 30 % of the tile's width, white line, no background. */
 .icon {
-  display: grid;
-  place-items: center;
-  width: var(--size-badge-sm);
-  height: var(--size-badge-sm);
+  display: block;
+  width: 30%;
   margin-bottom: var(--space-2);
-  border-radius: var(--radius-sm);
-  background: var(--color-neutral-surface);
+  color: var(--color-neutral-surface);
+}
+
+.icon svg {
+  width: 100%;
+  height: auto;
 }
 
 .label,
