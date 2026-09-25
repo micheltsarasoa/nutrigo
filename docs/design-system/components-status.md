@@ -40,7 +40,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Select | #89 | #117 | `done` |
 | Segmented | #90 | #118 | `done` |
 | FilterTabs | #91 | #119 | `done` |
-| IconButton | #92 | `feat/92-iconbutton-atom`, #124 | `design-approved` |
+| IconButton | #92 | `feat/92-iconbutton-atom`, #124 | `done` (on merge) |
 
 ## Molecules
 
