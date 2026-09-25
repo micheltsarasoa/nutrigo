@@ -65,15 +65,57 @@
   list-style: none;
 }
 
+.row {
+  display: flex;
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-rail);
+}
+
+.dragging {
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+
+/* The whole left edge is the handle; touch on it drags instead of scrolling. */
+.grip {
+  flex: none;
+  width: var(--size-touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background: none;
+  color: var(--color-neutral-faint);
+  cursor: grab;
+  touch-action: none;
+}
+
+.grip:hover,
+.grip[aria-expanded="true"] {
+  color: var(--color-neutral-ink);
+}
+
+.grip:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+.dragging .grip {
+  cursor: grabbing;
+}
+
+.dots {
+  width: var(--size-icon-xs);
+  height: var(--size-icon-md);
+}
+
 .item {
   display: grid;
+  flex: 1;
   gap: var(--space-3);
   min-inline-size: 0;
   margin: 0;
-  padding: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-4) 0;
   border: 0;
-  border-radius: var(--radius-lg);
-  background: var(--color-neutral-rail);
 }
 
 .legend {

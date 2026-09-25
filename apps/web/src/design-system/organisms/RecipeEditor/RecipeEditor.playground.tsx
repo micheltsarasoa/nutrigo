@@ -104,9 +104,8 @@ export default {
   level: "organism",
   states: {
     "new (empty; press Save for the errors, Tab for the focus ring★)": <Live />,
-    "edit (3 ingredients, 2 steps, 2 tools; move and remove lines)": (
-      <Live recipe={TURKEY} />
-    ),
+    "edit (3 ingredients, 2 steps, 2 tools; drag a grip ⠿ to reorder, or tap it for the move buttons)":
+      <Live recipe={TURKEY} />,
     "validation errors (after Save)": <Submitted recipe={INVALID} />,
     "saving (Save busy)": <Live recipe={TURKEY} saving />,
     "server error (input kept)": (

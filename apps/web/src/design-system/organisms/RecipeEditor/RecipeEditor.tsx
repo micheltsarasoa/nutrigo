@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type PointerEvent,
   type ReactNode,
 } from "react";
 import { Button } from "../../atoms/Button/index.ts";
@@ -465,7 +466,12 @@ export function RecipeEditor({
   );
 }
 
-// A numbered list of fieldsets ("Step 2") that can be added, moved and removed.
+// Pointer travel before a press on the grip counts as a drag, not a tap.
+const DRAG_START = 6;
+
+// A numbered list of fieldsets ("Step 2") that can be added, reordered and removed.
+// Each line's grip is dragged (mouse or touch), moved with the arrow keys, or
+// tapped to show Move up / Move down for anyone who can't drag (WCAG 2.5.7).
 function Lines<T extends { key: number }>({
   noun,
   items,
@@ -480,34 +486,127 @@ function Lines<T extends { key: number }>({
   render: (item: T, i: number) => ReactNode;
 }) {
   const Noun = noun.charAt(0).toUpperCase() + noun.slice(1);
+  const list = useRef<HTMLOListElement>(null);
+  const [open, setOpen] = useState<number | null>(null);
+  const [dragging, setDragging] = useState<number | null>(null);
+  // The latest lines, for the window listeners of a drag in progress.
+  const latest = useRef({ items, onChange });
+  latest.current = { items, onChange };
+
+  const toggle = (key: number) => setOpen((o) => (o === key ? null : key));
+  const reorder = (from: number, to: number) => {
+    const { items, onChange } = latest.current;
+    if (to >= 0 && to < items.length) onChange(move(items, from, to));
+  };
+
+  function startDrag(
+    e: PointerEvent<HTMLButtonElement>,
+    index: number,
+    key: number,
+  ) {
+    if (e.button !== 0) return;
+    const startY = e.clientY;
+    let moved = false;
+    // On window, not the grip: moving the line in the DOM drops pointer capture.
+    const onMove = (ev: globalThis.PointerEvent) => {
+      if (!moved && Math.abs(ev.clientY - startY) < DRAG_START) return;
+      moved = true;
+      setDragging(key);
+      // The new place is after every other line whose middle is above the pointer.
+      let to = 0;
+      [...(list.current?.children ?? [])].forEach((line, j) => {
+        const box = line.getBoundingClientRect();
+        if (j !== index && ev.clientY > box.top + box.height / 2) to++;
+      });
+      if (to !== index) {
+        reorder(index, to);
+        index = to;
+      }
+    };
+    const onEnd = (ev: globalThis.PointerEvent) => {
+      // A press that didn't move is a tap. Browsers don't always follow a
+      // touch drag with a click, so the tap isn't left to the click event.
+      if (!moved && ev.type === "pointerup") toggle(key);
+      setDragging(null);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onEnd);
+      window.removeEventListener("pointercancel", onEnd);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onEnd);
+    window.addEventListener("pointercancel", onEnd);
+  }
+
   return (
     <>
       {items.length > 0 && (
-        <ol className={styles.list}>
+        <ol ref={list} className={styles.list}>
           {items.map((item, i) => (
-            <li key={item.key}>
+            <li
+              key={item.key}
+              className={
+                dragging === item.key
+                  ? `${styles.row} ${styles.dragging}`
+                  : styles.row
+              }
+            >
+              <button
+                type="button"
+                className={styles.grip}
+                aria-label={`Reorder ${noun} ${i + 1}`}
+                aria-expanded={open === item.key}
+                aria-keyshortcuts="ArrowUp ArrowDown"
+                onKeyDown={(e) => {
+                  const to = { ArrowUp: i - 1, ArrowDown: i + 1 }[e.key];
+                  if (to === undefined) return;
+                  e.preventDefault();
+                  reorder(i, to);
+                }}
+                onPointerDown={(e) => startDrag(e, i, item.key)}
+                // Keyboard only (detail 0); pointer taps toggle in startDrag.
+                onClick={(e) => e.detail === 0 && toggle(item.key)}
+              >
+                {/* The Icon set has no grip, so its 6 dots are drawn here. */}
+                <svg
+                  className={styles.dots}
+                  viewBox="0 0 10 16"
+                  fill="currentColor"
+                  focusable="false"
+                  aria-hidden
+                >
+                  {[2, 8, 14].flatMap((y) =>
+                    [2, 8].map((x) => (
+                      <circle key={`${x}-${y}`} cx={x} cy={y} r="1.6" />
+                    )),
+                  )}
+                </svg>
+              </button>
               <fieldset className={styles.item}>
                 <legend className={styles.legend}>{`${Noun} ${i + 1}`}</legend>
                 {render(item, i)}
                 <div className={styles.tools}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    aria-label={`Move up ${noun} ${i + 1}`}
-                    disabled={i === 0}
-                    onClick={() => onChange(move(items, i, i - 1))}
-                  >
-                    Move up
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    aria-label={`Move down ${noun} ${i + 1}`}
-                    disabled={i === items.length - 1}
-                    onClick={() => onChange(move(items, i, i + 1))}
-                  >
-                    Move down
-                  </Button>
+                  {open === item.key && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Move up ${noun} ${i + 1}`}
+                        disabled={i === 0}
+                        onClick={() => reorder(i, i - 1)}
+                      >
+                        Move up
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Move down ${noun} ${i + 1}`}
+                        disabled={i === items.length - 1}
+                        onClick={() => reorder(i, i + 1)}
+                      >
+                        Move down
+                      </Button>
+                    </>
+                  )}
                   <Button
                     variant="ghost"
                     size="sm"
