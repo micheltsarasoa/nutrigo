@@ -48,12 +48,12 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 |---|---|---|---|
 | MenuListItem | #93 | – | `later` |
 | MetaRow | #94 | #128; #131 switches prep and cook to their icons | `done` |
-| MacroTile | #95 | `feat/95-macrotile`, #129 | `done` (on merge) |
+| MacroTile | #95 | #129 | `done` |
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
-| ToolItem | #98 | #133, #136 | `done` (on merge) |
-| NoteItem | #99 | – | `later` |
-| NutritionRow | #100 | #132; baseline #134 | `done` (on merge) |
+| ToolItem | #98 | #133, #136 | `done` |
+| NoteItem | #99 | #135 | `done` |
+| NutritionRow | #100 | #132, #134 | `done` |
 | PhotoOrPlaceholder | #101 | – | `later` |
 | SettingRow | #102 | – | `later` |
 
