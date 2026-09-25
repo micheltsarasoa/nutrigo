@@ -179,6 +179,7 @@ erDiagram
 | `ciqual_food.name_search` is stored lower case without accents | SQLite's `LIKE` ignores case for ASCII only, so "epeautre" must find "Épeautre" |
 | Dates are ISO text; weeks are ISO (Monday start) | SQLite has no date type; ISO strings sort correctly |
 | `ON DELETE RESTRICT` from recipe_ingredient to ingredient | You can't delete an ingredient that a recipe uses (the API returns 409) |
+| Columns and tables arrive with the sprint that uses them | S1 creates `ingredient` (without `image_*` and `price_*`, added in S3 and S4), `recipe`, `recipe_ingredient`, `recipe_step`, `recipe_tool` and `settings` (all its columns) |
 | `tag` and `recipe_tag` are **not created yet** | S1 decision (SPEC-002 §10): the meal type covers the filters; the tables arrive with a tag filter |
 | `ON DELETE CASCADE` from recipe to its ingredients, steps, tools and tags | Their rows have no meaning without the recipe |
 | `ON DELETE RESTRICT` from meal_entry to recipe | You can't delete a recipe that's in a plan; archive or remove it from the plan first |
@@ -191,6 +192,7 @@ flowchart LR
 ```
 
 - Migrations only go forward. To roll back, write a new migration.
+- `apps/api/src/db/fixtures/v<previous release>.db` is a DB made by the previous release, with a marker row in `meta`. `migrations.test.ts` applies every migration to a copy of it. Replace the fixture after each release.
 - CI runs every migration on an empty DB **and** on a fixture DB copied from the previous release, to catch migrations that break existing data.
 
 ## 4. Backups and restore
