@@ -28,12 +28,12 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Button | #21 | main | `done` |
 | Pill | #22 | main | `done` |
 | IconBadge | #23 | main | `done` |
-| SearchField | #24 | #125 makes the text 16 px (#123) | `done` (fix `awaiting-validation`) |
+| SearchField | #24 | #125 makes the text 16 px (#123) | `done` (fix `design-approved`) |
 | ProgressBar | #25 | main | `done` |
 | Stepper | #26 | main | `done` |
 | StarRating | #27 | main | `done` |
 | MealCheck | #28 | main | `done` |
-| SelectPill | #29 | #125 makes the text 16 px (#123) | `done` (fix `awaiting-validation`) |
+| SelectPill | #29 | #125 makes the text 16 px (#123) | `done` (fix `design-approved`) |
 | NavLink | #30 | main | `done` |
 | Card | #31 | main | `done` |
 | Field | #88 | #116 | `done` |
