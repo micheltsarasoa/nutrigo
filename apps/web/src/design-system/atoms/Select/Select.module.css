@@ -1,0 +1,72 @@
+.field {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-ink);
+}
+
+.box {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+/* 16 px so iOS Safari doesn't zoom in on focus; same surface as Field. */
+.select {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: var(--size-field);
+  padding: 0 calc(var(--space-4) + var(--size-icon-xs) + var(--space-2)) 0
+    var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-hairline);
+  font: inherit;
+  font-size: var(--font-size-title);
+  color: var(--color-neutral-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+/* The chevron sits over the right padding; clicks go through to the select. */
+.select + svg {
+  position: absolute;
+  top: 50%;
+  right: var(--space-4);
+  translate: 0 -50%;
+  color: var(--color-neutral-muted);
+  pointer-events: none;
+}
+
+.select:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.select:disabled,
+.select:disabled + svg {
+  opacity: var(--opacity-disabled);
+}
+
+.select:disabled {
+  cursor: not-allowed;
+}
+
+.invalid {
+  box-shadow: inset 0 0 0 var(--focus-width) var(--status-attention);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-orange-on-light);
+}

@@ -1,0 +1,62 @@
+.field {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-ink);
+}
+
+/* Same surface as SearchField (.search-bar); the ring goes on the whole box. */
+.box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--size-field);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-hairline);
+}
+
+.box:focus-within {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.box:has(:disabled) {
+  opacity: var(--opacity-disabled);
+}
+
+.invalid {
+  box-shadow: inset 0 0 0 var(--focus-width) var(--status-attention);
+}
+
+/* 16 px so iOS Safari doesn't zoom in on focus. */
+.control {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2) 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--font-size-title);
+  color: var(--color-neutral-ink);
+  resize: vertical;
+}
+
+.unit {
+  flex: none;
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-orange-on-light);
+}

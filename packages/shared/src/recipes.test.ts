@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { IngredientInput, IngredientPatch, RecipeInput } from "./recipes.ts";
+import {
+  IngredientInput,
+  IngredientPatch,
+  RecipeInput,
+  RecipeQuery,
+} from "./recipes.ts";
 
 const oats = {
   name: "Oats",
@@ -149,5 +154,12 @@ describe("RecipeInput", () => {
     expect(fields(RecipeInput.safeParse(twice))).toEqual([
       "ingredients.1.ingredientId",
     ]);
+  });
+});
+
+describe("RecipeQuery", () => {
+  it("defaults the sort to name and rejects an unknown one", () => {
+    expect(RecipeQuery.parse({})).toEqual({ sort: "name" });
+    expect(RecipeQuery.safeParse({ sort: "price" }).success).toBe(false);
   });
 });
