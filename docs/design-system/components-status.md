@@ -46,23 +46,23 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
-| MenuListItem | #93 | `feat/93-menulistitem`, #140 | `done` (on merge) |
+| MenuListItem | #93 | #140 | `done` |
 | MetaRow | #94 | #128; #131 switches prep and cook to their icons | `done` |
 | MacroTile | #95 | #129 | `done` |
-| IngredientRow | #96 | `feat/96-ingredientrow`, #138 | `done` (on merge) |
+| IngredientRow | #96 | #138 | `done` |
 | RecipeStep | #97 | #137 | `done` |
 | ToolItem | #98 | #133, #136 | `done` |
 | NoteItem | #99 | #135 | `done` |
 | NutritionRow | #100 | #132, #134 | `done` |
-| PhotoOrPlaceholder | #101 | `feat/101-photoorplaceholder`, #139 | `done` (on merge) |
-| SettingRow | #102 | `feat/102-settingrow`, #141 | `done` (on merge) |
+| PhotoOrPlaceholder | #101 | #139 | `done` |
+| SettingRow | #102 | #141 | `done` |
 
 ## Organisms
 
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
 | AppShell | – (#62, #65) | main | `done` |
-| AppShell: settings entry | #108 | – | `later` (needs IconButton) |
+| AppShell: settings entry | #108 | – | `later` |
 | RecipeList | #103 | – | `later` |
 | RecipeDetail | #104 | – | `later` |
 | RecipeEditor | #105 | – | `later` |
