@@ -68,6 +68,20 @@ describe("App", () => {
   });
 });
 
+describe("App /ingredients (SPEC-002)", () => {
+  it("renders the ingredients page, with the Recipes tab current", () => {
+    render(<App path="/ingredients" wide={false} />);
+    expect(heading().textContent).toBe("Ingredients");
+    expect(current()).toEqual(["Recipes"]);
+  });
+
+  it("/ingredients/abc shows Page not found", () => {
+    render(<App path="/ingredients/abc" wide={false} />);
+    expect(heading().textContent).toBe("Page not found");
+    expect(current()).toEqual([]);
+  });
+});
+
 describe("NotFound", () => {
   it("shows a page-not-found heading in the main landmark (production /playground, SPEC-001 AC-4)", () => {
     render(<NotFound />);
