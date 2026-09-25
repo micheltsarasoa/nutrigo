@@ -24,7 +24,7 @@ flowchart TB
 | Visual | `apps/web/e2e/playground.spec.ts` | Playwright screenshots of each **approved** `/playground/*` page at 390 px and 1280 px. Compared in CI only (Linux baselines) | `e2e` |
 | E2E | `apps/web/e2e/*.spec.ts` | Playwright against the built app (`vite preview` until the Docker image exists, #18), axe injected from `axe-core` | `e2e` |
 | Performance/PWA | n/a | Lighthouse CI | `lighthouse` (from S4, the offline PWA sprint; `@lhci/cli` needs an ADR then) |
-| Migrations | `apps/api/db/migrations.test.ts` | Apply all migrations to an empty DB and to the previous release's fixture | `test` |
+| Migrations | `apps/api/src/db/migrations.test.ts` | Apply all migrations to an empty DB and to the previous release's fixture | `test` |
 
 ### Adding a visual baseline
 
