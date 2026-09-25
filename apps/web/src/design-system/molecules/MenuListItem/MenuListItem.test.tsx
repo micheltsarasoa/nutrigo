@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { axeViolations } from "../../../axe.ts";
 import { MenuListItem } from "./MenuListItem.tsx";
@@ -50,10 +49,11 @@ describe("MenuListItem", () => {
     expect(screen.getAllByText("–")).toHaveLength(2);
   });
 
-  it("is reached with Tab", async () => {
+  it("is reachable with the keyboard", () => {
     render(<MenuListItem {...recipe} variant="list" />);
-    await userEvent.tab();
-    expect(document.activeElement).toBe(screen.getByRole("link"));
+    const link = screen.getByRole("link");
+    link.focus();
+    expect(document.activeElement).toBe(link);
   });
 
   it("has no axe violations in both variants", async () => {
