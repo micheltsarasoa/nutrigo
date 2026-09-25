@@ -46,7 +46,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
-| MenuListItem | #93 | – | `later` |
+| MenuListItem | #93 | `feat/93-menulistitem`, #140 | `done` (on merge) |
 | MetaRow | #94 | #128; #131 switches prep and cook to their icons | `done` |
 | MacroTile | #95 | #129 | `done` |
 | IngredientRow | #96 | `feat/96-ingredientrow`, #138 | `done` (on merge) |
