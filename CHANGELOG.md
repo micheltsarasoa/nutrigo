@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.2.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.1.0...v0.2.0) (2026-09-25)
+
+
+### Features
+
+* **api:** add GET and PUT /api/settings ([#153](https://github.com/micheltsarasoa/nutrigo/issues/153)) ([506866b](https://github.com/micheltsarasoa/nutrigo/commit/506866ba6027d9856a89983e3f756b09fc88f948))
+* **api:** add the /api/ingredients routes ([#120](https://github.com/micheltsarasoa/nutrigo/issues/120)) ([983eff1](https://github.com/micheltsarasoa/nutrigo/commit/983eff1c3f4b3fa4ca1ff85728bd3b3e2cfa316e))
+* **api:** add the ingredient, recipe and settings tables ([#114](https://github.com/micheltsarasoa/nutrigo/issues/114)) ([6ec758f](https://github.com/micheltsarasoa/nutrigo/commit/6ec758f816587e9cdda4b85609b479bbda377b8e))
+* **api:** add the recipe create, replace and delete routes ([#122](https://github.com/micheltsarasoa/nutrigo/issues/122)) ([2b7c683](https://github.com/micheltsarasoa/nutrigo/commit/2b7c683a1248f5c491b6b5c3bc8ad37ddadce259))
+* **api:** add the recipe list and detail routes ([#121](https://github.com/micheltsarasoa/nutrigo/issues/121)) ([f75c7fc](https://github.com/micheltsarasoa/nutrigo/commit/f75c7fc28e2421f9c44dbc75cf1352a884982eb2))
+* **shared:** add formatNumber and formatEUR ([#112](https://github.com/micheltsarasoa/nutrigo/issues/112)) ([a18ac3b](https://github.com/micheltsarasoa/nutrigo/commit/a18ac3b02a76da51809081a003846f6157f2e1f2))
+* **shared:** add the ingredient, recipe and settings schemas ([#110](https://github.com/micheltsarasoa/nutrigo/issues/110)) ([c2a4bde](https://github.com/micheltsarasoa/nutrigo/commit/c2a4bde8034922750cc58aecf35c4e263a0512d0))
+* **shared:** add the nutrition functions of SPEC-002 ([#111](https://github.com/micheltsarasoa/nutrigo/issues/111)) ([5990e9d](https://github.com/micheltsarasoa/nutrigo/commit/5990e9d66936e97a42971f0035b196127dadcfd2))
+* **web:** add the Field atom ([#116](https://github.com/micheltsarasoa/nutrigo/issues/116)) ([6825eca](https://github.com/micheltsarasoa/nutrigo/commit/6825eca535d1c783f57b17dabc4fdfbeec61319f))
+* **web:** add the FilterTabs atom ([#119](https://github.com/micheltsarasoa/nutrigo/issues/119)) ([1596820](https://github.com/micheltsarasoa/nutrigo/commit/15968207787920be3f745724317965886c795df0))
+* **web:** add the IconButton atom and a settings icon ([#124](https://github.com/micheltsarasoa/nutrigo/issues/124)) ([6bc9ab2](https://github.com/micheltsarasoa/nutrigo/commit/6bc9ab267f6333fbb84527604d05e3cef24a4840))
+* **web:** add the IngredientEditor organism ([#148](https://github.com/micheltsarasoa/nutrigo/issues/148)) ([0fba009](https://github.com/micheltsarasoa/nutrigo/commit/0fba0097f60cb0dfdf33dcc200145c370e6e318f))
+* **web:** add the IngredientRow molecule ([#138](https://github.com/micheltsarasoa/nutrigo/issues/138)) ([e1b87b2](https://github.com/micheltsarasoa/nutrigo/commit/e1b87b22221ba1ccec473c53f9212c2d8894ff81))
+* **web:** add the MacroTile molecule ([#129](https://github.com/micheltsarasoa/nutrigo/issues/129)) ([a40bdde](https://github.com/micheltsarasoa/nutrigo/commit/a40bddeef547887fa20c4be4209ca7c13998ead5))
+* **web:** add the MenuListItem molecule ([#140](https://github.com/micheltsarasoa/nutrigo/issues/140)) ([21c464e](https://github.com/micheltsarasoa/nutrigo/commit/21c464eff6bf93aad12bb4facaa6b66c4f65ad1b))
+* **web:** add the MetaRow molecule ([#128](https://github.com/micheltsarasoa/nutrigo/issues/128)) ([e646151](https://github.com/micheltsarasoa/nutrigo/commit/e646151f03d1a8aa3f71fea85c41bd5064d873f4))
+* **web:** add the NoteItem molecule ([#135](https://github.com/micheltsarasoa/nutrigo/issues/135)) ([bd464ca](https://github.com/micheltsarasoa/nutrigo/commit/bd464ca9f870944a3ecdd9217c1a4b59bad92cf2))
+* **web:** add the NutritionRow molecule ([#132](https://github.com/micheltsarasoa/nutrigo/issues/132)) ([0fe7887](https://github.com/micheltsarasoa/nutrigo/commit/0fe78876e042c8f0586d2083452dc726ebf49678))
+* **web:** add the PhotoOrPlaceholder molecule ([#139](https://github.com/micheltsarasoa/nutrigo/issues/139)) ([c00adc6](https://github.com/micheltsarasoa/nutrigo/commit/c00adc6c24ed75ade5b79d754526023b7acd51ec))
+* **web:** add the prep and cook icons ([#131](https://github.com/micheltsarasoa/nutrigo/issues/131)) ([99b4cb7](https://github.com/micheltsarasoa/nutrigo/commit/99b4cb7cbfecbdf0951b5b66a7ae0bffc0cade58))
+* **web:** add the RecipeDetail organism ([#146](https://github.com/micheltsarasoa/nutrigo/issues/146)) ([1f3936c](https://github.com/micheltsarasoa/nutrigo/commit/1f3936cb713569b6ae0d32f387fbd345e05069ba))
+* **web:** add the RecipeEditor organism ([#147](https://github.com/micheltsarasoa/nutrigo/issues/147)) ([a71c8ee](https://github.com/micheltsarasoa/nutrigo/commit/a71c8ee207de5764a28b7354b2e6564eb26cf3f9))
+* **web:** add the RecipeList organism ([#143](https://github.com/micheltsarasoa/nutrigo/issues/143)) ([8369b19](https://github.com/micheltsarasoa/nutrigo/commit/8369b19c22c5cd75151b65adc5ec8a10fa09d36d))
+* **web:** add the RecipeStep molecule ([#137](https://github.com/micheltsarasoa/nutrigo/issues/137)) ([efeb837](https://github.com/micheltsarasoa/nutrigo/commit/efeb8378a05f548aa3afcea68fb2ab50f21b0738))
+* **web:** add the Segmented atom ([#118](https://github.com/micheltsarasoa/nutrigo/issues/118)) ([22bc6de](https://github.com/micheltsarasoa/nutrigo/commit/22bc6ded164e52e797e09893fe49eca008da3718))
+* **web:** add the Select atom ([#117](https://github.com/micheltsarasoa/nutrigo/issues/117)) ([dc21527](https://github.com/micheltsarasoa/nutrigo/commit/dc21527f7b4ef2ee4de44b1aa005374d62e5b074))
+* **web:** add the SettingRow molecule ([#141](https://github.com/micheltsarasoa/nutrigo/issues/141)) ([6a1a712](https://github.com/micheltsarasoa/nutrigo/commit/6a1a7129a4622e3290fd0c475e08d93942f0aaea))
+* **web:** add the settings entry to the AppShell ([#151](https://github.com/micheltsarasoa/nutrigo/issues/151)) ([813dec4](https://github.com/micheltsarasoa/nutrigo/commit/813dec403d2c9558a392e7a775e0547fb641d452))
+* **web:** add the SettingsDialog organism ([#149](https://github.com/micheltsarasoa/nutrigo/issues/149)) ([973f646](https://github.com/micheltsarasoa/nutrigo/commit/973f646f58b75c58b976d52307a099fa6231bfeb))
+* **web:** add the ToolItem molecule ([#133](https://github.com/micheltsarasoa/nutrigo/issues/133)) ([5277e11](https://github.com/micheltsarasoa/nutrigo/commit/5277e111d0e6cc9790227c478d401a7e9edb184c))
+* **web:** open Settings from the app and save the locale ([#154](https://github.com/micheltsarasoa/nutrigo/issues/154)) ([92a54f3](https://github.com/micheltsarasoa/nutrigo/commit/92a54f31b2dabc8d688fbe257432f99436d2d93f))
+
+
+### Bug Fixes
+
+* **web:** keep the MenuListItem top row inside narrow cards ([#145](https://github.com/micheltsarasoa/nutrigo/issues/145)) ([531ba90](https://github.com/micheltsarasoa/nutrigo/commit/531ba907df1ddb318c51de56f18d69f2d9798b88))
+* **web:** use 16 px text in SelectPill and SearchField ([#125](https://github.com/micheltsarasoa/nutrigo/issues/125)) ([d0a6aab](https://github.com/micheltsarasoa/nutrigo/commit/d0a6aabda4212332a08a0eda7a01cbf3bed349a3))
+
 ## 0.1.0 (2026-09-24)
 
 
