@@ -86,8 +86,9 @@ jobs:
   docker:
     name: Docker image builds
     needs: detect
-    # Turns on once the Dockerfile exists (#18).
-    if: needs.detect.outputs.has_docker == 'true'
+    # Deactivated for now. To turn it back on, restore:
+    # if: needs.detect.outputs.has_docker == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

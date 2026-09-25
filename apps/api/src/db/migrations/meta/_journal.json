@@ -8,6 +8,13 @@
       "when": 1790204442964,
       "tag": "0000_normal_silver_samurai",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790327397329,
+      "tag": "0001_s1_recipes_settings",
+      "breakpoints": true
     }
   ]
 }
