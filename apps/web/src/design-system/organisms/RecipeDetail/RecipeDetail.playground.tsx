@@ -129,11 +129,8 @@ function Live({
   );
 }
 
-// A 320 px phone frame, and a 1280 px frame that scrolls on its own on a narrow screen.
-const narrow: CSSProperties = {
-  maxWidth: "calc(var(--size-aside) - var(--space-5))",
-  boxShadow: "var(--shadow-hairline)",
-};
+// A 1280 px frame that scrolls on its own on a narrow screen. The 320 px check
+// lives in e2e/recipedetail.spec.ts.
 const wideScroll: CSSProperties = { overflowX: "auto" };
 const wide: CSSProperties = {
   minWidth: "calc(var(--breakpoint-desktop) + var(--space-10) * 2)",
@@ -165,11 +162,6 @@ export default {
         onServingsChange={() => {}}
         onBack={() => {}}
       />
-    ),
-    "320 px": (
-      <div style={narrow}>
-        <Live />
-      </div>
     ),
     "1280 px (on a phone, scroll this frame sideways)": (
       <div style={wideScroll}>
