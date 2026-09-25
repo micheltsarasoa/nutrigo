@@ -53,7 +53,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipeStep | #97 | – | `later` |
 | ToolItem | #98 | – | `later` |
 | NoteItem | #99 | – | `later` |
-| NutritionRow | #100 | – | `later` |
+| NutritionRow | #100 | `feat/100-nutritionrow` | `draft` |
 | PhotoOrPlaceholder | #101 | – | `later` |
 | SettingRow | #102 | – | `later` |
 
