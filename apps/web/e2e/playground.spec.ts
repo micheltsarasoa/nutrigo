@@ -61,6 +61,7 @@ const APPROVED = [
   "atom/card",
   "molecule/macrotile",
   "atom/filtertabs",
+  "molecule/nutritionrow",
   "organism/appshell",
 ];
 
