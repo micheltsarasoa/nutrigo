@@ -55,7 +55,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | NoteItem | #99 | #135 | `done` |
 | NutritionRow | #100 | #132, #134 | `done` |
 | PhotoOrPlaceholder | #101 | – | `later` |
-| SettingRow | #102 | – | `later` |
+| SettingRow | #102 | `feat/102-settingrow` | `draft` |
 
 ## Organisms
 
