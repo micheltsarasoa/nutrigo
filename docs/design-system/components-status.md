@@ -51,7 +51,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MacroTile | #95 | – | `later` |
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
-| ToolItem | #98 | – | `later` |
+| ToolItem | #98 | `feat/98-toolitem` | `draft` |
 | NoteItem | #99 | – | `later` |
 | NutritionRow | #100 | – | `later` |
 | PhotoOrPlaceholder | #101 | – | `later` |
