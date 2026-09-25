@@ -61,7 +61,7 @@ describe("PhotoOrPlaceholder", () => {
         size="hero"
       />,
     );
-    expect(imgs(container)[0].getAttribute("alt")).toBe("");
+    expect(imgs(container)[0]?.getAttribute("alt")).toBe("");
     rerender(
       <PhotoOrPlaceholder
         photo="/own.jpg"
@@ -71,7 +71,7 @@ describe("PhotoOrPlaceholder", () => {
         alt="Grilled turkey breast"
       />,
     );
-    expect(imgs(container)[0].getAttribute("alt")).toBe(
+    expect(imgs(container)[0]?.getAttribute("alt")).toBe(
       "Grilled turkey breast",
     );
   });
