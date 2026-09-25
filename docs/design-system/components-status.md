@@ -23,7 +23,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
-| Icon | #19 | #124 adds the `settings` icon | `done` (new icon `awaiting-validation`) |
+| Icon | #19 | #124 adds the `settings` icon | `done` (new icon `design-approved`) |
 | Logo | #20 | main | `done` |
 | Button | #21 | main | `done` |
 | Pill | #22 | main | `done` |
@@ -40,7 +40,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Select | #89 | #117 | `done` |
 | Segmented | #90 | #118 | `done` |
 | FilterTabs | #91 | #119 | `done` |
-| IconButton | #92 | `feat/92-iconbutton-atom`, #124 | `awaiting-validation` |
+| IconButton | #92 | `feat/92-iconbutton-atom`, #124 | `design-approved` |
 
 ## Molecules
 
