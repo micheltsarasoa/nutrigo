@@ -66,5 +66,5 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipeList | #103 | #143 | `done` |
 | RecipeDetail | #104 | #146 | `done` |
 | RecipeEditor | #105 | #147 | `done` |
-| IngredientEditor | #106 | – | `later` |
+| IngredientEditor | #106 | feat/106-ingredienteditor | `draft` |
 | SettingsDialog | #107 | – | `later` |
