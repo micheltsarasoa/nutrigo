@@ -18,6 +18,9 @@ const phone: CSSProperties = {
   maxWidth: "var(--size-aside)",
   boxShadow: "var(--shadow-hairline)",
 };
+// overflow: hidden makes the frame the tab bar's scroll container, so the sticky bar
+// stays at the bottom of its own frame wherever the frame is on the page.
+const phoneStill: CSSProperties = { ...phone, overflow: "hidden" };
 const desktopScroll: CSSProperties = { overflowX: "auto" };
 const desktop: CSSProperties = { minWidth: "var(--breakpoint-desktop)" };
 const block: CSSProperties = {
@@ -106,7 +109,7 @@ export default {
       ),
     "tab bar with settings: the button at the right of the top bar; press it to open Settings":
       (
-        <div style={phone}>
+        <div style={phoneStill}>
           <Live layout="tabs" label="Main, tab bar with settings" />
         </div>
       ),
@@ -120,7 +123,7 @@ export default {
       ),
     "settings active: its dialog is open (both layouts, static)": (
       <>
-        <div style={phone}>
+        <div style={phoneStill}>
           <AppShell
             items={items}
             current="#plan"
