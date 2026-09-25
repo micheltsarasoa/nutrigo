@@ -1,0 +1,52 @@
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: var(--space-3) var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  color: var(--color-neutral-ink);
+  text-align: center;
+}
+
+.kcal {
+  background: var(--color-green-base);
+}
+
+.carbs {
+  background: var(--color-yellow-base);
+}
+
+.protein {
+  background: var(--color-orange-base);
+}
+
+.fat {
+  background: var(--color-neutral-chip-grey);
+}
+
+/* Owner 2026-09-25: the icon takes 30 % of the tile's width, white line, no background. */
+.icon {
+  display: block;
+  width: 30%;
+  margin-bottom: var(--space-2);
+  color: var(--color-neutral-surface);
+}
+
+.icon svg {
+  width: 100%;
+  height: auto;
+}
+
+.label,
+.unit {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.value {
+  max-width: 100%;
+  font-size: var(--font-size-figure-sm);
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}
