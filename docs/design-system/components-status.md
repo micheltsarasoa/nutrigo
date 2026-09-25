@@ -47,7 +47,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Component | Issue | Branch / PR | Status |
 |---|---|---|---|
 | MenuListItem | #93 | – | `later` |
-| MetaRow | #94 | – | `later` |
+| MetaRow | #94 | `feat/94-metarow` | `draft` |
 | MacroTile | #95 | – | `later` |
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
