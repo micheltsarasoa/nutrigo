@@ -1,0 +1,50 @@
+.seg {
+  width: fit-content;
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--color-neutral-subtle);
+}
+
+/* 44 px wide; the tap area also reaches 44 px tall (the design's buttons are 30 × 28). */
+.option {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size-touch-target);
+  height: var(--size-control-sm);
+  border-radius: var(--radius-xs);
+  color: var(--color-neutral-muted);
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+.option::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--size-control-sm) - var(--size-touch-target)) / 2) 0;
+}
+
+.option:hover {
+  color: var(--color-neutral-ink);
+}
+
+.option:has(:checked) {
+  background: var(--color-green-base);
+  color: var(--color-neutral-ink);
+}
+
+.option:has(:focus-visible) {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+/* Kept in the accessibility tree and focusable, but not drawn. */
+.radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
