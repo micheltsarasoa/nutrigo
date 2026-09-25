@@ -52,8 +52,8 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | IngredientRow | #96 | – | `later` |
 | RecipeStep | #97 | – | `later` |
 | ToolItem | #98 | `feat/98-toolitem`, #133 | `awaiting-validation` |
-| NoteItem | #99 | – | `later` |
-| NutritionRow | #100 | #132; baseline #134 | `done` (on merge) |
+| NoteItem | #99 | `feat/99-noteitem`, #135 | `done` (on merge) |
+| NutritionRow | #100 | #132, #134 | `done` |
 | PhotoOrPlaceholder | #101 | – | `later` |
 | SettingRow | #102 | – | `later` |
 
