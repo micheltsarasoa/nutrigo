@@ -30,7 +30,7 @@ export default {
   title: "Icon",
   level: "atom",
   states: {
-    "all 20 icons (md, 18 px)": (
+    [`all ${ICON_NAMES.length} icons (md, 18 px)`]: (
       <div style={grid}>
         {ICON_NAMES.map((name) => (
           <div key={name} style={cell}>
