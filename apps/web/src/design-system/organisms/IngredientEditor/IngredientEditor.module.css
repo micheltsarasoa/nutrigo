@@ -1,0 +1,132 @@
+/* The layout follows the form's own width, not the screen's. */
+.editor {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--space-5);
+  color: var(--color-neutral-ink);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-figure);
+  font-weight: var(--font-weight-bold);
+}
+
+.cardTitle {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--font-tracking-card-title);
+}
+
+/* Phone: one column. Wide: two. */
+.fields {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@container (min-width: 600px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.alert {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.alert p,
+.alert ul {
+  margin: 0;
+}
+
+.alert p + p,
+.alert ul {
+  margin-top: var(--space-2);
+}
+
+.alert ul {
+  padding-left: var(--space-5);
+  font-weight: var(--font-weight-regular);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+/* The Button atom has no destructive variant: a red Delete, sized like a
+   md Button, pushed to the start of the row. */
+.delete,
+.confirmDelete {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--size-control);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.delete:focus-visible,
+.confirmDelete:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.delete {
+  margin-right: auto;
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-hairline);
+  color: var(--status-danger);
+}
+
+.confirmDelete {
+  background: var(--status-danger);
+  color: var(--color-neutral-surface);
+}
+
+.binIcon {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+}
+
+.dialog {
+  max-width: calc(var(--size-aside) - var(--space-5));
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-phone);
+  color: var(--color-neutral-ink);
+}
+
+.dialogTitle {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.dialog p {
+  margin: 0 0 var(--space-5);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+}

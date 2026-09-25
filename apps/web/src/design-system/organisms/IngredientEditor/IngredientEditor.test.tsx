@@ -92,11 +92,13 @@ describe("IngredientEditor", () => {
 
   it("shows errors for a missing name and category, and a grams per unit of 0", () => {
     const { onSave } = setup();
-    type(number("Grams per unit"), "0");
+    type(number("Grams per unit (optional)"), "0");
     save();
     expect(error(box("Name"))).toBe("Enter a name, up to 100 characters.");
     expect(error(select("Category"))).toBe("Choose a category.");
-    expect(error(number("Grams per unit"))).toBe("Enter a weight above 0.");
+    expect(error(number("Grams per unit (optional)"))).toBe(
+      "Enter a weight above 0.",
+    );
     expect(document.activeElement).toBe(box("Name"));
     expect(onSave).not.toHaveBeenCalled();
   });
@@ -110,7 +112,7 @@ describe("IngredientEditor", () => {
     type(number("Protein"), "12.6");
     type(number("Fat"), "9.5");
     type(select("Default unit"), "piece");
-    type(number("Grams per unit"), "60");
+    type(number("Grams per unit (optional)"), "60");
     save();
     expect(onSave).toHaveBeenCalledWith({
       name: "Egg",
@@ -134,11 +136,12 @@ describe("IngredientEditor", () => {
     );
     expect(select("Category").value).toBe("grains");
     expect(number("Calories").value).toBe("389");
-    expect(number("Fibre").value).toBe("10.6");
-    expect(number("Sugars").value).toBe("");
+    expect(number("Fibre (optional)").value).toBe("10.6");
+    expect(number("Sugars (optional)").value).toBe("");
     save();
-    const { source: _, ...input } = oats;
-    expect(onSave).toHaveBeenCalledWith(input);
+    expect(onSave).toHaveBeenCalledWith(
+      Object.fromEntries(Object.entries(oats).filter(([k]) => k !== "source")),
+    );
   });
 
   it("names the source of an imported ingredient", () => {
@@ -150,7 +153,7 @@ describe("IngredientEditor", () => {
     setup();
     expect(error(number("Calories"))).toBe("kcal");
     expect(error(number("Carbs"))).toBe("g");
-    expect(error(number("Sodium"))).toBe("mg");
+    expect(error(number("Sodium (optional)"))).toBe("mg");
   });
 
   it("while saving, Save is busy and doesn't save twice", () => {
