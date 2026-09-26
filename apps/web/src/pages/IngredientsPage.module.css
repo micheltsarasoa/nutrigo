@@ -1,0 +1,72 @@
+/* SPEC-002: the ingredients list. The editor screens are IngredientEditor's own styles. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.head h1 {
+  margin: 0;
+  font-size: var(--font-size-page);
+  font-weight: var(--font-weight-bold);
+}
+
+.alert {
+  display: grid;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.alert p {
+  margin: 0;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each row is its own tap target; the link is the row's name, sized to
+   --size-touch-target, with the detail line and source Pill beside it. */
+.row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: thin solid var(--color-neutral-line);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  min-height: var(--size-touch-target);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-ink);
+}
+
+/* Stretches the link over the whole row, so tapping anywhere navigates. */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.detail {
+  color: var(--color-neutral-muted);
+  font-size: var(--font-size-body);
+}

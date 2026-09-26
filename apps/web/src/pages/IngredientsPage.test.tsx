@@ -250,7 +250,12 @@ describe("IngredientsPage /ingredients/new", () => {
     expect(fetchMock).toHaveBeenCalledWith("/api/ingredients", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(oatsInput),
+      // fillOats() leaves the optional nutrients empty: the editor sends null.
+      body: JSON.stringify({
+        ...oatsInput,
+        fibre100g: null,
+        sodiumMg100g: null,
+      }),
     });
   });
 
