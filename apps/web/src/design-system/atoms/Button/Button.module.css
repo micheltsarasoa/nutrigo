@@ -49,10 +49,18 @@
   font-size: var(--font-size-caption);
 }
 
-/* A 44 px touch target around the 32 px button. */
+/* A 44 px touch target around the 40 px and 32 px buttons. */
+.md::after,
 .sm::after {
   content: "";
   position: absolute;
+}
+
+.md::after {
+  inset: calc((var(--size-control) - var(--size-touch-target)) / 2) 0;
+}
+
+.sm::after {
   inset: calc((var(--size-control-sm) - var(--size-touch-target)) / 2) 0;
 }
 
