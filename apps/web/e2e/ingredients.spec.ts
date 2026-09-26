@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { expectNoAxeViolations, expectNoHorizontalScroll } from "./helpers.ts";
+import {
+  expectNoAxeViolations,
+  expectNoHorizontalScroll,
+  expectTapTargets,
+} from "./helpers.ts";
 
 // Runs on both projects (mobile, desktop): each gets its own API server and
 // SQLite file (apps/web/playwright.config.ts), so this reset never races the
@@ -126,12 +130,8 @@ test("SPEC-002 AC-10 (ingredient screens): no horizontal scroll, 44 px tap targe
     await expectNoHorizontalScroll(page);
 
     const targets = page.locator("main a:visible, main button:visible");
-    const count = await targets.count();
-    expect(count).toBeGreaterThan(0);
-    for (let i = 0; i < count; i++) {
-      const box = await targets.nth(i).boundingBox();
-      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
-    }
+    expect(await targets.count()).toBeGreaterThan(0);
+    await expectTapTargets(page, targets);
 
     await expectNoAxeViolations(page);
   }
