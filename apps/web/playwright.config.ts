@@ -26,6 +26,7 @@ const apiServer = (port: number, dbFile: string) => ({
 export default defineConfig({
   testDir: "e2e",
   forbidOnly: true,
+  fullyParallel: true,
   // Baselines are Linux renders made in CI; other OSes draw fonts differently, so only CI compares them.
   ignoreSnapshots: !process.env.CI,
   reporter: [["html", { open: "never" }], ["list"]],
@@ -41,7 +42,10 @@ export default defineConfig({
   ],
   projects: [
     {
+      // Each spec runs once. Only the playground (fit + visual baselines) runs at both sizes;
+      // the other specs set their own viewport or don't depend on it.
       name: "mobile",
+      testMatch: ["playground.spec.ts", "ios-zoom.spec.ts"],
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 390, height: 844 },
@@ -50,6 +54,7 @@ export default defineConfig({
     },
     {
       name: "desktop",
+      testIgnore: "ios-zoom.spec.ts",
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1280, height: 800 },
