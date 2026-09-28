@@ -4,8 +4,8 @@
 |---|---|
 | Status | **Draft**: design reviewed, open questions answered (rev 0.4), awaiting owner approval |
 | Owner | Michel Tsarasoa |
-| Last updated | 2026-09-23 |
-| Target | v1.0.0 (local) at the end of Sprint 5 · v1.1.0 on Railway at the end of Sprint 6 |
+| Last updated | 2026-09-28 |
+| Target | v1.0.0 (local) at the end of Sprint 4 · v1.1.0 on Railway at the end of Sprint 5 · imports and AI in v1.2.0, Sprint 6 (ADR-0014) |
 
 | Revision | Date | Change |
 |---|---|---|
@@ -13,6 +13,7 @@
 | 0.2 | 2026-09-23 | Railway deployment moved after v1.0.0 (new §5.6, Sprint 6) |
 | 0.3 | 2026-09-23 | Claude Design export reviewed: recipe fields, food diary (check-off), grocery costs in EUR, photos from imports, Monday weeks; progress/activity/insights out of scope |
 | 0.4 | 2026-09-23 | Open questions Q1–Q9 answered: Tailscale then Cloudflare Access (ADR-0009), AI provider choice + spend cap (ADR-0010), CIQUAL replaces USDA (ADR-0011), new Settings (§5.10, SPEC-008) |
+| 0.5 | 2026-09-28 | MVP = S1–S4: v1.0.0 after S4, Railway in S5 (v1.1.0), imports and AI in S6 (v1.2.0) (ADR-0014) |
 
 ## 1. Problem
 
@@ -97,7 +98,7 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | S-6 | When ticking an item as purchased, you can enter the actual price paid | Should |
 | S-7 | Spending insights: estimated vs actual per week, and a breakdown by category | Could |
 
-### 5.5 AI-assisted features (Sprint 5)
+### 5.5 AI-assisted features (Sprint 6, v1.2.0)
 
 | ID | Requirement | Priority |
 |---|---|---|
@@ -107,7 +108,7 @@ Priority uses **MoSCoW**. IDs are referenced from specs, issues and tests.
 | A-4 | The AI provider is chosen in Settings: Claude (default), Mistral or DeepSeek (ADR-0010) | Should |
 | A-5 | A monthly AI spend cap in EUR, set in Settings; calls are refused once it's reached (ADR-0010) | Should |
 
-### 5.6 Production deployment (Sprint 6, after v1.0.0)
+### 5.6 Production deployment (Sprint 5, v1.1.0)
 
 Until v1.0.0 the app runs only locally (Docker Compose).
 
@@ -174,7 +175,7 @@ journey
 
 ## 8. Release plan
 
-See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint, v0.1.0 → v1.0.0.
+See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint: v0.1.0 → v1.0.0 (end of S4) → v1.2.0.
 
 ## 9. Risks and open questions
 
@@ -190,5 +191,5 @@ See [`../roadmap.md`](../roadmap.md). There is one release per two-week sprint, 
 | Q9 | Number and currency locale: `fr-FR` (1 240 kcal, 57,40 €) or `en-IE` (1,240 kcal, €57.40)? | Decided | **A setting**, `fr-FR` by default (§5.9, §5.10, SPEC-008) |
 | Q5 | How does the phone reach the local app before v1.1? A service worker (offline, install) needs HTTPS, and plain `http://192.168.x.x` won't allow it | Decided | **Tailscale** (`tailscale serve`) on the laptop and phone (ADR-0009) |
 | R1 | Before v1.1 all data lives on one laptop | Risk | Local daily backup from Sprint 1 (ADR-0004) |
-| R3 | SQLite on Railway loses data without a volume | Risk | Volume and backups in Sprint 6 (ADR-0004) |
+| R3 | SQLite on Railway loses data without a volume | Risk | Volume and backups in Sprint 5 (ADR-0004, ADR-0014) |
 | R2 | Offline sync conflicts on the shopping list | Risk | Last-write-wins per item, spec in Sprint 4 |
