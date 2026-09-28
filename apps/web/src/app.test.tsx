@@ -83,6 +83,43 @@ describe("App /ingredients (SPEC-002)", () => {
   });
 });
 
+describe("App recipe routes (SPEC-002)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("/recipes/42 shows a Recipe placeholder, with the Recipes tab current", () => {
+    render(<App path="/recipes/42" wide={false} />);
+    expect(heading().textContent).toBe("Recipe");
+    expect(current()).toEqual(["Recipes"]);
+  });
+
+  it.each([
+    ["/recipes/new", "Loading your ingredients…"],
+    ["/recipes/42/edit", "Loading the recipe…"],
+  ])(
+    "%s renders the recipe editor page, with the Recipes tab current",
+    (path, loading) => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(() => new Promise(() => {})),
+      );
+      render(<App path={path} wide={false} />);
+      expect(screen.getByRole("status").textContent).toBe(loading);
+      expect(current()).toEqual(["Recipes"]);
+    },
+  );
+
+  it.each(["/recipes/abc", "/recipes/new/edit", "/recipes/42/x"])(
+    "%s shows Page not found",
+    (path) => {
+      render(<App path={path} wide={false} />);
+      expect(heading().textContent).toBe("Page not found");
+      expect(current()).toEqual([]);
+    },
+  );
+});
+
 describe("NotFound", () => {
   it("shows a page-not-found heading in the main landmark (production /playground, SPEC-001 AC-4)", () => {
     render(<NotFound />);

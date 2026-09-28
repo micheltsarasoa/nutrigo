@@ -5,6 +5,7 @@ import {
 } from "./design-system/organisms/AppShell/index.ts";
 import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
 import { IngredientsPage } from "./pages/IngredientsPage.tsx";
+import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
 import { useSettings } from "./use-settings.ts";
 
 // Dev and preview builds only (ADR-0006). In production this is a constant false,
@@ -29,8 +30,10 @@ const ROUTES: [RegExp, string][] = [
   [/^\/groceries(\/\d{4}-W\d{2})?$/, "Groceries"],
   [/^\/targets$/, "Targets"],
 ];
-// SPEC-002: ingredients live under the Recipes tab, but need their own page.
+// SPEC-002: ingredients and single recipes live under the Recipes tab.
 const INGREDIENTS_PATH = /^\/ingredients(\/new|\/\d+)?$/;
+const RECIPE_EDIT_PATH = /^\/recipes\/(?:new|(\d+)\/edit)$/;
+const RECIPE_PATH = /^\/recipes\/\d+$/;
 
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
 export function App({ path, wide }: { path: string; wide: boolean }) {
@@ -46,18 +49,30 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
     );
   }
   const isIngredients = INGREDIENTS_PATH.test(path);
+  const recipeEdit = RECIPE_EDIT_PATH.exec(path);
+  const isRecipe = RECIPE_PATH.test(path);
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
   return (
     <>
       <AppShell
         items={NAV}
-        current={isIngredients ? "/recipes" : title ? path : ""}
+        current={
+          isIngredients || recipeEdit || isRecipe
+            ? "/recipes"
+            : title
+              ? path
+              : ""
+        }
         layout={wide ? "sidebar" : "tabs"}
         {...shellProps}
       >
         {isIngredients ? (
           <IngredientsPage path={path} />
+        ) : recipeEdit ? (
+          <RecipeEditPage key={path} id={recipeEdit[1]} />
+        ) : isRecipe ? (
+          <Placeholder title="Recipe" />
         ) : title ? (
           <Placeholder title={title} />
         ) : (
