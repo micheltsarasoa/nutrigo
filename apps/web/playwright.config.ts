@@ -3,11 +3,10 @@ import { defineConfig, devices } from "@playwright/test";
 // `npm run build` makes two builds: production (dist/, no playground) and
 // preview (dist-playground/, ADR-0006). Production is served by the real API
 // (`node ../api/src/index.ts`, ADR-0005) so the e2e suite exercises the same
-// shape as Docker/Railway, with its own SQLite file per project (mobile,
-// desktop) so they never share settings state. The playground keeps using
-// `vite preview`, since it has no API calls of its own.
+// shape as Docker/Railway, with its own SQLite file. Only the desktop project
+// uses it. The playground keeps using `vite preview`, since it has no API calls
+// of its own.
 export const PREVIEW = "http://localhost:4174";
-const MOBILE = "http://localhost:4173";
 const DESKTOP = "http://localhost:4175";
 const reuseExistingServer = !process.env.CI;
 
@@ -30,7 +29,6 @@ export default defineConfig({
   ignoreSnapshots: !process.env.CI,
   reporter: [["html", { open: "never" }], ["list"]],
   webServer: [
-    apiServer(4173, "mobile.db"),
     apiServer(4175, "desktop.db"),
     {
       command:
@@ -41,15 +39,18 @@ export default defineConfig({
   ],
   projects: [
     {
+      // Each spec runs once. Only the playground (fit + visual baselines) runs at both sizes;
+      // the other specs set their own viewport (e.g. 390 px for an AC) or don't depend on it.
       name: "mobile",
+      testMatch: ["playground.spec.ts", "ios-zoom.spec.ts"],
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 390, height: 844 },
-        baseURL: MOBILE,
       },
     },
     {
       name: "desktop",
+      testIgnore: "ios-zoom.spec.ts",
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1280, height: 800 },

@@ -1,6 +1,6 @@
 # Frontend architecture
 
-React + TypeScript + Vite, as a mobile-first PWA.
+React + TypeScript + Vite, as a PWA. Until v1.0.0, only the desktop layouts (≥ 1200 px) are designed. Below that, the app works but isn't designed (ADR-0013).
 
 ## 1. Folder structure
 
@@ -75,7 +75,7 @@ stateDiagram-v2
 - It's on in the dev server and in **preview** builds (`vite build --mode playground`, which reads `apps/web/.env.playground`: `VITE_PLAYGROUND=true`). `npm run build` makes both `dist/` (production) and `dist-playground/` (preview). In production the check is a constant `false`, so the playground chunk isn't even in the bundle, and `/playground` shows "Page not found" (SPEC-001 AC-4).
 - Each `*.playground.tsx` exports `{ title, level, states: Record<string, ReactNode> }`, and the index page discovers them with `import.meta.glob`. There's no registry to maintain by hand.
 - It shows every state: default, hover/focus, disabled, loading, empty, error, long content, and dark mode if the design system has one.
-- Mobile first: the owner reviews on the phone itself (the dev server over Tailscale), so there's no simulated device frame.
+- Until v1.0.0 the owner reviews at 1280 px on the laptop. At 390 px, the only check is that nothing breaks (ADR-0013). There's no simulated device frame.
 
 ## 5. State and data
 

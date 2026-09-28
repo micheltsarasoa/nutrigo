@@ -4,6 +4,7 @@ import {
   type NavItem,
 } from "./design-system/organisms/AppShell/index.ts";
 import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
+import { IngredientsPage } from "./pages/IngredientsPage.tsx";
 import { useSettings } from "./use-settings.ts";
 
 // Dev and preview builds only (ADR-0006). In production this is a constant false,
@@ -28,6 +29,8 @@ const ROUTES: [RegExp, string][] = [
   [/^\/groceries(\/\d{4}-W\d{2})?$/, "Groceries"],
   [/^\/targets$/, "Targets"],
 ];
+// SPEC-002: ingredients live under the Recipes tab, but need their own page.
+const INGREDIENTS_PATH = /^\/ingredients(\/new|\/\d+)?$/;
 
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
 export function App({ path, wide }: { path: string; wide: boolean }) {
@@ -42,17 +45,24 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
       <NotFound />
     );
   }
+  const isIngredients = INGREDIENTS_PATH.test(path);
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
   return (
     <>
       <AppShell
         items={NAV}
-        current={title ? path : ""}
+        current={isIngredients ? "/recipes" : title ? path : ""}
         layout={wide ? "sidebar" : "tabs"}
         {...shellProps}
       >
-        {title ? <Placeholder title={title} /> : <NotFound />}
+        {isIngredients ? (
+          <IngredientsPage path={path} />
+        ) : title ? (
+          <Placeholder title={title} />
+        ) : (
+          <NotFound />
+        )}
       </AppShell>
       <SettingsDialog {...dialogProps} />
     </>

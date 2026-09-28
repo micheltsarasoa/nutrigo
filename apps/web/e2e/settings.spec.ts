@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { expectNoAxeViolations, expectNoHorizontalScroll } from "./helpers.ts";
 
-// Runs on both projects (mobile, desktop): each gets its own API server and
-// SQLite file (apps/web/playwright.config.ts), so this reset never races the
-// other project's state.
+// Runs on the desktop project, against its API server and SQLite file
+// (apps/web/playwright.config.ts).
 test.beforeEach(async ({ request }) => {
   const res = await request.put("/api/settings", {
     data: { locale: "fr-FR" },

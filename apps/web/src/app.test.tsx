@@ -1,4 +1,5 @@
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -68,6 +69,20 @@ describe("App", () => {
   });
 });
 
+describe("App /ingredients (SPEC-002)", () => {
+  it("renders the ingredients page, with the Recipes tab current", () => {
+    render(<App path="/ingredients" wide={false} />);
+    expect(heading().textContent).toBe("Ingredients");
+    expect(current()).toEqual(["Recipes"]);
+  });
+
+  it("/ingredients/abc shows Page not found", () => {
+    render(<App path="/ingredients/abc" wide={false} />);
+    expect(heading().textContent).toBe("Page not found");
+    expect(current()).toEqual([]);
+  });
+});
+
 describe("NotFound", () => {
   it("shows a page-not-found heading in the main landmark (production /playground, SPEC-001 AC-4)", () => {
     render(<NotFound />);
@@ -103,6 +118,13 @@ describe("App settings (SPEC-008)", () => {
     screen.findByRole<HTMLSelectElement>("combobox", {
       name: "Number and money format",
     });
+  // SettingsDialog resets its draft in an effect once settings arrive; flush it
+  // first, or the next fireEvent's act() runs it and undoes the change.
+  const selectSettled = async () => {
+    const el = await select();
+    await act(async () => {});
+    return el;
+  };
   const saveButton = () => screen.getByRole("button", { name: "Save" });
 
   it.each([false, true])(
@@ -139,7 +161,7 @@ describe("App settings (SPEC-008)", () => {
 
     const button = settingsButton();
     fireEvent.click(button);
-    const field = await select();
+    const field = await selectSettled();
     fireEvent.change(field, { target: { value: "en-IE" } });
     fireEvent.click(saveButton());
 
@@ -226,7 +248,7 @@ describe("App settings (SPEC-008)", () => {
     render(<App path="/" wide={false} />);
 
     fireEvent.click(settingsButton());
-    const field = await select();
+    const field = await selectSettled();
     fireEvent.change(field, { target: { value: "en-IE" } });
     fireEvent.click(saveButton());
 

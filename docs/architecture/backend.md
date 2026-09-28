@@ -7,7 +7,7 @@ Node LTS + Hono + TypeScript, and SQLite through Drizzle.
 ```
 apps/api/src/
 ├── index.ts            Boot: validate env, run migrations, start server, serve web build
-├── env.ts              Zod-validated env (DATABASE_PATH, PORT, WEB_ROOT?, AI keys from S5)
+├── env.ts              Zod-validated env (DATABASE_PATH, PORT, WEB_ROOT?, AI keys from S6)
 ├── db/
 │   ├── schema.ts       Drizzle tables (source of truth for data-model.md)
 │   ├── client.ts       better-sqlite3 + WAL mode + foreign_keys=ON
@@ -64,7 +64,7 @@ The final contract for each endpoint is defined in its feature spec and in the `
 | 502 | `UPSTREAM_FAILED` | Open Food Facts or the AI provider failed |
 | 500 | `INTERNAL` | Anything else. The stack trace goes to stderr and is never returned |
 
-## 4. AI integration flow (Sprint 5)
+## 4. AI integration flow (Sprint 6)
 
 The AI only **proposes**. The owner confirms, and only then does a normal write endpoint persist the data (A-3).
 
