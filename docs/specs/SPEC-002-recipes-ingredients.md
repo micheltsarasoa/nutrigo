@@ -8,7 +8,7 @@
 | Design | `design/source/Healthy Menu.dc.html` (list) · `design/source/Recipe Details.dc.html` (detail) · editors: derived, not in design |
 
 ## 1. Summary
-Your personal recipe library. You can browse, search and filter recipes and open one to see its ingredients (scaled by servings), steps, tools, notes and nutrition per serving. You also create and edit recipes and ingredients, entering nutrition by hand. Imports from CIQUAL and Open Food Facts come in Sprint 3 (SPEC-004, ADR-0011).
+Your personal recipe library. You can browse, search and filter recipes and open one to see its ingredients (scaled by servings), steps, tools, notes and nutrition per serving. You also create and edit recipes and ingredients, entering nutrition by hand. Imports from CIQUAL and Open Food Facts come in Sprint 6 (SPEC-004, ADR-0011, ADR-0014).
 
 ## 2. User stories
 - **US-1** As the owner, I can add an ingredient with its nutrition per 100 g, so recipes can compute nutrition.

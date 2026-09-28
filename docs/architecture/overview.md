@@ -7,7 +7,7 @@
 
 ## 1. System context
 
-NutriGo is a single deployable used by one person. The only outbound dependencies are Open Food Facts and, from Sprint 5, the AI provider chosen in Settings (Anthropic, Mistral or DeepSeek; ADR-0010). CIQUAL, the French generic food table, is bundled in the DB as seed data, so it isn't an outbound dependency and works offline (ADR-0011).
+NutriGo is a single deployable used by one person. The only outbound dependencies are Open Food Facts and, from Sprint 6, the AI provider chosen in Settings (Anthropic, Mistral or DeepSeek; ADR-0010). CIQUAL, the French generic food table, is bundled in the DB as seed data, so it isn't an outbound dependency and works offline (ADR-0011).
 
 ```mermaid
 C4Context
@@ -15,7 +15,7 @@ C4Context
     Person(owner, "Owner", "Plans meals on a phone")
     System(nutrigo, "NutriGo", "PWA + API + SQLite (CIQUAL bundled)")
     System_Ext(off, "Open Food Facts", "Branded products, live search")
-    System_Ext(ai, "AI provider", "Anthropic, Mistral or DeepSeek, chosen in Settings: plan suggestions, nutrient estimates (S5)")
+    System_Ext(ai, "AI provider", "Anthropic, Mistral or DeepSeek, chosen in Settings: plan suggestions, nutrient estimates (S6)")
     System_Ext(edge, "Edge protection", "Cloudflare Access or proxy auth (ADR-0002)")
     Rel(owner, edge, "HTTPS")
     Rel(edge, nutrigo, "Forwards allowed requests")
@@ -79,7 +79,7 @@ sequenceDiagram
 
 ## 5. Deployment
 
-The app runs locally up to v1.0.0 (Sprints 0–5), then on Railway from v1.1.0 (Sprint 6). The flow is the same in both places: build one image and mount one data directory.
+The app runs locally up to v1.0.0 (Sprints 0–4), then on Railway from v1.1.0 (Sprint 5; ADR-0014). The flow is the same in both places: build one image and mount one data directory.
 
 ```mermaid
 flowchart LR
@@ -99,7 +99,7 @@ flowchart LR
 | Auth | None in the app; protection at the edge (ADR-0002) |
 | Logging | No logging library. The API writes unexpected errors to stderr, which Railway captures. There is no request logging (CLAUDE.md rule 8) |
 | Errors | The API returns `{ error: { code, message, fields? } }` with the right HTTP status; the web app maps codes to UI states |
-| Config | Env vars only: `DATABASE_PATH`, `PORT`, `WEB_ROOT` (the web build the API serves; set in the Docker image) and the AI keys from S5 (ADR-0010). They're validated with Zod at boot |
+| Config | Env vars only: `DATABASE_PATH`, `PORT`, `WEB_ROOT` (the web build the API serves; set in the Docker image) and the AI keys from S6 (ADR-0010). They're validated with Zod at boot |
 | Offline | The service worker caches the app shell, recipes and the current shopping list (details in the Sprint 4 spec) |
 | Time | ISO weeks (`2026-W40`), dates stored as `YYYY-MM-DD` text, Europe/Paris shown in the UI |
 | i18n | UI copy in English for v1, with strings kept in one module so they can be translated later |
