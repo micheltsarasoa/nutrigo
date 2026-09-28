@@ -5,10 +5,9 @@ import {
   expectTapTargets,
 } from "./helpers.ts";
 
-// Runs on both projects (mobile, desktop): each gets its own API server and
-// SQLite file (apps/web/playwright.config.ts), so this reset never races the
-// other project's state. Recipes first: an ingredient can't be deleted while
-// a recipe still uses it (AC-9).
+// Runs on the desktop project, against its API server and SQLite file
+// (apps/web/playwright.config.ts). Recipes first: an ingredient can't be
+// deleted while a recipe still uses it (AC-9).
 test.beforeEach(async ({ request }) => {
   const recipes = await (await request.get("/api/recipes")).json();
   for (const recipe of recipes) {
@@ -117,6 +116,7 @@ test("SPEC-002 AC-10 (ingredient screens): no horizontal scroll, 44 px tap targe
   page,
   request,
 }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   const created = await (
     await request.post("/api/ingredients", { data: oatsBody })
   ).json();

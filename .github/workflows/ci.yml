@@ -28,19 +28,24 @@ jobs:
     name: Detect app code
     runs-on: ubuntu-latest
     outputs:
-      has_app: ${{ steps.check.outputs.has_app }}
+      has_code: ${{ steps.check.outputs.has_code }}
       has_docker: ${{ steps.check.outputs.has_docker }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - id: check
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
-          if [ -f package.json ]; then echo "has_app=true" >> "$GITHUB_OUTPUT"; else echo "has_app=false" >> "$GITHUB_OUTPUT"; echo "No package.json yet (docs-only repo) - app jobs skipped."; fi
+          # Markdown-only changes (docs, CLAUDE.md, skills) skip e2e; a skipped job still passes a required check.
+          # If the diff can't be computed (a new branch's first push), run everything.
+          files=$(git diff --name-only "$BASE" HEAD) || files=unknown
+          if [ -z "$files" ] || echo "$files" | grep -qv '\.md$'; then echo "has_code=true" >> "$GITHUB_OUTPUT"; else echo "has_code=false" >> "$GITHUB_OUTPUT"; echo "Markdown only - e2e skipped."; fi
           if [ -f Dockerfile ]; then echo "has_docker=true" >> "$GITHUB_OUTPUT"; else echo "has_docker=false" >> "$GITHUB_OUTPUT"; echo "No Dockerfile yet (#18) - docker job skipped."; fi
 
   quality:
     name: Lint, typecheck, unit/integration/component tests
-    needs: detect
-    if: needs.detect.outputs.has_app == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -62,7 +67,7 @@ jobs:
   e2e:
     name: E2E + visual (Playwright)
     needs: detect
-    if: needs.detect.outputs.has_app == 'true'
+    if: needs.detect.outputs.has_code == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
