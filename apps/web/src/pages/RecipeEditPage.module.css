@@ -1,0 +1,15 @@
+/* SPEC-002: the load error. The editor itself is RecipeEditor's own styles. */
+.alert {
+  display: grid;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-orange-light);
+  color: var(--color-orange-on-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.alert p {
+  margin: 0;
+}
