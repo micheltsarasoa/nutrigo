@@ -28,7 +28,7 @@ gantt
 | Sprint | Version | Goal | PRD refs | Done when |
 |---|---|---|---|---|
 | S0 | v0.1.0 | Foundations: monorepo, CI/CD, Docker, tokens, atoms in `/playground`, board | G4 | CI green, `docker compose up` serves the playground, atoms approved |
-| S1 | v0.2.0 | Recipes & ingredients (manual nutrition entry); **Settings** modal with the locale | R-1…R-9, C-1 | CRUD works end to end on a phone |
+| S1 | v0.2.0 | Recipes & ingredients (manual nutrition entry); **Settings** modal with the locale | R-1…R-9, C-1 | CRUD works end to end on desktop, without breaking on a phone (ADR-0013) |
 | S2 | v0.3.0 | Weekly meal plan screen | P-1…P-4 | A week can be planned from recipes |
 | S3 | v0.4.0 | Today screen: nutrition totals, targets, charts, **food diary check-off**; CIQUAL + Open Food Facts import; Settings: nutrition sources | N-1…N-6, C-2 | Daily and weekly nutrition visible against targets |
 | S4 | v0.5.0 | Shopping list with **costs in EUR**, offline PWA | S-1…S-7 | List usable offline in the store (on the local deployment) |

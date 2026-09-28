@@ -20,7 +20,7 @@ flowchart TD
     C --> D[2 · Implement minimal component<br/>tokens only]
     D --> E[3 · Playground demo<br/>Component.playground.tsx, all states]
     E --> F[Open PR · label awaiting-validation<br/>CI green]
-    F --> G{Owner reviews<br/>/playground on phone}
+    F --> G{Owner reviews<br/>/playground at 1280 px}
     G -- changes --> D
     G -- approved --> H[Label design-approved<br/>screenshot baseline committed<br/>merge]
     H --> I[4 · Integrate into higher level / page<br/>in a separate PR]
@@ -68,7 +68,7 @@ A PR that adds code without tests doesn't pass review. Coverage thresholds are e
 - Each new runtime dependency needs an ADR stating why platform or stdlib code isn't enough, its size, and its maintenance status.
 - Dependabot opens weekly update PRs, grouped by ecosystem, and they're merged once CI is green.
 
-## 7. Code review checklist (PR template mirrors this)
+## 7. Code review checklist (the PR template has a one-line version)
 
 - [ ] Linked issue, and a spec for features
 - [ ] Tests written first and passing; coverage not lower

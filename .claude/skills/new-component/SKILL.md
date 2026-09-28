@@ -16,7 +16,7 @@ Follow `docs/process/coding-policy.md` §2 exactly. Do not skip or reorder steps
    - Ponytail check: can a native element or an existing component do this? If so, say so and stop.
 2. **Test first** (create the branch and push it with the status row set to `draft` as soon as the first file exists): create `apps/web/src/design-system/<level>s/<Name>/<Name>.test.tsx` covering behaviour, every state, keyboard use and an axe check. Run it and show that it fails.
 3. **Implement**: `<Name>.tsx` + `<Name>.module.css` + `index.ts`. Use tokens only (CSS custom properties), no fetching, props only. Make the test pass.
-4. **Playground**: `<Name>.playground.tsx` exporting `{ title, level, states }` with every state from the issue (default, focus, disabled, loading, empty, error, long content). Check it at 390 px.
+4. **Playground**: `<Name>.playground.tsx` exporting `{ title, level, states }` with every state from the issue (default, focus, disabled, loading, empty, error, long content). Check it at 1280 px. At 390 px, only check for no horizontal scroll and nothing broken. No mobile-only variants until v1.0.0 (ADR-0013).
 5. **Verify**: run lint, typecheck and tests.
 6. **Hand off**: open or update the PR with label `awaiting-validation`, and set its row in `components-status.md` to `awaiting-validation`. Tell the owner the exact URL, `/playground/<level>/<name>`, and **stop**. Do not integrate the component into anything until the owner adds `design-approved`.
 7. After approval: add the Playwright screenshot baseline for the playground page in the same PR (`docs/testing/strategy.md`, "Adding a visual baseline"), set its row to `done`, then merge.
