@@ -1,4 +1,9 @@
-import { expect, test } from "@playwright/test";
+import {
+  type APIRequestContext,
+  expect,
+  type Page,
+  test,
+} from "@playwright/test";
 import {
   expectNoAxeViolations,
   expectNoHorizontalScroll,
@@ -191,7 +196,7 @@ test("SPEC-002 AC-3: a recipe made in the editor is saved under its meal type, w
   }
   await page.getByRole("button", { name: "Save" }).click();
 
-  // The list (#74) and detail page (#75) come later, so the API is checked.
+  // The detail page (#75) comes later, so the API is checked.
   await expect(page).toHaveURL(/\/recipes\/\d+$/);
   const id = new URL(page.url()).pathname.split("/").pop();
   const lunch = await (await request.get("/api/recipes?mealType=lunch")).json();
@@ -252,4 +257,118 @@ test("SPEC-002 AC-10 (recipe editor): no horizontal scroll, 44 px tap targets, n
     );
     await expectNoAxeViolations(page);
   }
+});
+
+// Ten recipes, three of them with "chick" in the name in different cases.
+const LIBRARY = [
+  ["Chicken curry", "dinner"],
+  ["Grilled CHICKEN salad", "lunch"],
+  ["Spiced chickpea stew", "lunch"],
+  ["Porridge", "breakfast"],
+  ["Overnight oats", "breakfast"],
+  ["Turkey rice bowl", "lunch"],
+  ["Salmon poke bowl", "dinner"],
+  ["Apple and peanut butter", "snack"],
+  ["Greek yoghurt", "snack"],
+  ["Lentil soup", "dinner"],
+] as const;
+
+const seedLibrary = async (request: APIRequestContext) => {
+  for (const [name, mealType] of LIBRARY) {
+    const res = await request.post("/api/recipes", {
+      data: {
+        name,
+        mealType,
+        servings: 1,
+        ingredients: [],
+        steps: [],
+        tools: [],
+      },
+    });
+    expect(res.ok()).toBe(true);
+  }
+};
+
+const cards = (page: Page) => page.getByRole("main").getByRole("listitem");
+// FilterTabs and Segmented hide the native radio under its label: click the label.
+const pick = (page: Page, name: string) =>
+  page.getByRole("radio", { name }).locator("..").click();
+
+test('SPEC-002 AC-4: searching "chick" shows only the names containing it, in any case', async ({
+  page,
+  request,
+}) => {
+  await seedLibrary(request);
+  await page.goto("/recipes");
+  await expect(cards(page)).toHaveCount(10);
+
+  await page.getByRole("searchbox", { name: "Search recipes" }).fill("chick");
+  await expect(cards(page)).toHaveCount(3);
+  for (const name of [
+    "Chicken curry",
+    "Grilled CHICKEN salad",
+    "Spiced chickpea stew",
+  ]) {
+    await expect(cards(page).filter({ hasText: name })).toHaveCount(1);
+  }
+});
+
+test("SPEC-002 AC-5: the Lunch tab shows only lunch recipes; All restores the list", async ({
+  page,
+  request,
+}) => {
+  await seedLibrary(request);
+  await page.goto("/recipes");
+  await expect(cards(page)).toHaveCount(10);
+
+  await pick(page, "Lunch");
+  await expect(cards(page)).toHaveCount(3);
+  await expect(cards(page).filter({ hasText: "Lunch" })).toHaveCount(3);
+
+  await pick(page, "All");
+  await expect(cards(page)).toHaveCount(10);
+});
+
+test("SPEC-002 AC-7: switching to the grid changes the layout and is remembered after a reload", async ({
+  page,
+  request,
+}) => {
+  await seedLibrary(request);
+  await page.goto("/recipes");
+  await expect(cards(page)).toHaveCount(10);
+  const topOf = async (i: number) =>
+    (await cards(page).nth(i).boundingBox())!.y;
+
+  // List: one card per row. Grid: two side by side on a desktop screen.
+  expect(await topOf(1)).toBeGreaterThan(await topOf(0));
+  await pick(page, "Grid view");
+  await expect.poll(async () => (await topOf(1)) - (await topOf(0))).toBe(0);
+
+  await page.reload();
+  await expect(page.getByRole("radio", { name: "Grid view" })).toBeChecked();
+  await expect(cards(page)).toHaveCount(10);
+  expect(await topOf(1)).toBe(await topOf(0));
+});
+
+test("SPEC-002 AC-10 (recipe list): no horizontal scroll, 44 px tap targets, no axe violations", async ({
+  page,
+  request,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  // The empty library, then the list.
+  await page.goto("/recipes");
+  await expect(page.getByText("No recipes yet")).toBeVisible();
+  await expectNoHorizontalScroll(page);
+  await expectNoAxeViolations(page);
+
+  await seedLibrary(request);
+  await page.reload();
+  await expect(cards(page)).toHaveCount(10);
+  await expectNoHorizontalScroll(page);
+  await expectTapTargets(
+    page,
+    page.locator("main a:visible, main button:visible"),
+  );
+  await expectNoAxeViolations(page);
 });
