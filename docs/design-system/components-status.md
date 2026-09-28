@@ -25,7 +25,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 |---|---|---|---|
 | Icon | #19, #130 | main; #131 adds prep and cook | `done` |
 | Logo | #20 | main | `done` |
-| Button | #21 | main | `done` |
+| Button | #21, #156 | main; #157 adds the 44 px md hit area | `awaiting-validation` |
 | Pill | #22 | main | `done` |
 | IconBadge | #23 | main | `done` |
 | SearchField | #24 | main (16 px since #125) | `done` |
@@ -66,5 +66,5 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipeList | #103 | #143 | `done` |
 | RecipeDetail | #104 | #146 | `done` |
 | RecipeEditor | #105 | #147 | `done` |
-| IngredientEditor | #106 | #148 | `done` |
+| IngredientEditor | #106, #156 | #148; #157 adds the 44 px Delete hit area | `awaiting-validation` |
 | SettingsDialog | #107 | #149, #150 | `done` |

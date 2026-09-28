@@ -70,9 +70,10 @@
 }
 
 /* The Button atom has no destructive variant: a red Delete, sized like a
-   md Button, pushed to the start of the row. */
+   md Button (with the same 44 px touch target), pushed to the start of the row. */
 .delete,
 .confirmDelete {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -84,6 +85,13 @@
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
+}
+
+.delete::after,
+.confirmDelete::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--size-control) - var(--size-touch-target)) / 2) 0;
 }
 
 .delete:focus-visible,
