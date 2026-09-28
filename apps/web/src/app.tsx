@@ -6,6 +6,7 @@ import {
 import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
 import { IngredientsPage } from "./pages/IngredientsPage.tsx";
 import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
+import { RecipesPage } from "./pages/RecipesPage.tsx";
 import { useSettings } from "./use-settings.ts";
 
 // Dev and preview builds only (ADR-0006). In production this is a constant false,
@@ -73,6 +74,8 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
           <RecipeEditPage key={path} id={recipeEdit[1]} />
         ) : isRecipe ? (
           <Placeholder title="Recipe" />
+        ) : path === "/recipes" ? (
+          <RecipesPage />
         ) : title ? (
           <Placeholder title={title} />
         ) : (
