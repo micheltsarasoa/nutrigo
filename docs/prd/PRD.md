@@ -145,7 +145,7 @@ One configuration screen for app-wide preferences. It's stored in the DB, so it 
 
 | Area | Requirement |
 |---|---|
-| Platform | Mobile-first PWA, installable, usable offline for reads and the shopping list |
+| Platform | Mobile-first PWA, installable, usable offline for reads and the shopping list. **Until v1.0.0, desktop-first**: only ≥ 1200 px layouts are designed; mobile works but isn't designed (ADR-0013) |
 | Performance | Lighthouse Performance ≥ 90 on mobile; interactive in < 2 s on 4G |
 | Accessibility | WCAG 2.2 AA; axe checks pass in CI. **Temporary exception:** the brand colour contrast failures are kept until the owner updates the token values (ADR-0008) |
 | Privacy | Data stays in the owner's SQLite; only AI prompts go out, to the provider chosen in Settings. Mistral is hosted in the EU; **DeepSeek is hosted in China**, and the Settings screen says so (ADR-0010) |

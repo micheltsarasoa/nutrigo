@@ -1,19 +1,8 @@
-<!-- Title must be a Conventional Commit: feat: …, fix: …, docs: …, refactor: …, test: …, chore: …, ci: … -->
-
-## What & why
+<!-- Title: a Conventional Commit (feat: …, fix: …, docs: …). Body: short, only what a reviewer needs. -->
 
 Closes #
 
-## Type
-- [ ] Feature (story) · [ ] Component (atom / molecule / organism) · [ ] Fix · [ ] Refactor (no behaviour change) · [ ] Docs / CI / chore
+**What:** 1–3 lines. What changes and why, not how.
+**Tested:** the test files, or "n/a (docs)". Playground: `/playground/<level>/<name>` (UI only)
 
-## Spec / design
-- Spec: `docs/specs/SPEC-…` (AC covered: …)
-- Playground: `/playground/<level>/<name>` (UI only)
-
-## Checklist (Definition of Done)
-- [ ] Tests written **first** and passing locally; coverage not lower
-- [ ] UI: every state shown in the playground, tokens only, axe clean, `design-approved` label from the owner
-- [ ] `/ponytail-review` run; no speculative code, no new dependency without an ADR
-- [ ] Docs updated (spec status, data-model, ADR, CLAUDE.md commands)
-- [ ] No secrets, no logging library, no auth code
+- [ ] DoD met: tests first, CI green, tokens only, `design-approved` (UI), `/ponytail-review`, docs updated, no secrets / logging lib / auth code

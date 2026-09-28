@@ -17,6 +17,7 @@ These use the Michael Nygard format. An ADR is **immutable once Accepted**: to c
 | [0010](0010-ai-provider-choice-and-spend-cap.md) | AI provider chosen in settings (Claude, Mistral, DeepSeek) with a monthly spend cap | Accepted |
 | [0011](0011-nutrition-sources-off-ciqual.md) | Nutrition sources: manual, Open Food Facts, CIQUAL (USDA dropped) | Accepted |
 | [0012](0012-native-routing-and-vite-plugin-pwa.md) | Native routing (no React Router) and `vite-plugin-pwa` for the service worker | Accepted |
+| [0013](0013-desktop-first-mvp.md) | Desktop-first until v1.0.0; mobile works but isn't designed | Accepted |
 
 ```mermaid
 stateDiagram-v2
