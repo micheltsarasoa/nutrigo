@@ -75,6 +75,7 @@ const APPROVED = [
   "molecule/nutritionrow",
   "organism/ingredienteditor",
   "organism/appshell",
+  "organism/ingredientlist",
 ];
 
 for (const slug of APPROVED) {
