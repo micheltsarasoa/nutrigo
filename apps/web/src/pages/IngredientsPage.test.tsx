@@ -86,6 +86,24 @@ const eggIngredient: Ingredient = {
   updatedAt: "2026-01-01T00:00:00.000Z",
 };
 
+const branIngredient: Ingredient = {
+  ...oatsIngredient,
+  id: 43,
+  name: "Oat bran",
+  kcal100g: 246,
+  protein100g: 17.3,
+};
+
+// The names in the table, in row order, and the cells of one ingredient's row.
+const rowNames = () =>
+  within(screen.getByRole("table"))
+    .getAllByRole("link")
+    .map((a) => a.textContent);
+const cells = (link: HTMLElement) =>
+  within(link.closest("tr")!)
+    .getAllByRole("cell")
+    .map((td) => td.textContent);
+
 const heading = () =>
   within(screen.getByRole("main")).getByRole("heading", { level: 1 });
 const box = (name: string) => screen.getByRole("textbox", { name });
@@ -121,9 +139,7 @@ describe("IngredientsPage /ingredients (list)", () => {
     render(<IngredientsPage path="/ingredients" />);
     expect(heading().textContent).toBe("Ingredients");
     expect(screen.getByRole("button", { name: "Add ingredient" })).toBeTruthy();
-    expect(screen.getByRole("status").textContent).toBe(
-      "Loading your ingredients…",
-    );
+    expect(screen.getByRole("status").textContent).toBe("Loading ingredients…");
   });
 
   it("shows a load error with Retry, which reloads", async () => {
@@ -142,7 +158,7 @@ describe("IngredientsPage /ingredients (list)", () => {
     ).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
-    await screen.findByText("No ingredients yet. Add your first one.");
+    await screen.findByText("No ingredients yet");
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
@@ -152,12 +168,31 @@ describe("IngredientsPage /ingredients (list)", () => {
       vi.fn(() => Promise.resolve(jsonResponse([]))),
     );
     render(<IngredientsPage path="/ingredients" />);
-    expect(
-      await screen.findByText("No ingredients yet. Add your first one."),
-    ).toBeTruthy();
+    expect(await screen.findByText("No ingredients yet")).toBeTruthy();
   });
 
-  it("lists every ingredient as a linked row with its category, rounded kcal and source", async () => {
+  it("AC-11: lists every ingredient by name as a linked row of category and nutrition per 100 g", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(jsonResponse([oatsIngredient, eggIngredient])),
+      ),
+    );
+    render(<IngredientsPage path="/ingredients" />);
+
+    const eggLink = await screen.findByRole("link", { name: "Egg" });
+    expect(eggLink.getAttribute("href")).toBe("/ingredients/7");
+    // Oats came first from the API, but the list is by name.
+    expect(rowNames()).toEqual(["Egg", "Oats"]);
+    // 143.4 kcal rounds to 143; macros keep one decimal.
+    expect(cells(eggLink)).toEqual(["Protein", "143", "0.7", "12.6", "9.5"]);
+    const oatsLink = screen.getByRole("link", { name: "Oats" });
+    expect(oatsLink.getAttribute("href")).toBe("/ingredients/42");
+    expect(cells(oatsLink)).toEqual(["Grains", "389", "66.0", "17.0", "7.0"]);
+    expect(screen.getByText("2 ingredients · values per 100 g")).toBeTruthy();
+  });
+
+  it("AC-15: shows the source chip of an imported ingredient, not of a manual one", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() =>
@@ -165,21 +200,81 @@ describe("IngredientsPage /ingredients (list)", () => {
       ),
     );
     render(<IngredientsPage path="/ingredients" />);
+    await screen.findByRole("link", { name: "Oats" });
+    expect(screen.getByText("Open Food Facts")).toBeTruthy();
+    expect(screen.queryByText("Manual")).toBeNull();
+  });
 
-    const oatsLink = await screen.findByRole("link", { name: "Oats" });
-    expect(oatsLink.getAttribute("href")).toBe("/ingredients/42");
-    const oatsRow = oatsLink.closest("li")!;
-    expect(oatsRow.textContent).toContain("Grains · 389 kcal / 100 g");
-    expect(within(oatsRow).getByText("Manual")).toBeTruthy();
+  it("AC-12: search narrows the rows by name, ignoring case, and says when nothing matches", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          jsonResponse([eggIngredient, oatsIngredient, branIngredient]),
+        ),
+      ),
+    );
+    render(<IngredientsPage path="/ingredients" />);
+    await screen.findByRole("link", { name: "Oats" });
 
-    const eggLink = screen.getByRole("link", { name: "Egg" });
-    expect(eggLink.getAttribute("href")).toBe("/ingredients/7");
-    const eggRow = eggLink.closest("li")!;
-    // 143.4 rounds down to 143.
-    expect(eggRow.textContent).toContain("Protein · 143 kcal / 100 g");
-    expect(within(eggRow).getByText("Open Food Facts")).toBeTruthy();
+    type(screen.getByRole("searchbox", { name: "Search ingredients" }), "OAT");
+    expect(rowNames()).toEqual(["Oat bran", "Oats"]);
 
-    expect(screen.getAllByRole("listitem").length).toBe(2);
+    type(
+      screen.getByRole("searchbox", { name: "Search ingredients" }),
+      "pizza",
+    );
+    expect(screen.getByText("No ingredients match")).toBeTruthy();
+    expect(screen.queryByRole("table")).toBeNull();
+  });
+
+  it("AC-13: a category tab shows only that category, every tab counts its ingredients, All restores", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          jsonResponse([eggIngredient, oatsIngredient, branIngredient]),
+        ),
+      ),
+    );
+    render(<IngredientsPage path="/ingredients" />);
+    await screen.findByRole("link", { name: "Oats" });
+    expect(screen.getByRole("radio", { name: "All 3" })).toBeTruthy();
+    expect(screen.getByRole("radio", { name: "Dairy 0" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("radio", { name: "Grains 2" }));
+    expect(rowNames()).toEqual(["Oat bran", "Oats"]);
+    // The counts don't follow the filter.
+    expect(screen.getByRole("radio", { name: "Protein 1" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("radio", { name: "Dairy 0" }));
+    expect(screen.getByText("No ingredients match")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("radio", { name: "All 3" }));
+    expect(rowNames()).toEqual(["Egg", "Oat bran", "Oats"]);
+  });
+
+  it("AC-14: sorts by name A to Z, or by calories or protein, highest first", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          jsonResponse([eggIngredient, oatsIngredient, branIngredient]),
+        ),
+      ),
+    );
+    render(<IngredientsPage path="/ingredients" />);
+    await screen.findByRole("link", { name: "Oats" });
+    expect(rowNames()).toEqual(["Egg", "Oat bran", "Oats"]);
+
+    type(select("Sort by"), "kcal");
+    expect(rowNames()).toEqual(["Oats", "Oat bran", "Egg"]);
+
+    type(select("Sort by"), "protein");
+    expect(rowNames()).toEqual(["Oat bran", "Oats", "Egg"]);
+
+    type(select("Sort by"), "name");
+    expect(rowNames()).toEqual(["Egg", "Oat bran", "Oats"]);
   });
 
   it("names the other three sources", async () => {
@@ -211,7 +306,7 @@ describe("IngredientsPage /ingredients (list)", () => {
       vi.fn(() => Promise.resolve(jsonResponse([]))),
     );
     render(<IngredientsPage path="/ingredients" />);
-    await screen.findByText("No ingredients yet. Add your first one.");
+    await screen.findByText("No ingredients yet");
     fireEvent.click(screen.getByRole("button", { name: "Add ingredient" }));
     expect(location.pathname).toBe("/ingredients/new");
   });

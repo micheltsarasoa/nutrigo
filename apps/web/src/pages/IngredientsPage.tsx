@@ -1,11 +1,10 @@
-// SPEC-002 US-1 (AC-1, AC-2, AC-9, AC-10): browse, add, edit and delete
-// ingredients. The only page that fetches; IngredientEditor stays props-only.
+// SPEC-002 US-1 and US-6 (AC-1, AC-2, AC-9 to AC-15): browse, search, filter, sort, add, edit
+// and delete ingredients. The only page that fetches; the organisms stay props-only.
 import { Ingredient, IngredientInput, type Source } from "@nutrigo/shared";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import { Button } from "../design-system/atoms/Button/index.ts";
-import { Card } from "../design-system/atoms/Card/index.ts";
-import { Pill } from "../design-system/atoms/Pill/index.ts";
 import { IngredientEditor } from "../design-system/organisms/IngredientEditor/index.ts";
+import { IngredientList } from "../design-system/organisms/IngredientList/index.ts";
 import { navigate } from "../router.ts";
 import styles from "./IngredientsPage.module.css";
 
@@ -20,32 +19,41 @@ const DELETE_CONFLICT = "This ingredient can't be deleted.";
 const DELETE_ERROR = "Couldn't delete the ingredient. Try again.";
 const USED_BY_PREFIX = "Used by these recipes: ";
 
-// Category and Source from packages/shared, in the wording SPEC-002 §4 uses.
-const CATEGORY_LABEL: Record<string, string> = {
-  grains: "Grains",
-  veggies: "Veggies",
-  protein: "Protein",
-  fruits: "Fruits",
-  dairy: "Dairy",
-  others: "Others",
-};
-const SOURCE_LABEL: Record<Source, string> = {
-  manual: "Manual",
+// Source from packages/shared, in the wording SPEC-002 §4 uses. A manual entry is the norm,
+// so it shows no chip (AC-15).
+const SOURCE_LABEL: Record<Exclude<Source, "manual">, string> = {
   off: "Open Food Facts",
   ciqual: "Ciqual",
   ai_estimate: "AI estimate",
 };
 
+type ListProps = ComponentProps<typeof IngredientList>;
+
+const toItem = (i: Ingredient): ListProps["ingredients"][number] => ({
+  id: i.id,
+  href: `/ingredients/${i.id}`,
+  name: i.name,
+  category: i.category,
+  kcal: i.kcal100g,
+  carbs: i.carbs100g,
+  protein: i.protein100g,
+  fat: i.fat100g,
+  source: i.source === "manual" ? null : SOURCE_LABEL[i.source],
+});
+
 export function IngredientsPage({ path }: { path: string }) {
   if (path === "/ingredients/new") return <NewIngredient />;
   const editId = /^\/ingredients\/(\d+)$/.exec(path)?.[1];
   if (editId) return <EditIngredient key={editId} id={editId} />;
-  return <IngredientList />;
+  return <BrowseIngredients />;
 }
 
-function IngredientList() {
+function BrowseIngredients() {
   const [ingredients, setIngredients] = useState<Ingredient[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<ListProps["category"]>("all");
+  const [sort, setSort] = useState<ListProps["sort"]>("name");
 
   async function load() {
     setError(null);
@@ -62,10 +70,43 @@ function IngredientList() {
     void load();
   }, []);
 
+  // ponytail: filters and sorts in the browser, fine for a hand-entered library. The S6 imports
+  // (thousands of Ciqual rows) will need ?q= and ?category= on the API.
+  const all = ingredients ?? [];
+  const counts: ListProps["counts"] = {
+    all: all.length,
+    grains: 0,
+    veggies: 0,
+    protein: 0,
+    fruits: 0,
+    dairy: 0,
+    others: 0,
+  };
+  for (const i of all) counts[i.category]++;
+  const shown = all
+    .filter(
+      (i) =>
+        i.name.toLowerCase().includes(query.toLowerCase()) &&
+        (category === "all" || i.category === category),
+    )
+    .map(toItem)
+    .sort((a, b) =>
+      sort === "name" ? a.name.localeCompare(b.name) : b[sort] - a[sort],
+    );
+
   return (
     <main>
       <div className={styles.head}>
-        <h1>Ingredients</h1>
+        <div className={styles.title}>
+          <h1>Ingredients</h1>
+          {ingredients && (
+            <p>
+              {ingredients.length}{" "}
+              {ingredients.length === 1 ? "ingredient" : "ingredients"} · values
+              per 100 g
+            </p>
+          )}
+        </div>
         <Button onClick={() => navigate("/ingredients/new")}>
           Add ingredient
         </Button>
@@ -77,27 +118,19 @@ function IngredientList() {
             Retry
           </Button>
         </div>
-      ) : ingredients === null ? (
-        <p role="status">Loading your ingredients…</p>
-      ) : ingredients.length === 0 ? (
-        <p>No ingredients yet. Add your first one.</p>
       ) : (
-        <Card>
-          <ul className={styles.list}>
-            {ingredients.map((i) => (
-              <li key={i.id} className={styles.row}>
-                <a href={`/ingredients/${i.id}`} className={styles.link}>
-                  {i.name}
-                </a>
-                <span className={styles.detail}>
-                  {CATEGORY_LABEL[i.category] ?? i.category} ·{" "}
-                  {Math.round(i.kcal100g)} kcal / 100 g
-                </span>
-                <Pill variant="grey">{SOURCE_LABEL[i.source]}</Pill>
-              </li>
-            ))}
-          </ul>
-        </Card>
+        <IngredientList
+          ingredients={shown}
+          counts={counts}
+          loading={ingredients === null}
+          query={query}
+          category={category}
+          sort={sort}
+          onQueryChange={setQuery}
+          onCategoryChange={setCategory}
+          onSortChange={setSort}
+          onAdd={() => navigate("/ingredients/new")}
+        />
       )}
     </main>
   );

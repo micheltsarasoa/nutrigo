@@ -41,9 +41,7 @@ test("SPEC-002 AC-1: adding Oats through the form shows it in the list", async (
   page,
 }) => {
   await page.goto("/ingredients");
-  await expect(
-    page.getByText("No ingredients yet. Add your first one."),
-  ).toBeVisible();
+  await expect(page.getByText("No ingredients yet")).toBeVisible();
 
   await page.getByRole("button", { name: "Add ingredient" }).click();
   await expect(page).toHaveURL(/\/ingredients\/new$/);
@@ -57,9 +55,11 @@ test("SPEC-002 AC-1: adding Oats through the form shows it in the list", async (
   await page.getByRole("button", { name: "Save" }).click();
 
   await expect(page).toHaveURL(/\/ingredients$/);
-  const row = page.getByRole("listitem").filter({ hasText: "Oats" });
-  await expect(row).toContainText("Grains · 389 kcal / 100 g");
-  await expect(row).toContainText("Manual");
+  const row = page.getByRole("row").filter({ hasText: "Oats" });
+  await expect(row).toContainText("Grains");
+  await expect(row).toContainText("389");
+  // A manual entry is the norm, so it shows no source chip (AC-15).
+  await expect(row).not.toContainText("Manual");
 });
 
 test("SPEC-002 AC-2: invalid input shows field errors and saves nothing", async ({
@@ -498,4 +498,37 @@ test("SPEC-002 AC-10 (recipe detail): phone order, no horizontal scroll, 44 px t
     page.locator("main a:visible, main button:visible"),
   );
   await expectNoAxeViolations(page);
+});
+
+test("SPEC-002 AC-11 to AC-14: the ingredient table is by name, and search, a category tab and the sort narrow and reorder it", async ({
+  page,
+  request,
+}) => {
+  for (const body of [
+    ingredient("Oats", "grains", [389, 66, 17, 7]),
+    ingredient("Oat milk", "dairy", [46, 6.7, 1, 1.5]),
+    ingredient("Egg", "protein", [143, 0.7, 12.6, 9.5]),
+  ]) {
+    const res = await request.post("/api/ingredients", { data: body });
+    expect(res.ok()).toBe(true);
+  }
+  const names = page.getByRole("rowheader");
+  const search = page.getByRole("searchbox", { name: "Search ingredients" });
+
+  await page.goto("/ingredients");
+  await expect(names).toHaveText(["Egg", "Oat milk", "Oats"]);
+
+  await search.fill("OAT");
+  await expect(names).toHaveText(["Oat milk", "Oats"]);
+  await search.fill("pizza");
+  await expect(page.getByText("No ingredients match")).toBeVisible();
+  await search.fill("");
+
+  await pick(page, "Grains 1");
+  await expect(names).toHaveText(["Oats"]);
+  await pick(page, "All 3");
+  await expect(names).toHaveCount(3);
+
+  await page.getByRole("combobox", { name: "Sort by" }).selectOption("kcal");
+  await expect(names).toHaveText(["Oats", "Egg", "Oat milk"]);
 });
