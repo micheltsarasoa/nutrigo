@@ -2,10 +2,11 @@
 
 | | |
 |---|---|
-| Status | Draft |
+| Status | Approved (2026-09-29; desktop only, see Scope) |
 | Sprint | S2 → v0.3.0 |
 | PRD refs | P-1 … P-4 |
 | Design | `design/source/Meal Plan.dc.html` (desktop grid + mobile day view) |
+| Scope | ADR-0013 defers AC-10, WeekStrip, DayMealsPanel, MealGroup/MealItem and the RecipePicker bottom sheet until after v1.0.0. Below 1200 px the grid reflows and doesn't break |
 
 ## 1. Summary
 Plan the week, Monday to Sunday, by putting recipes into four slots per day: breakfast, lunch, snack and dinner. Desktop shows the 7-day grid from the design. Mobile shows a week strip and one day, as in the design's mobile variant. Nutrition totals and the eaten check-off come in SPEC-004. This spec only shows planned kcal.
@@ -37,7 +38,7 @@ Plan the week, Monday to Sunday, by putting recipes into four slots per day: bre
 |---|---|---|
 | `/plan/:isoWeek` | PageHeader (title, WeekNav, "Add meal") + MealPlanGrid: a slot column (pill + planned kcal) × 7 day columns | Top bar + WeekStrip + DayMealsPanel (the MealGroup per slot, with MealItems and an add button) |
 
-**Changes from the design:** weeks start Monday (not Sunday). The slot column's kcal is the **planned total for the selected day** (the design shows a fixed number). Snack is a grey pill. The notification bell and user menu are removed. The design's "Add Meal" button links to the recipe list; here it opens the picker for the selected day.
+**Changes from the design:** weeks start Monday (not Sunday). The slot column's kcal is the **planned total for the selected day** (the design shows a fixed number). Snack is a grey pill. The notification bell and user menu are removed. The design's "Add Meal" button links to the recipe list; here it opens the picker for the selected day. Each day header gets a caption line with that day's planned kcal.
 
 ### Add / actions flow
 ```mermaid
@@ -59,7 +60,7 @@ sequenceDiagram
 |---|---|---|---|
 | Atom | Pill (slot variants), Button, Stepper, IconButton | existing | n/a |
 | Molecule | WeekNav | new | current week, other week, loading |
-| Molecule | DayHead | new | normal, today, selected |
+| Molecule | DayHead | new | normal, today, selected; planned kcal caption |
 | Molecule | MealMiniCard | new | with/without photo, long name, 2+ servings badge, focused |
 | Molecule | MealAddSlot | new | idle, hover/focus, drop target (future) |
 | Molecule | WeekStrip | new | today, selected ≠ today, week boundary |
@@ -106,4 +107,4 @@ Drag and drop (a later improvement; actions menu for now), eaten check-off (SPEC
 | E2E | AC-1 … AC-12, with the clock fixed at 2026-09-30 |
 
 ## 10. Open questions
-- Should the desktop grid also show daily kcal totals under each day header? The design doesn't have them; proposal: yes, as a caption line.
+- ~~Should the desktop grid also show daily kcal totals under each day header?~~ Yes, as a caption line (owner, 2026-09-29).
