@@ -78,6 +78,7 @@ The GitHub API can't change views or turn on the auto-add workflow. Do these onc
 - [ ] UI: `design-approved` by the owner; screenshot baseline committed; axe passes
 - [ ] `/ponytail-review` clean
 - [ ] Docs updated (spec status, data model, ADR, CLAUDE.md)
+- [ ] Every done-when and AC box in the issue is ticked before it's closed
 - [ ] Squash-merged with a Conventional Commit title; issue closed
 
 ## 5. Sprint cadence (2 weeks)

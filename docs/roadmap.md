@@ -1,6 +1,6 @@
 # Roadmap
 
-There is one sprint every two weeks, and each sprint ships one minor version. Sprint 0 started early, on Thu 24 Sep 2026, and runs 18 days so every later sprint starts on a Monday.
+There is one sprint every two weeks, and each sprint ships one minor version. S0 and S1 finished early (24 and 29 Sep 2026), so S2 runs 12 days, Wed 30 Sep to Sun 11 Oct, and every later sprint starts on a Monday.
 
 ```mermaid
 gantt
@@ -8,9 +8,9 @@ gantt
     dateFormat YYYY-MM-DD
     axisFormat %d %b
     section Sprints
-    S0 Foundations            :s0, 2026-09-24, 18d
-    S1 Recipes & ingredients  :s1, after s0, 14d
-    S2 Weekly meal plan       :s2, after s1, 14d
+    S0 Foundations            :s0, 2026-09-24, 1d
+    S1 Recipes & ingredients  :s1, 2026-09-25, 5d
+    S2 Weekly meal plan       :s2, 2026-09-30, 12d
     S3 Nutrition tracking     :s3, after s2, 14d
     S4 Shopping list + PWA + 1.0 :s4, after s3, 14d
     S5 Production on Railway  :s5, after s4, 14d
