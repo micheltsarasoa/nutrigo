@@ -15,7 +15,7 @@ stateDiagram-v2
 |---|---|---|
 | [SPEC-001 Foundations](SPEC-001-foundations.md) | S0 | Approved |
 | [SPEC-002 Recipes & ingredients](SPEC-002-recipes-ingredients.md) | S1 | Approved |
-| [SPEC-003 Weekly meal plan](SPEC-003-meal-plan.md) | S2 | Draft |
+| [SPEC-003 Weekly meal plan](SPEC-003-meal-plan.md) | S2 | Approved |
 | [SPEC-004 Today, nutrition & food diary](SPEC-004-today-nutrition-diary.md) | S3 (imports: S6, ADR-0014) | Draft |
 | [SPEC-005 Grocery list, costs & offline](SPEC-005-grocery-list.md) | S4 | Draft |
 | SPEC-006 AI assist (Claude, Mistral, DeepSeek; ADR-0010) | S6 | not written |
