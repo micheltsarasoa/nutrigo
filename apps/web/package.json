@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "tokens": "node scripts/build-tokens.ts",
     "typecheck": "tsc -p .",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test --project desktop --grep @smoke"
   },
   "dependencies": {
     "react": "^19.3.0",

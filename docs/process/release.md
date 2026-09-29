@@ -35,7 +35,19 @@ flowchart LR
 1. Every issue in the sprint milestone is Done or moved to the next milestone.
 2. CI is green on `main`.
 3. Review the release-please PR: is the changelog readable, and is the version the expected minor? It has no CI yet, because GitHub doesn't run workflows on PRs opened by `GITHUB_TOKEN`: close and reopen it as the owner, then wait for the 5 checks to pass. `main`'s protection blocks the merge until they do, admins included.
-4. From Sprint 1: run the **restore drill**: restore the latest backup locally, then `npm run test:e2e:smoke`.
+4. From Sprint 1: run the **restore drill**, without Docker. Restore the latest backup to a scratch file, never over `data/nutrigo.db` (its `-wal` file would be replayed onto the restored copy), then run the smoke e2e against it:
+
+   ```powershell
+   npm run db:backup   # skip if today's backup exists
+   npm run build
+   New-Item -ItemType Directory -Force apps/web/.e2e-data
+   Remove-Item apps/web/.e2e-data/restore.db* -ErrorAction Ignore   # a stale -wal would replay onto the new copy
+   Copy-Item (Get-ChildItem data/backups/*.db | Sort-Object Name | Select-Object -Last 1) apps/web/.e2e-data/restore.db
+   $env:E2E_DATABASE_PATH = ".e2e-data/restore.db"   # relative to apps/web
+   npm run test:e2e:smoke
+   ```
+
+   In bash, write `E2E_DATABASE_PATH=.e2e-data/restore.db npm run test:e2e:smoke`. With that variable set the run never reuses a server, so if port 4175 is busy it stops instead of testing another DB. Report pass or fail.
 5. Merge the release PR. This creates the tag, the GitHub Release and the image, and deploys.
 6. Check `/health` on the deployment, then close the milestone.
 

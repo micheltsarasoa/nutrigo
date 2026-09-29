@@ -41,6 +41,8 @@ Keep this table up to date. The API runs its TypeScript directly on Node 24 (typ
 | Unit + component tests | `npm test` (coverage: `npm test -- --coverage`) |
 | E2E | `npm run build` then `npm run test:e2e` (first time: `npx -w @nutrigo/web playwright install chromium`) |
 | DB migration | `npm run db:generate` then `npm run db:migrate` (the API also migrates at boot) |
+| DB backup | `npm run db:backup` writes `data/backups/YYYY-MM-DD.db` and keeps the latest 30 |
+| Restore drill (smoke e2e) | `npm run build` then `npm run test:e2e:smoke`, on a restored backup via `E2E_DATABASE_PATH` (steps in [release.md](docs/process/release.md)) |
 | Local prod-like run | `docker compose up --build`, then http://localhost:3000 (data in `./data`) |
 | Open it on the phone | `tailscale serve --bg 3000`, then `https://<laptop>.<tailnet>.ts.net` ([guide](docs/guides/phone-access.md)); stop with `tailscale serve reset` |
 

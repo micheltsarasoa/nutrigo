@@ -8,6 +8,7 @@
     "start": "node src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/migrate.ts",
+    "db:backup": "node scripts/backup.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {
