@@ -6,6 +6,7 @@ import {
 import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
 import { IngredientsPage } from "./pages/IngredientsPage.tsx";
 import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
+import { RecipePage } from "./pages/RecipePage.tsx";
 import { RecipesPage } from "./pages/RecipesPage.tsx";
 import { useSettings } from "./use-settings.ts";
 
@@ -34,7 +35,7 @@ const ROUTES: [RegExp, string][] = [
 // SPEC-002: ingredients and single recipes live under the Recipes tab.
 const INGREDIENTS_PATH = /^\/ingredients(\/new|\/\d+)?$/;
 const RECIPE_EDIT_PATH = /^\/recipes\/(?:new|(\d+)\/edit)$/;
-const RECIPE_PATH = /^\/recipes\/\d+$/;
+const RECIPE_PATH = /^\/recipes\/(\d+)$/;
 
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
 export function App({ path, wide }: { path: string; wide: boolean }) {
@@ -51,7 +52,7 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
   }
   const isIngredients = INGREDIENTS_PATH.test(path);
   const recipeEdit = RECIPE_EDIT_PATH.exec(path);
-  const isRecipe = RECIPE_PATH.test(path);
+  const recipe = RECIPE_PATH.exec(path);
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
   return (
@@ -59,11 +60,7 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
       <AppShell
         items={NAV}
         current={
-          isIngredients || recipeEdit || isRecipe
-            ? "/recipes"
-            : title
-              ? path
-              : ""
+          isIngredients || recipeEdit || recipe ? "/recipes" : title ? path : ""
         }
         layout={wide ? "sidebar" : "tabs"}
         {...shellProps}
@@ -72,8 +69,8 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
           <IngredientsPage path={path} />
         ) : recipeEdit ? (
           <RecipeEditPage key={path} id={recipeEdit[1]} />
-        ) : isRecipe ? (
-          <Placeholder title="Recipe" />
+        ) : recipe ? (
+          <RecipePage key={path} id={recipe[1]!} />
         ) : path === "/recipes" ? (
           <RecipesPage />
         ) : title ? (

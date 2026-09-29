@@ -23,7 +23,7 @@ function storedView(): View {
 }
 
 // 35 → "35 min", 75 → "1 h 15 min", 60 → "1 h".
-function formatMinutes(total: number | null) {
+export function formatMinutes(total: number | null | undefined) {
   if (!total) return null;
   const h = Math.floor(total / 60);
   const min = total % 60;

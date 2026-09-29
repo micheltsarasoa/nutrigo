@@ -110,8 +110,18 @@ export const RecipeQuery = z.object({
   sort: RecipeSort.default("name"),
 });
 
-export type RecipeDetail = Recipe & {
-  nutritionPerServing: Nutrition;
-  healthScore: number;
-  totalMin: number | null;
-};
+// GET /api/recipes/:id: the recipe plus its computed values (SPEC-002 §7).
+export const RecipeDetail = Recipe.extend({
+  nutritionPerServing: z.object({
+    kcal: z.number(),
+    carbs: z.number(),
+    protein: z.number(),
+    fat: z.number(),
+    fibre: z.number(),
+    sugars: z.number(),
+    sodiumMg: z.number(),
+  }) satisfies z.ZodType<Nutrition>,
+  healthScore: z.number(),
+  totalMin: z.number().nullable(),
+});
+export type RecipeDetail = z.infer<typeof RecipeDetail>;
