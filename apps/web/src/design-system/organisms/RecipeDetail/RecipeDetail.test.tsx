@@ -59,7 +59,8 @@ describe("RecipeDetail", () => {
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(
       "Grilled turkey with brown rice",
     );
-    expect(screen.getByText("Lunch")).toBeTruthy();
+    // .rd-desc .pill--solid-yellow
+    expect(screen.getByText("Lunch").className).toContain("solid-yellow");
     expect(screen.getByRole("img", { name: "Rated 4 out of 5" })).toBeTruthy();
     expect(screen.getByText("A lean and balanced lunch.")).toBeTruthy();
   });

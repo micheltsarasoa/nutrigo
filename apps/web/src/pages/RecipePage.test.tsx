@@ -141,6 +141,30 @@ describe("RecipePage (SPEC-002 US-4, US-5)", () => {
     expect([tile("Calories"), row("Carbs"), row("Fat")]).toEqual(before);
   });
 
+  it("shows the recipe's photo in the hero, and the placeholder without one", async () => {
+    serve(() =>
+      Promise.resolve(jsonResponse({ ...bowl, photoPath: "/photos/bowl.jpg" })),
+    );
+    const { container, unmount } = render(<RecipePage id="5" />);
+    await loaded();
+    expect(container.querySelector("img")?.getAttribute("src")).toBe(
+      "/photos/bowl.jpg",
+    );
+    unmount();
+    serve();
+    const placeholder = render(<RecipePage id="5" />);
+    await loaded();
+    expect(placeholder.container.querySelector("img")).toBeNull();
+  });
+
+  it("Recipes goes back to the list", async () => {
+    serve();
+    render(<RecipePage id="5" />);
+    await loaded();
+    fireEvent.click(screen.getByRole("button", { name: "Recipes" }));
+    expect(location.pathname).toBe("/recipes");
+  });
+
   it("Edit opens the recipe editor", async () => {
     serve();
     render(<RecipePage id="5" />);

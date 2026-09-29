@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { axeViolations } from "../../../axe.ts";
 import { Stepper } from "./Stepper.tsx";
@@ -104,6 +104,16 @@ describe("Stepper", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it("has neutral buttons by default and green ones on request (Recipe Details)", () => {
+    const { dec, inc } = setup();
+    expect(dec.className).not.toContain("green");
+    cleanup();
+    const green = setup({ variant: "green" });
+    expect(green.dec.className).toContain("green");
+    expect(green.inc.className).toContain("green");
+    expect(inc.className).not.toContain("green");
+  });
+
   it("has no axe violations at min, in range and at max", async () => {
     const { container } = render(
       <>
@@ -112,6 +122,7 @@ describe("Stepper", () => {
           value={0}
           min={0}
           max={3}
+          variant="green"
           onChange={vi.fn()}
         />
         <Stepper

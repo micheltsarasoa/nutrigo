@@ -17,3 +17,6 @@ apps/web/.e2e-data/
 .DS_Store
 # Worktrees made by Claude Code subagents
 .claude/worktrees/
+
+# Local preview photos until the upload route (SPEC-002 POST /api/recipes/:id/photo) lands.
+apps/web/public/photos/

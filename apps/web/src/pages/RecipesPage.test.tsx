@@ -226,6 +226,21 @@ describe("RecipesPage", () => {
     ).toBe(true);
   });
 
+  it("shows a recipe's photo on its card, and the placeholder without one", async () => {
+    stubFetch([{ ...bowl, photoPath: "/photos/bowl.jpg" }, porridge]);
+    render(<RecipesPage />);
+    const bowlCard = (
+      await screen.findByRole("link", { name: /Turkey rice bowl/ })
+    ).closest("li")!;
+    expect(bowlCard.querySelector("img")?.getAttribute("src")).toBe(
+      "/photos/bowl.jpg",
+    );
+    const porridgeCard = screen
+      .getByRole("link", { name: /Porridge/ })
+      .closest("li")!;
+    expect(porridgeCard.querySelector("img")).toBeNull();
+  });
+
   it("Add recipe navigates to /recipes/new", async () => {
     stubFetch();
     render(<RecipesPage />);

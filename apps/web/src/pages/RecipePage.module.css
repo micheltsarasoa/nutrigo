@@ -1,9 +1,13 @@
-/* SPEC-002: Edit, Delete and errors around RecipeDetail, which has its own styles. */
+/* SPEC-002: back to the list on the left, Edit and Delete on the right, and
+   errors around RecipeDetail, which has its own styles. */
 .actions {
   display: flex;
-  justify-content: flex-end;
   gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.actions > :first-child {
+  margin-right: auto;
 }
 
 .alert {
