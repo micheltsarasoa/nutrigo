@@ -81,6 +81,8 @@
   --size-touch-target: 44px;
   --size-sidebar: 252px;
   --size-aside: 340px;
+  --size-rail: 321px;
+  --size-block-label: 130px;
   --size-media-hero: 250px;
   --size-media-thumb: 110px;
   --size-control: 40px;
@@ -88,6 +90,7 @@
   --size-field-sm: 36px;
   --size-control-sm: 32px;
   --size-pill: 26px;
+  --size-pill-lg: 34px;
   --size-progress-bar: 6px;
   --size-progress-bar-thin: 5px;
   --size-icon-xs: 12px;

@@ -5,16 +5,16 @@
 }
 
 .button {
+  --stepper-button: var(--size-stepper-button);
+
   position: relative;
   display: grid;
   place-items: center;
-  width: var(--size-stepper-button);
-  height: var(--size-stepper-button);
+  width: var(--stepper-button);
+  height: var(--stepper-button);
   padding: 0;
   border: 0;
   border-radius: var(--radius-xs);
-  background: var(--color-neutral-subtle);
-  color: var(--color-neutral-muted);
   font: inherit;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
@@ -23,16 +23,35 @@
     color var(--motion-fast);
 }
 
-/* A 44 px touch target around the 26 px button. */
+/* A 44 px touch target around the button. */
 .button::after {
   content: "";
   position: absolute;
-  inset: calc((var(--size-stepper-button) - var(--size-touch-target)) / 2);
+  inset: calc((var(--stepper-button) - var(--size-touch-target)) / 2);
 }
 
-.button:hover:not(:disabled) {
+.neutral {
+  background: var(--color-neutral-subtle);
+  color: var(--color-neutral-muted);
+}
+
+.neutral:hover:not(:disabled) {
   background: var(--color-orange-light);
   color: var(--color-orange-base);
+}
+
+/* .stepper__btn--green (Recipe Details), with ink on green like the green Button. */
+.green {
+  --stepper-button: var(--size-control-sm);
+
+  border-radius: var(--radius-sm);
+  background: var(--color-green-base);
+  color: var(--color-neutral-ink);
+  font-size: var(--font-size-title);
+}
+
+.green:hover:not(:disabled) {
+  background: var(--color-green-hover);
 }
 
 .button:disabled {
