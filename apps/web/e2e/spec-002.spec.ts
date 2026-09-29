@@ -196,8 +196,10 @@ test("SPEC-002 AC-3: a recipe made in the editor is saved under its meal type, w
   }
   await page.getByRole("button", { name: "Save" }).click();
 
-  // The detail page (#75) comes later, so the API is checked.
   await expect(page).toHaveURL(/\/recipes\/\d+$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Turkey rice bowl",
+  );
   const id = new URL(page.url()).pathname.split("/").pop();
   const lunch = await (await request.get("/api/recipes?mealType=lunch")).json();
   expect(lunch.map((r: { name: string }) => r.name)).toEqual([
@@ -365,6 +367,131 @@ test("SPEC-002 AC-10 (recipe list): no horizontal scroll, 44 px tap targets, no 
   await seedLibrary(request);
   await page.reload();
   await expect(cards(page)).toHaveCount(10);
+  await expectNoHorizontalScroll(page);
+  await expectTapTargets(
+    page,
+    page.locator("main a:visible, main button:visible"),
+  );
+  await expectNoAxeViolations(page);
+});
+
+// Turkey as in AC-6: 200 g for 2 servings, with every section filled.
+const seedTurkey = async (request: APIRequestContext) => {
+  const turkey = await (
+    await request.post("/api/ingredients", {
+      data: ingredient("Turkey", "protein", [135, 0, 30, 1]),
+    })
+  ).json();
+  const res = await request.post("/api/recipes", {
+    data: {
+      name: "Grilled turkey",
+      mealType: "lunch",
+      servings: 2,
+      rating: 4,
+      ingredients: [{ ingredientId: turkey.id, quantity: 200, unit: "g" }],
+      steps: [{ title: "Grill", body: "6 min a side" }],
+      tools: [{ name: "Grill pan" }],
+      notes: "Rest it 5 min.",
+    },
+  });
+  expect(res.ok()).toBe(true);
+  return (await res.json()) as { id: number; healthScore: number };
+};
+
+const nutrition = (page: Page) =>
+  page
+    .getByRole("table")
+    .innerText()
+    .then((t) => t.replace(/\s+/g, " "));
+
+test("SPEC-002 AC-6: + on Servings makes 3 servings and 300 g; nutrition per serving is unchanged", async ({
+  page,
+  request,
+}) => {
+  const recipe = await seedTurkey(request);
+  await page.goto(`/recipes/${recipe.id}`);
+  const servings = page.getByRole("spinbutton", { name: "Servings" });
+  await expect(servings).toHaveText("2");
+  await expect(page.getByText("200 g Turkey")).toBeVisible();
+  // 200 g × 135 kcal ÷ 100 ÷ 2 servings.
+  await expect(page.getByRole("table")).toContainText("135 kcal");
+  const before = await nutrition(page);
+
+  await page.getByRole("button", { name: "Increase Servings" }).click();
+
+  await expect(servings).toHaveText("3");
+  await expect(page.getByText("300 g Turkey")).toBeVisible();
+  expect(await nutrition(page)).toBe(before);
+});
+
+test("SPEC-002 US-5: the recipe shows my rating and its health score", async ({
+  page,
+  request,
+}) => {
+  const recipe = await seedTurkey(request);
+  await page.goto(`/recipes/${recipe.id}`);
+  await expect(
+    page.getByRole("img", { name: "Rated 4 out of 5" }),
+  ).toBeVisible();
+  await expect(
+    page.locator("dt", { hasText: "Health score" }).locator("+ dd"),
+  ).toHaveText(`${recipe.healthScore}/10`);
+});
+
+test("SPEC-002: Edit opens the editor; Delete, confirmed, removes the recipe", async ({
+  page,
+  request,
+}) => {
+  const recipe = await seedTurkey(request);
+  await page.goto(`/recipes/${recipe.id}`);
+  await page.getByRole("button", { name: "Edit" }).click();
+  await expect(page).toHaveURL(`/recipes/${recipe.id}/edit`);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Edit recipe",
+  );
+
+  await page.goto(`/recipes/${recipe.id}`);
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Delete" }).click();
+  await expect(page).toHaveURL("/recipes");
+  expect((await request.get(`/api/recipes/${recipe.id}`)).status()).toBe(404);
+});
+
+test("SPEC-002: /recipes/999 shows the not-found state", async ({ page }) => {
+  await page.goto("/recipes/999");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Recipe not found",
+  );
+  await page.getByRole("button", { name: "Back to recipes" }).click();
+  await expect(page).toHaveURL("/recipes");
+});
+
+test("SPEC-002 AC-10 (recipe detail): phone order, no horizontal scroll, 44 px tap targets, no axe violations", async ({
+  page,
+  request,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const recipe = await seedTurkey(request);
+  await page.goto(`/recipes/${recipe.id}`);
+  const main = page.getByRole("main");
+  const heading = (name: string) =>
+    main.getByRole("heading", { name, exact: true });
+
+  // Title → macro tiles → servings and ingredients → directions → tools → notes
+  // → nutrition facts, top to bottom (the nutrition facts move last with CSS).
+  const order = [
+    heading("Grilled turkey"),
+    main.getByText("Carbs", { exact: true }).first(),
+    heading("Ingredients"),
+    heading("Directions"),
+    heading("Tools & equipment"),
+    heading("Notes"),
+    heading("Nutrition facts"),
+  ];
+  const tops: number[] = [];
+  for (const locator of order) tops.push((await locator.boundingBox())!.y);
+  expect(tops).toEqual([...tops].sort((a, b) => a - b));
+
   await expectNoHorizontalScroll(page);
   await expectTapTargets(
     page,

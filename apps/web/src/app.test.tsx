@@ -88,17 +88,12 @@ describe("App recipe routes (SPEC-002)", () => {
     vi.unstubAllGlobals();
   });
 
-  it("/recipes/42 shows a Recipe placeholder, with the Recipes tab current", () => {
-    render(<App path="/recipes/42" wide={false} />);
-    expect(heading().textContent).toBe("Recipe");
-    expect(current()).toEqual(["Recipes"]);
-  });
-
   it.each([
+    ["/recipes/42", "Loading recipe…"],
     ["/recipes/new", "Loading your ingredients…"],
     ["/recipes/42/edit", "Loading the recipe…"],
   ])(
-    "%s renders the recipe editor page, with the Recipes tab current",
+    "%s renders its recipe page, with the Recipes tab current",
     (path, loading) => {
       vi.stubGlobal(
         "fetch",
