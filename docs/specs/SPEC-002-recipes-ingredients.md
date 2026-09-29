@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Approved (2026-09-25) |
+| Status | Approved (2026-09-25); ingredient list amended 2026-09-29 (US-6, AC-1, AC-11 to AC-15) |
 | Sprint | S1 → v0.2.0 |
 | PRD refs | R-1 … R-9 |
 | Design | `design/source/Healthy Menu.dc.html` (list) · `design/source/Recipe Details.dc.html` (detail) · editors: derived, not in design |
@@ -16,11 +16,12 @@ Your personal recipe library. You can browse, search and filter recipes and open
 - **US-3** As the owner, I can browse, search and filter my recipes by meal type, and sort them.
 - **US-4** As the owner, I can open a recipe, change the servings and see scaled quantities with nutrition per serving.
 - **US-5** As the owner, I can rate my own recipe (1–5) and see a computed health score.
+- **US-6** As the owner, I can find and compare my ingredients in a table with search, a category filter and sort, so I can pick the right one fast and see every macro at a glance.
 
 ## 3. Acceptance criteria
 | ID | Given | When | Then |
 |---|---|---|---|
-| AC-1 | No ingredients | I save "Oats" with 389 kcal, 66 g carbs, 17 g protein, 7 g fat per 100 g, category Grains | It appears in the ingredient list with source "manual" |
+| AC-1 | No ingredients | I save "Oats" with 389 kcal, 66 g carbs, 17 g protein, 7 g fat per 100 g, category Grains | It appears in the ingredient list. A manual entry shows no source chip (AC-15) |
 | AC-2 | The ingredient form | I enter a negative value or leave kcal empty | Field errors are shown and nothing is saved |
 | AC-3 | Ingredients exist | I create a recipe with 2 servings, 3 ingredients and 2 titled steps | It is listed under its meal type; kcal and macros per serving match the unit tests of `nutritionPerServing` |
 | AC-4 | 10 recipes | I type "chick" in search | Only recipes whose name contains "chick" (case-insensitive) are shown |
@@ -29,7 +30,12 @@ Your personal recipe library. You can browse, search and filter recipes and open
 | AC-7 | The recipe list | I switch between list and grid views | The layout changes and the choice is remembered on this device |
 | AC-8 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted. **Moved to SPEC-003 (S2)**: it needs the `meal_entry` table; in S1 a recipe deletes freely |
 | AC-9 | An ingredient used in a recipe | I try to delete it | I get a message listing the recipes that use it (409) |
-| AC-10 | A 390 px wide screen | I open the list, the detail page and the editor | Everything fits in one column; no horizontal scroll; tap targets ≥ 44 px |
+| AC-10 | A 390 px wide screen | I open the list, the detail page and the editor | Everything fits in one column; no horizontal scroll; tap targets ≥ 44 px. The ingredient table scrolls sideways inside its own card, never the page |
+| AC-11 | Ingredients exist | I open `/ingredients` | A table lists them by name: category chip, kcal, carbs, protein and fat per 100 g |
+| AC-12 | 16 ingredients | I type "oat" in search | Only names containing "oat" (case-insensitive) are shown; no match shows "No ingredients match" |
+| AC-13 | Ingredients in several categories | I pick the "Veggies" tab | Only veggies are shown; each tab shows its count; "All" restores the list |
+| AC-14 | Ingredients exist | I sort by Calories or Protein | Highest first; "Name" is A to Z |
+| AC-15 | A manual and an imported ingredient | I look at the list | Only the imported one shows its source chip |
 
 ## 4. UI
 
@@ -39,7 +45,8 @@ Your personal recipe library. You can browse, search and filter recipes and open
 | `/recipes` | Recipe list: search, filter tabs (All / Breakfast / Lunch / Snack / Dinner), sort (Name, Calories, Health score, Total time, Rating), list/grid toggle, "Add recipe" | Healthy Menu (the Featured card, Popular and Recommended panels are removed) |
 | `/recipes/:id` | Detail: hero, meta list (prep, cook, difficulty, steps, health score), title, meal-type pill, description, tools, directions, notes, servings stepper, ingredients, macro tiles, nutrition facts, "Add to meal plan" | Recipe Details (Reviews, Eat time and Vitamin C are removed) |
 | `/recipes/new`, `/recipes/:id/edit` | Recipe editor | **Derived** |
-| `/ingredients`, `/ingredients/new`, `/ingredients/:id` | Ingredient list and editor | **Derived** |
+| `/ingredients` | Ingredient table (name, category chip, kcal, carbs, protein, fat per 100 g; the source chip only for imports): search, category tabs with counts, sort (Name, Calories, Protein), "Add ingredient". Filtered and sorted in the browser; server side (`?q=`) once the S6 imports land | **Derived** (canvas "Ingredients redesign", board A). Chips as in Grocery List |
+| `/ingredients/new`, `/ingredients/:id` | Ingredient editor | **Derived** |
 
 Mobile (<768 px): the list is a single column of MenuListItem cards. On the detail page the order is hero → title and meal type → macro tiles → servings and ingredients → directions → tools → notes → nutrition facts.
 
@@ -55,6 +62,7 @@ Mobile (<768 px): the list is a single column of MenuListItem cards. On the deta
 | Molecule | IngredientRow, RecipeStep, ToolItem, NoteItem, NutritionRow | new | long text, scaled quantity |
 | Molecule | PhotoOrPlaceholder | new | own photo, ingredient mosaic, placeholder by meal type |
 | Organism | RecipeList | new | empty library, no search results, 1 item, many |
+| Organism | IngredientList | new | empty library, no results, 1 item, many, imported source, loading, 390 px |
 | Organism | RecipeDetail | new | full, minimal (no steps or tools), loading, not found |
 | Organism | RecipeEditor, IngredientEditor | new | new, edit, validation errors, saving, server error |
 | Page | RecipesPage, RecipePage, RecipeEditPage, IngredientsPage | new | n/a |
@@ -108,7 +116,7 @@ Tags (no tables, no UI; the meal type covers the filters, S1 decision), reviews 
 | Unit | `toGrams`, `nutritionPerServing`, `scaleQuantities`, `totalTime`, `healthScore` (a table of cases, edge cases 0 and missing values) |
 | Integration | Every route, happy path and each error code; transactional PATCH (a failure leaves the old recipe intact) |
 | Component | Every molecule and organism listed above, in every state, with axe |
-| E2E | AC-1 … AC-10 (AC-8 in S2), run on mobile (390 px) and desktop viewports |
+| E2E | AC-1 … AC-15 (AC-8 in S2), run on mobile (390 px) and desktop viewports |
 
 ## 10. Open questions
 - ~~Q6 (PRD): recipe photo source beyond your own uploads.~~ **Your own uploads are the main source**; the ingredient mosaic and meal-type placeholder stay as fallbacks (resolved 2026-09-23).
