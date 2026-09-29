@@ -10,15 +10,17 @@ export const PREVIEW = "http://localhost:4174";
 const DESKTOP = "http://localhost:4175";
 const reuseExistingServer = !process.env.CI;
 
+// E2E_DATABASE_PATH points the server at another DB, e.g. a restored backup for the
+// restore drill (release.md §3). It then never reuses a server, which could be on a different DB.
 const apiServer = (port: number, dbFile: string) => ({
   command: `node ../api/src/index.ts`,
   url: `http://localhost:${port}/api/health`,
-  reuseExistingServer,
+  reuseExistingServer: reuseExistingServer && !process.env.E2E_DATABASE_PATH,
   env: {
     ...process.env,
     PORT: String(port),
     WEB_ROOT: "dist",
-    DATABASE_PATH: `.e2e-data/${dbFile}`,
+    DATABASE_PATH: process.env.E2E_DATABASE_PATH ?? `.e2e-data/${dbFile}`,
   } as Record<string, string>,
 });
 
