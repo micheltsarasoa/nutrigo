@@ -466,31 +466,14 @@ test("SPEC-002: /recipes/999 shows the not-found state", async ({ page }) => {
   await expect(page).toHaveURL("/recipes");
 });
 
-test("SPEC-002 AC-10 (recipe detail): phone order, no horizontal scroll, 44 px tap targets, no axe violations", async ({
+// The section order on a phone isn't fixed (ADR-0013): the 3 columns stack in page order.
+test("SPEC-002 AC-10 (recipe detail): no horizontal scroll, 44 px tap targets, no axe violations", async ({
   page,
   request,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const recipe = await seedTurkey(request);
   await page.goto(`/recipes/${recipe.id}`);
-  const main = page.getByRole("main");
-  const heading = (name: string) =>
-    main.getByRole("heading", { name, exact: true });
-
-  // Title → macro tiles → servings and ingredients → directions → tools → notes
-  // → nutrition facts, top to bottom (the nutrition facts move last with CSS).
-  const order = [
-    heading("Grilled turkey"),
-    main.getByText("Carbs", { exact: true }).first(),
-    heading("Ingredients"),
-    heading("Directions"),
-    heading("Tools & equipment"),
-    heading("Notes"),
-    heading("Nutrition facts"),
-  ];
-  const tops: number[] = [];
-  for (const locator of order) tops.push((await locator.boundingBox())!.y);
-  expect(tops).toEqual([...tops].sort((a, b) => a - b));
 
   await expectNoHorizontalScroll(page);
   await expectTapTargets(
