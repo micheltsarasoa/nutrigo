@@ -1,0 +1,168 @@
+.ingredients {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.search {
+  flex: 1 1 calc(var(--size-aside) * 0.6);
+  max-width: var(--size-aside);
+  min-width: 0;
+}
+
+.sort {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-inline-start: auto;
+  font-size: var(--font-size-caption);
+  color: var(--color-neutral-muted);
+}
+
+/* On a narrow screen the table scrolls inside its own box, never the page (SPEC-002 AC-10). */
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: calc(var(--size-aside) * 2);
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-ink);
+}
+
+/* The name takes what's left, so the columns don't spread out when there are few rows. */
+.table thead th:nth-child(2) {
+  width: var(--size-block-label);
+}
+
+.table thead .num {
+  width: calc(var(--size-touch-target) * 2);
+}
+
+.table th,
+.table td {
+  height: calc(var(--size-touch-target) + var(--space-2));
+  padding: 0 var(--space-3);
+  text-align: start;
+  font-weight: var(--font-weight-regular);
+  overflow-wrap: normal;
+}
+
+.table thead th {
+  height: var(--size-touch-target);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-muted);
+  white-space: nowrap;
+}
+
+.table .num {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dot {
+  display: inline-block;
+  width: var(--space-2);
+  height: var(--space-2);
+  margin-inline-end: var(--space-1);
+  border-radius: var(--radius-pill);
+}
+
+.kcal {
+  background: var(--color-green-base);
+}
+
+.carbs {
+  background: var(--color-yellow-base);
+}
+
+.protein {
+  background: var(--color-orange-base);
+}
+
+.fat {
+  background: var(--color-neutral-chip-grey);
+}
+
+/* The name is the row's link, stretched over the whole row so a click anywhere opens it. */
+.row {
+  position: relative;
+  border-top: thin solid var(--color-neutral-line);
+}
+
+.row:hover {
+  background: var(--color-neutral-subtle);
+}
+
+.row:has(.link:focus-visible) {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+.row th {
+  font-weight: var(--font-weight-semibold);
+}
+
+.link {
+  color: var(--color-neutral-ink);
+  text-decoration: none;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.source {
+  margin-inline-start: var(--space-2);
+}
+
+.row td:nth-child(3) {
+  font-weight: var(--font-weight-semibold);
+}
+
+.status,
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-10) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-subtle);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+  text-align: center;
+}
+
+.empty p {
+  margin: 0;
+}
+
+.empty .emptyTitle {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-ink);
+}
+
+.empty button {
+  margin-top: var(--space-2);
+}
