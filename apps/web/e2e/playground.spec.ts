@@ -27,6 +27,8 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
     .locator("main li a")
     .evaluateAll((links) => links.map((a) => a.getAttribute("href")!));
   expect(pages.length).toBeGreaterThan(0);
+  // One test walks every page (about 0.6 s each), so the budget grows with the page count.
+  test.setTimeout(30_000 + pages.length * 3_000);
 
   for (const href of pages) {
     await page.goto(href);
