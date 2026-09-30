@@ -1,6 +1,6 @@
 # One image serves web + api (ADR-0005). Node 24 runs the API's TypeScript directly (type stripping), so
 # there's no API build step.
-FROM node:24-slim AS build
+FROM node:26-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
@@ -12,7 +12,7 @@ RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build -w @nutrigo/web && npm prune --omit=dev
 
-FROM node:24-slim
+FROM node:26-slim
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000 DATABASE_PATH=/data/nutrigo.db WEB_ROOT=/app/apps/web/dist
 COPY --from=build /app/package.json ./
