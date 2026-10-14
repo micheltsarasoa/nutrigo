@@ -73,13 +73,10 @@ The GitHub API can't change views or turn on the auto-add workflow. Do these onc
 
 ## 4. Definition of Done (DoD)
 
-- [ ] Tests written first; unit, integration and e2e tests as relevant; CI green
-- [ ] Coverage thresholds met
-- [ ] UI: `design-approved` by the owner; screenshot baseline committed; axe passes
-- [ ] `/ponytail-review` clean
-- [ ] Docs updated (spec status, data model, ADR, CLAUDE.md)
-- [ ] Every done-when and AC box in the issue is ticked before it's closed
-- [ ] Squash-merged with a Conventional Commit title; issue closed
+- [ ] Tests first, CI green, coverage thresholds met
+- [ ] UI: `design-approved`, screenshot baseline committed, axe passes
+- [ ] `/ponytail-review` clean; docs updated (spec status, data model, ADR, CLAUDE.md)
+- [ ] Issue boxes ticked; squash-merged with a Conventional Commit title
 
 ## 5. Sprint cadence (2 weeks)
 

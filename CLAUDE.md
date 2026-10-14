@@ -41,12 +41,13 @@ Keep this table up to date. The API runs its TypeScript directly on Node 24 (typ
 | Unit + component tests | `npm test` (coverage: `npm test -- --coverage`) |
 | E2E | `npm run build` then `npm run test:e2e` (first time: `npx -w @nutrigo/web playwright install chromium`) |
 | DB migration | `npm run db:generate` then `npm run db:migrate` (the API also migrates at boot) |
+| Code map | `npm run docs:map` (a Stop hook runs it) |
 | DB backup | `npm run db:backup` writes `data/backups/YYYY-MM-DD.db` and keeps the latest 30 |
 | Restore drill (smoke e2e) | `npm run build` then `npm run test:e2e:smoke`, on a restored backup via `E2E_DATABASE_PATH` (steps in [release.md](docs/process/release.md)) |
 | Local prod-like run | `docker compose up --build`, then http://localhost:3000 (data in `./data`) |
 | Open it on the phone | `tailscale serve --bg 3000`, then `https://<laptop>.<tailnet>.ts.net` ([guide](docs/guides/phone-access.md)); stop with `tailscale serve reset` |
 
-Before saying a task is done, run lint, typecheck and tests. Say so if any of them fail.
+Before saying a task is done, run lint, typecheck and tests (scoped to the touched workspace while iterating, whole repo once before the PR). Report failures with the error lines only.
 
 ## Non-negotiable rules
 
@@ -77,17 +78,36 @@ Before saying a task is done, run lint, typecheck and tests. Say so if any of th
 
 Skills in `.claude/skills/`: `/new-component` (any atom, molecule, organism), `/write-spec` (feature with no spec), `/sprint-plan` (plan or close a sprint), `/cut-release` (ship the sprint's version). From the plugin: `/ponytail-review`, `/ponytail-audit`, `/ponytail-debt`.
 
+## Code map
+
+`docs/code-map.md` lists the exported names of every source file. Read it first to locate code instead of grepping the repo. Never edit it by hand: a Stop hook regenerates it (`npm run docs:map`).
+
 ## Token budget
 
-- **Read only what the task needs**: its issue, its spec, the files it touches. Use grep to find the section you need in a large file.
-- **Never read these whole:** `docs/design-system/index.html` (55 kB), `docs/design-system/dataviz.html`, and the `design/source/*.dc.html` exports. Grep them for the component or rule you need. Never read `design/source/support.js` or `image-slot.js`.
+- **Read only what the task needs**: its issue, its spec, the files it touches. Grep for the section you need in a large file.
+- **Never read these whole:** `docs/design-system/index.html` (55 kB), `docs/design-system/dataviz.html`, and the `design/source/*.dc.html` exports. Grep them. Never read `design/source/support.js` or `image-slot.js`.
+- **Logs: errors only.** Never paste or read a full log. Pipe gates through `| tail -40`, or run the touched workspace only (`npm test -w @nutrigo/api`, `npx vitest run <file>`).
 - **One session per issue.** Hand work off through the issue or PR, not the chat.
 - **Models:** plan, spec and debug with Opus; implement with Sonnet.
-- **Subagents:** only for wide searches (Explore on Haiku) or for independent, mechanical tasks with a precise brief (a visual baseline, status rows). A subagent starts cold, so never use one for work you can finish in a few tool calls.
+- **Work inline by default.** Subagents only for:
+  - a wide repo search → `Explore`, Haiku;
+  - an independent mechanical task with a complete brief (files, gate, constraints) → Haiku, or Sonnet if it needs judgment.
+  - Opus only for architecture or a final review, and only if the owner asks.
+- **Never** spawn a subagent for work doable in under ~5 tool calls, or for a TDD loop.
+- Superpowers skills (TDD, subagent-driven-development) only when the owner names them.
+- A multi-agent workflow likely over 200k tokens: ask first in ≤ 8 lines (necessity, cost, the cheaper inline option, the decision it feeds). No answer = take the inline option.
+- If the context feels long, tell the owner "Run /compact" or "Run /clear". You cannot compact yourself.
+
+## GitHub (keep it cheap)
+
+- Pass `minimal_output: true`. Don't call `get_me`, search for duplicates, or fetch the PR template: use `.github/pull_request_template.md` as is.
+- Create the PR in one call after pushing. No review-thread chatter, no status comments.
+- CI red: read only the failing job's log tail (`get_job_logs` with `failed_only`, small `tail_lines`), fix, push.
+- Don't subscribe to PR events or poll CI unless the owner asks. After pushing, report the PR link and stop.
 
 ## Reply formats
 
-Lead with what the owner has to do or decide. Stay short and skip preambles.
+Field report: lead with what the owner has to do or decide. No preamble, no recap, no praise. Delete anything the owner doesn't need to act or decide. Plain words, one example at most. Don't list advanced options; offer once: "More advanced options exist, ask if needed."
 
 | Reply | Format |
 |---|---|
