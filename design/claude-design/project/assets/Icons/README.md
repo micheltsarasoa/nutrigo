@@ -1,0 +1,1 @@
+Single-ink line icons on a 24 px grid, 1.9 to 2 px round strokes, drawn in `color-neutral-ink` (#1F2937). Used by the `Icon` component; the SVG files are for reference and export. Recolour by editing the file, not with CSS, because an `<img>` cannot inherit `currentColor`.

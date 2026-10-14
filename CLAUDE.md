@@ -41,6 +41,7 @@ Keep this table up to date. The API runs its TypeScript directly on Node 24 (typ
 | Unit + component tests | `npm test` (coverage: `npm test -- --coverage`) |
 | E2E | `npm run build` then `npm run test:e2e` (first time: `npx -w @nutrigo/web playwright install chromium`) |
 | DB migration | `npm run db:generate` then `npm run db:migrate` (the API also migrates at boot) |
+| Claude Design System copy | `npm run design:export` rewrites the generated files in `design/claude-design/project/` |
 | Code map | `npm run docs:map` (a Stop hook runs it) |
 | DB backup | `npm run db:backup` writes `data/backups/YYYY-MM-DD.db` and keeps the latest 30 |
 | Restore drill (smoke e2e) | `npm run build` then `npm run test:e2e:smoke`, on a restored backup via `E2E_DATABASE_PATH` (steps in [release.md](docs/process/release.md)) |

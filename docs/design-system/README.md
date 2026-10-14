@@ -7,6 +7,7 @@ The source is the Claude Design project (pages *Design System*, *Dashboard*, *Me
 | [`index.html`](index.html) | Living design system: colour, semantic colour, contrast audit, type, space, icons and logo, atoms, molecules, organisms, layout and mobile rules, screen inventory, removed patterns, known issues |
 | [`dataviz.html`](dataviz.html) | Chart inventory, colour by job, validator results, non-negotiable rules, reference renderings |
 | [`components-status.md`](components-status.md) | Every playground component with its issue, branch/PR and status. Read before building one |
+| [`design/claude-design/`](../../design/claude-design/) | Copy of the "NutriGo Design System" artifact in Claude (rules, tokens, every component with all states, icons, logo). Brand-book `*.md` and `Cover` are hand-written; the rest is made by `npm run design:export` |
 | [`tokens.json`](tokens.json) | Tokens (source, derived and proposed), the source for `apps/web/src/design-system/tokens.css` |
 
 Open the HTML files locally (e.g. `npx serve .` at the repo root, then `/docs/design-system/`). They load `design/source/nutrigo.css` by relative path.

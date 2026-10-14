@@ -1,0 +1,213 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-14T17:35:46Z"
+  },
+  "title": "NutriGo Design System",
+  "namespace": "NutriGo",
+  "libraries": [],
+  "sections": {},
+  "groups": [
+    "Logos",
+    "Icons"
+  ],
+  "assetGroups": {
+    "Logos": {
+      "name": "Logos",
+      "tile": "l",
+      "order": [
+        "nutrigo-mark.svg"
+      ],
+      "files": {
+        "nutrigo-mark.svg": {
+          "name": "nutrigo-mark.svg",
+          "blob": "3813d6c3b3c201f624ef165059681e56",
+          "size": 204,
+          "type": "image/svg+xml"
+        }
+      }
+    },
+    "Icons": {
+      "name": "Icons",
+      "tile": "s",
+      "order": [
+        "add.svg",
+        "calendar.svg",
+        "carbs.svg",
+        "check.svg",
+        "chevron.svg",
+        "cook.svg",
+        "cost.svg",
+        "dashboard.svg",
+        "diary.svg",
+        "difficulty.svg",
+        "fat.svg",
+        "filter.svg",
+        "health-score.svg",
+        "items.svg",
+        "kcal.svg",
+        "menu.svg",
+        "prep.svg",
+        "prev.svg",
+        "protein.svg",
+        "search.svg",
+        "settings.svg",
+        "steps.svg",
+        "time.svg"
+      ],
+      "files": {
+        "add.svg": {
+          "name": "add.svg",
+          "blob": "4950ace49957f98be8db78681df1d18e",
+          "size": 194,
+          "type": "image/svg+xml"
+        },
+        "calendar.svg": {
+          "name": "calendar.svg",
+          "blob": "e427f9ccb5f2f6a4c207c97c0d183705",
+          "size": 256,
+          "type": "image/svg+xml"
+        },
+        "carbs.svg": {
+          "name": "carbs.svg",
+          "blob": "80a807389db30dcc4b269c88d71ff4ba",
+          "size": 224,
+          "type": "image/svg+xml"
+        },
+        "check.svg": {
+          "name": "check.svg",
+          "blob": "91e32e36dcde7fa81054b5d8f5b1d8f2",
+          "size": 193,
+          "type": "image/svg+xml"
+        },
+        "chevron.svg": {
+          "name": "chevron.svg",
+          "blob": "c7fc71c3545e086d0c55cd24a671235f",
+          "size": 190,
+          "type": "image/svg+xml"
+        },
+        "cook.svg": {
+          "name": "cook.svg",
+          "blob": "3de791b79ef1f06808780e1065a130d5",
+          "size": 232,
+          "type": "image/svg+xml"
+        },
+        "cost.svg": {
+          "name": "cost.svg",
+          "blob": "38e6cf7b103166d8c62f36462eb2fa08",
+          "size": 330,
+          "type": "image/svg+xml"
+        },
+        "dashboard.svg": {
+          "name": "dashboard.svg",
+          "blob": "463214eab948571d384f9883d2d5441e",
+          "size": 376,
+          "type": "image/svg+xml"
+        },
+        "diary.svg": {
+          "name": "diary.svg",
+          "blob": "91946ddd82e1bd76acb4cfa80ae579dd",
+          "size": 253,
+          "type": "image/svg+xml"
+        },
+        "difficulty.svg": {
+          "name": "difficulty.svg",
+          "blob": "1acc345dcba58f035a009848694b757b",
+          "size": 209,
+          "type": "image/svg+xml"
+        },
+        "fat.svg": {
+          "name": "fat.svg",
+          "blob": "5faa8c8ea32c761cc81ad035c4dd8a93",
+          "size": 225,
+          "type": "image/svg+xml"
+        },
+        "filter.svg": {
+          "name": "filter.svg",
+          "blob": "1773848910c6d7ace5fdfb8bd03f60ef",
+          "size": 199,
+          "type": "image/svg+xml"
+        },
+        "health-score.svg": {
+          "name": "health-score.svg",
+          "blob": "b6814458c15db01aa51efcce7c580da4",
+          "size": 205,
+          "type": "image/svg+xml"
+        },
+        "items.svg": {
+          "name": "items.svg",
+          "blob": "f59ba0b4c00a204c7ea67ef990d9186c",
+          "size": 250,
+          "type": "image/svg+xml"
+        },
+        "kcal.svg": {
+          "name": "kcal.svg",
+          "blob": "db9cce2540755ab74795774b45153895",
+          "size": 222,
+          "type": "image/svg+xml"
+        },
+        "menu.svg": {
+          "name": "menu.svg",
+          "blob": "b9718059ce7c204d7d7a068306a2ee8a",
+          "size": 261,
+          "type": "image/svg+xml"
+        },
+        "prep.svg": {
+          "name": "prep.svg",
+          "blob": "a863c3d1c60e0617f0a1aa08f428e7c4",
+          "size": 195,
+          "type": "image/svg+xml"
+        },
+        "prev.svg": {
+          "name": "prev.svg",
+          "blob": "f280c925465b9323d88d2a5d16db15d3",
+          "size": 192,
+          "type": "image/svg+xml"
+        },
+        "protein.svg": {
+          "name": "protein.svg",
+          "blob": "42d8465143f79b2169df6e070fefd5df",
+          "size": 222,
+          "type": "image/svg+xml"
+        },
+        "search.svg": {
+          "name": "search.svg",
+          "blob": "7237d7ebb48ec473653577f248b7faa2",
+          "size": 230,
+          "type": "image/svg+xml"
+        },
+        "settings.svg": {
+          "name": "settings.svg",
+          "blob": "ab70eb6c8ccbc3a3c06b80d2c20a2a47",
+          "size": 534,
+          "type": "image/svg+xml"
+        },
+        "steps.svg": {
+          "name": "steps.svg",
+          "blob": "147e199e0af81191a80c36247700bfc9",
+          "size": 199,
+          "type": "image/svg+xml"
+        },
+        "time.svg": {
+          "name": "time.svg",
+          "blob": "75916510c4e221fdf658809611d407e3",
+          "size": 231,
+          "type": "image/svg+xml"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "lastChange": {
+    "by": "Claude",
+    "at": "2026-10-14T17:35:46Z",
+    "via": "Claude Code",
+    "note": "First sync from micheltsarasoa/nutrigo: tokens, rules, components, icons, logo"
+  }
+}
