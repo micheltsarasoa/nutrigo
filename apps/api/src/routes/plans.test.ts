@@ -13,6 +13,8 @@ type Entry = {
   kcalPerServing: number;
   servings: number;
   position: number;
+  eatenServings: number | null;
+  eatenAt: string | null;
 };
 type Plan = {
   isoWeek: string;
@@ -24,7 +26,12 @@ const json = <T>(res: Response) => res.json() as Promise<T>;
 // Two recipes: Bowl = 100 kcal per serving, Soup = 50.
 const setup = () => {
   const db = freshDb();
-  const app = createApp({ db, version: "test" });
+  // The clock is fixed to Wed 2026-09-30, 12:00 local.
+  const app = createApp({
+    db,
+    version: "test",
+    now: () => new Date(2026, 8, 30, 12, 0, 0),
+  });
   db.insert(ingredient)
     .values({
       id: 1,
@@ -359,5 +366,81 @@ describe("POST /api/plans/:isoWeek/copy-from/:otherWeek", () => {
     expect((await copy(send, "merge", "2026-W41", "2026-W39")).status).toBe(
       404,
     );
+  });
+});
+
+describe("eaten (SPEC-004 §5)", () => {
+  const eaten = (id: number, w = "2026-W40") =>
+    `/api/plans/${w}/entries/${id}/eaten`;
+
+  it("ticks with the planned servings and exposes it in the plan", async () => {
+    const { send, add, week } = setup();
+    const e = await add({ servings: 2 });
+    const res = await send("POST", eaten(e.id));
+    expect(res.status).toBe(200);
+    const ticked = await json<Entry>(res);
+    expect(ticked).toMatchObject({
+      id: e.id,
+      eatenServings: 2,
+      recipeName: "Bowl",
+    });
+    expect(ticked.eatenAt).toBe(new Date(2026, 8, 30, 12).toISOString());
+    expect((await week()).days[2]?.slots.lunch?.[0]?.eatenServings).toBe(2);
+  });
+
+  it("ticks with custom servings, and ticking again overwrites", async () => {
+    const { send, add } = setup();
+    const e = await add();
+    await send("POST", eaten(e.id), { servings: 1.5 });
+    const res = await send("POST", eaten(e.id), { servings: 3 });
+    expect((await json<Entry>(res)).eatenServings).toBe(3);
+  });
+
+  it("allows a past day", async () => {
+    const { send, add } = setup();
+    const e = await add({ date: "2026-09-29" });
+    expect((await send("POST", eaten(e.id))).status).toBe(200);
+  });
+
+  it("unticks: both columns go back to null", async () => {
+    const { send, add } = setup();
+    const e = await add();
+    await send("POST", eaten(e.id));
+    const res = await send("DELETE", eaten(e.id));
+    expect(res.status).toBe(200);
+    expect(await json<Entry>(res)).toMatchObject({
+      eatenServings: null,
+      eatenAt: null,
+    });
+  });
+
+  it("404s on an unknown entry, a wrong week and a non-numeric id", async () => {
+    const { send, add } = setup();
+    const e = await add();
+    for (const method of ["POST", "DELETE"]) {
+      expect((await send(method, eaten(999))).status).toBe(404);
+      expect((await send(method, eaten(e.id, "2026-W41"))).status).toBe(404);
+      expect(
+        (await send(method, "/api/plans/2026-W40/entries/x/eaten")).status,
+      ).toBe(404);
+    }
+  });
+
+  it("400s on bad servings and a bad week", async () => {
+    const { send, add } = setup();
+    const e = await add();
+    for (const servings of [0, 0.4, 0.75, 20.5, -1, "2"])
+      expect((await send("POST", eaten(e.id), { servings })).status).toBe(400);
+    expect((await send("POST", eaten(e.id, "nope"))).status).toBe(400);
+    expect((await send("DELETE", eaten(e.id, "nope"))).status).toBe(400);
+  });
+
+  it("400s on a day after today and leaves the entry untouched", async () => {
+    const { send, add, week } = setup();
+    const e = await add({ date: "2026-10-01" });
+    const res = await send("POST", eaten(e.id));
+    expect(res.status).toBe(400);
+    expect((await json<ErrorBody>(res)).error.code).toBe("VALIDATION_FAILED");
+    expect((await week()).days[3]?.slots.lunch?.[0]?.eatenAt).toBeNull();
   });
 });

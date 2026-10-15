@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d0661730-5510-4cf4-8243-b39cd979eec6",
+  "id": "4d9dd0ad-adf3-42d9-bd9e-f618b9664bf6",
   "prevId": "f99b3ef1-c6a1-4c8b-8ff7-15eced33f3ff",
   "tables": {
     "ingredient": {
@@ -177,6 +177,20 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "eaten_servings": {
+          "name": "eaten_servings",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "eaten_at": {
+          "name": "eaten_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },
@@ -624,57 +638,6 @@
         "single_row": {
           "name": "single_row",
           "value": "\"settings\".\"id\" = 1"
-        }
-      }
-    },
-    "targets": {
-      "name": "targets",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
-        },
-        "kcal": {
-          "name": "kcal",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "carbs_g": {
-          "name": "carbs_g",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "protein_g": {
-          "name": "protein_g",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "fat_g": {
-          "name": "fat_g",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "targets_single_row": {
-          "name": "targets_single_row",
-          "value": "\"targets\".\"id\" = 1"
         }
       }
     }
