@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { createApp } from "../app.ts";
 import { ingredient, recipe, recipeIngredient } from "../db/schema.ts";
 import { freshDb } from "../test-db.ts";
@@ -263,5 +263,101 @@ describe("DELETE /api/plans/:isoWeek/entries/:id", () => {
       (await send("DELETE", `/api/plans/2026-W41/entries/${id}`)).status,
     ).toBe(404);
     expect(await lunch()).toEqual([id]);
+  });
+});
+
+describe("POST /api/plans/:isoWeek/copy-from/:otherWeek", () => {
+  const copy = (
+    send: ReturnType<typeof setup>["send"],
+    mode: unknown = "merge",
+    to = "2026-W41",
+    from = "2026-W40",
+  ) => send("POST", `/api/plans/${to}/copy-from/${from}`, { mode });
+  const seed = async (add: ReturnType<typeof setup>["add"]) => {
+    await add();
+    await add({ recipeId: 2, servings: 2 });
+    await add({ date: "2026-10-04", slot: "dinner" });
+  };
+
+  it("SPEC-003 AC-7: copies into an empty week, same weekday and slot", async () => {
+    const { send, add, week } = setup();
+    await seed(add);
+    const res = await copy(send);
+    expect(res.status).toBe(200);
+    const plan = await json<Plan>(res);
+    expect(plan.isoWeek).toBe("2026-W41");
+    const lunch = plan.days[2]?.slots.lunch;
+    expect(lunch?.map((e) => [e.date, e.recipeName, e.servings])).toEqual([
+      ["2026-10-07", "Bowl", 1],
+      ["2026-10-07", "Soup", 2],
+    ]);
+    expect(plan.days[6]?.slots.dinner).toHaveLength(1);
+    expect((await week("2026-W40")).days[2]?.slots.lunch).toHaveLength(2);
+  });
+
+  it("SPEC-003 AC-8: merge keeps the target's meals and appends", async () => {
+    const { send, add } = setup();
+    await seed(add);
+    await send("POST", "/api/plans/2026-W41/entries", {
+      date: "2026-10-07",
+      slot: "lunch",
+      recipeId: 2,
+      servings: 3,
+    });
+    const plan = await json<Plan>(await copy(send, "merge"));
+    const lunch = plan.days[2]?.slots.lunch;
+    expect(lunch?.map((e) => e.servings)).toEqual([3, 1, 2]);
+    expect(lunch?.map((e) => e.position)).toEqual([0, 1, 2]);
+  });
+
+  it("replace deletes the target's meals first", async () => {
+    const { send, add } = setup();
+    await seed(add);
+    await send("POST", "/api/plans/2026-W41/entries", {
+      date: "2026-10-05",
+      slot: "snack",
+      recipeId: 1,
+      servings: 1,
+    });
+    const plan = await json<Plan>(await copy(send, "replace"));
+    expect(plan.days[0]?.slots.snack).toEqual([]);
+    expect(plan.days[2]?.slots.lunch).toHaveLength(2);
+  });
+
+  it("a failed replace leaves the target unchanged", async () => {
+    const { db, send, add, week } = setup();
+    await seed(add);
+    await send("POST", "/api/plans/2026-W41/entries", {
+      date: "2026-10-05",
+      slot: "snack",
+      recipeId: 1,
+      servings: 1,
+    });
+    db.$client.exec(`create trigger boom before insert on meal_entry
+      when new.slot = 'dinner' begin select raise(abort, 'boom'); end`);
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect((await copy(send, "replace")).status).toBe(500);
+    spy.mockRestore();
+    const plan = await week("2026-W41");
+    expect(plan.days[0]?.slots.snack).toHaveLength(1);
+    expect(plan.days[2]?.slots.lunch).toEqual([]);
+  });
+
+  it("returns 400 for a bad week, a bad mode or the same week", async () => {
+    const { send, add } = setup();
+    await seed(add);
+    expect((await copy(send, "merge", "abc")).status).toBe(400);
+    expect((await copy(send, "merge", "2026-W41", "2027-W53")).status).toBe(
+      400,
+    );
+    expect((await copy(send, "swap")).status).toBe(400);
+    expect((await copy(send, "merge", "2026-W40")).status).toBe(400);
+  });
+
+  it("returns 404 when the source week has no meals", async () => {
+    const { send } = setup();
+    expect((await copy(send, "merge", "2026-W41", "2026-W39")).status).toBe(
+      404,
+    );
   });
 });
