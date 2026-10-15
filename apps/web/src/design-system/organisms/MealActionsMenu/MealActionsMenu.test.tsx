@@ -85,19 +85,17 @@ describe("MealActionsMenu", () => {
     expect((screen.getByLabelText("Slot") as HTMLSelectElement).value).toBe(
       "lunch",
     );
-    expect((button("Move to this slot") as HTMLButtonElement).disabled).toBe(
-      true,
-    );
+    expect((button("Move") as HTMLButtonElement).disabled).toBe(true);
     pick("Day", "2026-10-08");
     pick("Slot", "dinner");
-    fireEvent.click(button("Move to this slot"));
+    fireEvent.click(button("Move"));
     expect(onMove).toHaveBeenCalledWith("2026-10-08", "dinner");
   });
 
   it("duplicates, even into the same slot (AC-9)", () => {
     const { onDuplicate } = renderMenu();
     fireEvent.click(button("Duplicate"));
-    fireEvent.click(button("Duplicate to this slot"));
+    fireEvent.click(button("Duplicate"));
     expect(onDuplicate).toHaveBeenCalledWith("2026-10-06", "lunch");
   });
 
