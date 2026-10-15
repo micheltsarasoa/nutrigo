@@ -30,11 +30,11 @@ flowchart TB
 
 Baselines are Linux renders, because fonts draw differently on Windows and macOS. Locally, `ignoreSnapshots` turns the comparison off.
 
-1. After the owner adds `design-approved`, add the page's slug (e.g. `atom/icon`) to `APPROVED` in `apps/web/e2e/playground.spec.ts` and push.
-2. The `e2e` job fails with "A snapshot doesn't exist" and writes the baseline. Download the `playwright-report` artifact: `gh run download <run-id> -n playwright-report -D <tmp>`.
-3. Copy `<tmp>/e2e/playground.spec.ts-snapshots/*.png` into `apps/web/e2e/playground.spec.ts-snapshots/`, commit and push. CI goes green.
+1. Add the page's slug (e.g. `atom/icon`) to `APPROVED` in `apps/web/e2e/playground.spec.ts`.
+2. Run `npm run build`, then `CI=1 npx playwright test e2e/playground.spec.ts -g <name> --update-snapshots=missing` in `apps/web` (there is no CI, ADR-0015). It writes the Linux PNGs into `apps/web/e2e/playground.spec.ts-snapshots/`.
+3. Check the PNGs by eye, then commit them.
 
-A later visual change fails the job; the artifact then holds the new render and a diff. If the owner approves the change, replace the PNG the same way.
+A later visual change fails the run with a diff. If the change is intended, delete the PNG and write it again the same way.
 
 External services (Open Food Facts and the AI providers: Anthropic, Mistral, DeepSeek) are **always mocked** in CI with recorded fixtures, one set per provider (ADR-0010). CIQUAL isn't a service: it's bundled in the DB (ADR-0011), so integration tests seed a few `ciqual_food` rows and e2e uses the real seed. A separate weekly `contract` workflow can call the real APIs later if needed.
 

@@ -1,0 +1,22 @@
+.nav {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.label {
+  min-width: calc(var(--size-aside) * 0.6);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-ink);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.label[aria-current="date"] {
+  color: var(--color-green-deep);
+}
+
+.loading {
+  opacity: var(--opacity-disabled);
+}

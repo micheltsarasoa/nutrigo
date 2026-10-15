@@ -84,6 +84,7 @@ const ICONS = {
   "health-score": [2, <path d="M3 12h4l2-4 3 8 2.5-5 1.5 3h5" />],
   steps: [2, <path d="M4 7h16M4 12h16M4 17h10" />],
   prev: [2.4, <path d="M15 6l-6 6 6 6" />],
+  next: [2.4, <path d="M9 6l6 6-6 6" />],
   chevron: [2.2, <path d="M6 9l6 6 6-6" />],
   // Not in the export: drawn for the Settings entry (SPEC-008, owner 2026-09-25).
   settings: [
