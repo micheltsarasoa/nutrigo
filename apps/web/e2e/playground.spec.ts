@@ -87,7 +87,11 @@ const APPROVED = [
   "organism/recipepicker",
   "organism/mealactionsmenu",
   "organism/ring",
+  "organism/targetsform",
   "molecule/macrobar",
+  "molecule/mealitem",
+  "molecule/servingsprompt",
+  "organism/caloriescard",
 ];
 
 for (const slug of APPROVED) {
