@@ -9,6 +9,7 @@ import {
   weekDays,
   weekLabel,
 } from "./plan.ts";
+import type { MealType } from "./recipes.ts";
 
 describe("isoWeekOf", () => {
   it("SPEC-003 AC-1: Wed 2026-09-30 is in 2026-W40", () => {
@@ -124,7 +125,7 @@ describe("plannedKcal", () => {
 });
 
 describe("copyWeek", () => {
-  const entry = (id: number, date: string, slot = "lunch" as const) => ({
+  const entry = (id: number, date: string, slot: MealType = "lunch") => ({
     id,
     date,
     slot,
