@@ -13,6 +13,7 @@ import { Hono, type Context } from "hono";
 import type { Db } from "../db/client.ts";
 import {
   ingredient,
+  mealEntry,
   recipe,
   recipeIngredient,
   recipeStep,
@@ -204,9 +205,21 @@ export function recipeRoutes(db: Db) {
     })
     .delete("/:id", (c) => {
       const id = idParam(c);
-      // AC-8's 409 for a planned recipe arrives with meal_entry (SPEC-003 AC-12).
-      const row =
-        id && db.delete(recipe).where(eq(recipe.id, id)).returning().get();
+      if (!id) return notFound(c, "Recipe");
+      // SPEC-003 AC-12: name the weeks instead of surfacing the RESTRICT error.
+      const weeks = db
+        .selectDistinct({ isoWeek: mealEntry.isoWeek })
+        .from(mealEntry)
+        .where(eq(mealEntry.recipeId, id))
+        .orderBy(asc(mealEntry.isoWeek))
+        .all()
+        .map((r) => r.isoWeek);
+      if (weeks.length)
+        return c.json(
+          apiError("CONFLICT", `Planned in these weeks: ${weeks.join(", ")}`),
+          409,
+        );
+      const row = db.delete(recipe).where(eq(recipe.id, id)).returning().get();
       return row ? c.body(null, 204) : notFound(c, "Recipe");
     });
 }

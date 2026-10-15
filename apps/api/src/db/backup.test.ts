@@ -4,6 +4,7 @@ import { join } from "node:path";
 import Database from "better-sqlite3";
 import { expect, test } from "vitest";
 import { backupDb } from "./backup.ts";
+import { openDb } from "./client.ts";
 
 const makeDb = () => {
   const path = join(mkdtempSync(join(tmpdir(), "nutrigo-")), "nutrigo.db");
@@ -50,4 +51,20 @@ test("keeps the latest 30 backups and leaves other files alone", async () => {
   expect(files).toContain("2026-01-03.db");
   expect(files).toContain("2026-02-01.db");
   expect(files).toContain("notes.txt");
+});
+
+test("copies the meal plan tables with their rows (SPEC-003)", async () => {
+  const path = join(mkdtempSync(join(tmpdir(), "nutrigo-")), "nutrigo.db");
+  const { $client: live } = openDb(path);
+  live.exec(`insert into recipe (id, name, meal_type, servings, updated_at) values (1, 'Bowl', 'lunch', 2, 'x');
+    insert into plan_week (iso_week) values ('2026-W40');
+    insert into meal_entry (iso_week, date, slot, recipe_id, servings, position)
+    values ('2026-W40', '2026-09-30', 'lunch', 1, 1, 0)`);
+  live.close();
+
+  const copy = new Database(await backupDb(path), { readonly: true });
+  expect(copy.prepare("select count(*) as n from meal_entry").get()).toEqual({
+    n: 1,
+  });
+  copy.close();
 });
