@@ -27,8 +27,7 @@ function toDetail(recipe: RecipeDetail, servings: number): RecipeDetailData {
     title: recipe.name,
     mealType: recipe.mealType,
     description: recipe.description ?? null,
-    // ponytail: no photo route yet, as on RecipesPage.
-    photo: null,
+    photo: recipe.photoPath,
     mosaic: [],
     prepTime: formatMinutes(recipe.prepMin),
     cookTime: formatMinutes(recipe.cookMin),
@@ -122,9 +121,16 @@ export function RecipePage({ id }: { id: string }) {
   }
 
   return (
-    <main>
+    <main data-canvas="surface">
       {recipe && (
         <div className={styles.actions}>
+          <Button
+            variant="ghost"
+            icon="prev"
+            onClick={() => navigate("/recipes")}
+          >
+            Recipes
+          </Button>
           <Button
             variant="ghost"
             onClick={() => navigate(`/recipes/${id}/edit`)}

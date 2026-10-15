@@ -4,6 +4,16 @@
   background: var(--color-neutral-cream);
 }
 
+/* A page whose <main> has data-canvas="surface" sits on white, with a line
+   between it and the sidebar (Recipe Details: .app__main, .sidebar). */
+.shell:has(main[data-canvas="surface"]) {
+  background: var(--color-neutral-surface);
+}
+
+.shell:has(main[data-canvas="surface"]) .side {
+  border-right: thin solid var(--color-neutral-line);
+}
+
 .list {
   display: flex;
   margin: 0;

@@ -104,9 +104,28 @@ export default {
   title: "RecipeDetail",
   level: "organism",
   states: {
-    "full recipe (2 columns from 900 px; change the servings: ingredients scale, nutrition per serving doesn't; press Tab for the focus ring★)":
+    "full recipe (2 columns from 760 px, 3 from 1120 px; change the servings: ingredients scale, nutrition per serving doesn't; press Tab for the focus ring★)":
       <Live />,
     "servings changed (3 of 2)": <Live start={3} />,
+    "minimal: no photo, description, rating, prep time, tools, directions or notes":
+      (
+        <RecipeDetail
+          recipe={{
+            ...FULL,
+            ingredients: scaled(BASE),
+            photo: null,
+            description: null,
+            rating: null,
+            prepTime: null,
+            steps: [],
+            tools: [],
+            notes: [],
+          }}
+          servings={BASE}
+          onServingsChange={() => {}}
+          onBack={() => {}}
+        />
+      ),
     loading: (
       <RecipeDetail
         recipe={null}

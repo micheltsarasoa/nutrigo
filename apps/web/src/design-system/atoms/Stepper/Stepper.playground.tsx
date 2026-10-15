@@ -16,6 +16,7 @@ function Live(props: {
   min: number;
   max: number;
   step?: number;
+  variant?: "neutral" | "green";
 }) {
   const { start, ...rest } = props;
   const [value, setValue] = useState(start);
@@ -29,6 +30,12 @@ export default {
     "default, 1 to 10 (hover the buttons)": (
       <div style={row}>
         <Live label="Servings" start={2} min={1} max={10} />
+      </div>
+    ),
+    "green (Recipe Details servings), at min: − disabled": (
+      <div style={row}>
+        <Live label="Servings" start={2} min={1} max={10} variant="green" />
+        <Live label="Guests" start={1} min={1} max={10} variant="green" />
       </div>
     ),
     "at min: − disabled": (

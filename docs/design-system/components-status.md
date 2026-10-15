@@ -30,7 +30,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | IconBadge | #23 | main | `done` |
 | SearchField | #24 | main (16 px since #125) | `done` |
 | ProgressBar | #25 | main | `done` |
-| Stepper | #26 | main | `done` |
+| Stepper | #26, #175 | main; #176 adds the green variant | `done` |
 | StarRating | #27 | main | `done` |
 | MealCheck | #28 | main | `done` |
 | SelectPill | #29 | main (16 px since #125) | `done` |
@@ -64,7 +64,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | AppShell | – (#62, #65) | main | `done` |
 | AppShell: settings entry | #108 | #151 | `done` |
 | RecipeList | #103 | #143 | `done` |
-| RecipeDetail | #104 | #146 | `done` |
+| RecipeDetail | #104, #175 | #146; #176 makes it 3 columns | `done` |
 | RecipeEditor | #105 | #147 | `done` |
 | IngredientEditor | #106, #156 | #148 (44 px Delete hit area since #157) | `done` |
 | IngredientList | #169 | #170 | `done` |

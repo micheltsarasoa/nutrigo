@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Approved (2026-09-25); ingredient list amended 2026-09-29 (US-6, AC-1, AC-11 to AC-15) |
+| Status | Approved (2026-09-25); amended 2026-09-29: ingredient list (US-6, AC-1, AC-11 to AC-15), detail phone order dropped |
 | Sprint | S1 → v0.2.0 |
 | PRD refs | R-1 … R-9 |
 | Design | `design/source/Healthy Menu.dc.html` (list) · `design/source/Recipe Details.dc.html` (detail) · editors: derived, not in design |
@@ -48,7 +48,7 @@ Your personal recipe library. You can browse, search and filter recipes and open
 | `/ingredients` | Ingredient table (name, category chip, kcal, carbs, protein, fat per 100 g; the source chip only for imports): search, category tabs with counts, sort (Name, Calories, Protein), "Add ingredient". Filtered and sorted in the browser; server side (`?q=`) once the S6 imports land | **Derived** (canvas "Ingredients redesign", board A). Chips as in Grocery List |
 | `/ingredients/new`, `/ingredients/:id` | Ingredient editor | **Derived** |
 
-Mobile (<768 px): the list is a single column of MenuListItem cards. On the detail page the order is hero → title and meal type → macro tiles → servings and ingredients → directions → tools → notes → nutrition facts.
+Mobile (<768 px): the list is a single column of MenuListItem cards. The detail page is 3 columns on desktop and reflows to one column below that, in page order (rail, content, nutrition facts). The phone order is no longer fixed: it was dropped on 2026-09-29 with the 3-column layout (ADR-0013).
 
 ### Component inventory (bottom-up; the ✔ column means the component already exists)
 | Level | Component | ✔ | States to show in the playground |

@@ -3,54 +3,92 @@
   container-type: inline-size;
 }
 
-/* Phone: one column in source order, except the nutrition facts go last (SPEC-002 §4). */
-.detail {
+/* Narrow: the rail, the recipe text, then the aside, stacked. */
+.detail,
+.rail,
+.main,
+.aside {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+}
+
+.detail {
   color: var(--color-neutral-ink);
 }
 
-.nutrition {
-  order: 1;
-}
-
-.card {
-  margin: 0;
-  padding: var(--space-5);
-  border-radius: var(--radius-xl);
-  background: var(--color-neutral-rail);
-}
-
-/* Wide: the rail and aside cards float in a left column; the recipe text flows beside it. */
-@container (min-width: 900px) {
+/* Two columns: the aside sits under the rail, the recipe text beside both. */
+@container (min-width: 760px) {
   .detail {
-    display: flow-root;
+    display: grid;
+    grid-template-columns: var(--size-aside) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "rail main" "aside main";
+    gap: var(--space-5) var(--space-8);
+    align-items: start;
   }
 
-  .side {
-    float: left;
-    clear: left;
-    box-sizing: border-box;
-    width: var(--size-aside);
-    margin-bottom: var(--space-5);
+  .rail {
+    grid-area: rail;
   }
 
   .main {
-    margin-inline-start: calc(var(--size-aside) + var(--space-8));
-    margin-bottom: var(--space-8);
+    grid-area: main;
+  }
+
+  .aside {
+    grid-area: aside;
   }
 }
 
-.hero {
+/* .rd-grid next to .app__aside: rail | recipe text | aside. */
+@container (min-width: 1120px) {
+  .detail {
+    grid-template-columns: var(--size-rail) minmax(0, 1fr) var(--size-aside);
+    grid-template-rows: auto;
+    grid-template-areas: "rail main aside";
+  }
+}
+
+/* .rd-left: the photo bleeds to the card's top edges, the facts sit under it. */
+.railCard {
   overflow: hidden;
+  padding-bottom: var(--space-3);
   border-radius: var(--radius-lg);
+  background: var(--color-neutral-rail);
+}
+
+.hero > * {
+  border-radius: 0;
+}
+
+.meta {
+  margin: 0;
+  padding: var(--space-4) var(--space-5) 0;
+}
+
+.main {
+  container-type: inline-size;
+  gap: var(--space-8);
+}
+
+.head {
+  display: grid;
+  gap: var(--space-4);
 }
 
 .title {
   margin: 0;
   font-size: var(--font-size-figure);
   font-weight: var(--font-weight-bold);
+  text-wrap: balance;
+}
+
+/* .rd-desc */
+.summary {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-grey-fill);
 }
 
 .tags {
@@ -58,13 +96,40 @@
   flex-wrap: wrap;
   gap: var(--space-3);
   align-items: center;
-  margin-top: var(--space-3);
+}
+
+/* .rd-desc .pill: the design's larger meal pill. */
+.tags > :first-child {
+  height: var(--size-pill-lg);
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
 }
 
 .description {
   margin: var(--space-3) 0 0;
   font-size: var(--font-size-body);
   color: var(--color-neutral-muted);
+}
+
+/* .rd-block: the heading above its content, or in a label column when there's room. */
+.block {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@container (min-width: 540px) {
+  .block {
+    grid-template-columns: var(--size-block-label) minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+.card {
+  margin: 0;
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-rail);
 }
 
 .tiles {
@@ -90,23 +155,34 @@
   font-weight: var(--font-weight-bold);
 }
 
-.cardTitle {
+.servings + .cardTitle {
   margin-top: var(--space-4);
 }
 
 .list {
   display: grid;
   gap: var(--space-3);
-  margin: var(--space-4) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.card .list {
+  margin-top: var(--space-4);
+}
+
+/* .tools: two columns, numbered down the first column then the second, and
+   kept close together on very wide screens. */
 .tools {
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(calc(var(--size-aside) / 2), 1fr)
-  );
+  display: block;
+  max-width: calc(2 * var(--size-rail));
+  columns: 2;
+  column-gap: var(--space-6);
+}
+
+.tools > * {
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
 }
 
 .table {

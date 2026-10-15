@@ -93,9 +93,9 @@ export function RecipesPage() {
             totalTime: formatMinutes(r.totalMin),
             healthScore: r.healthScore,
             rating: r.rating,
-            // ponytail: no photo route yet, so every card gets the meal-type
-            // placeholder; map photoPath and the ingredient mosaic when photos land.
-            photo: null,
+            // ponytail: no ingredient mosaic yet, so a card without a photo gets
+            // the meal-type placeholder.
+            photo: r.photoPath,
             mosaic: [],
           }))}
           loading={recipes === null}
