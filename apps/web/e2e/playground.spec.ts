@@ -86,6 +86,7 @@ const APPROVED = [
   "organism/recipepicker",
   "organism/mealactionsmenu",
   "organism/ring",
+  "organism/targetsform",
   "molecule/macrobar",
   "organism/caloriescard",
 ];
