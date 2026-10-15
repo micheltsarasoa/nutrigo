@@ -1,20 +1,13 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import type { Targets } from "@nutrigo/shared";
 import { Button } from "../../atoms/Button/index.ts";
 import { Card } from "../../atoms/Card/index.ts";
 import { Field } from "../../atoms/Field/index.ts";
 import styles from "./TargetsForm.module.css";
 
-/** Daily targets; macros are optional (undefined = no target). */
-export type Targets = {
-  kcal: number;
-  carbs?: number;
-  protein?: number;
-  fat?: number;
-};
-
 type Props = {
   /** Strings let a demo show unparsable text. */
-  initial?: { [K in keyof Targets]?: number | string };
+  initial?: { [K in keyof Targets]?: number | string | null };
   /** Only called with valid values. */
   onSave: (targets: Targets) => void;
   saving?: boolean;
