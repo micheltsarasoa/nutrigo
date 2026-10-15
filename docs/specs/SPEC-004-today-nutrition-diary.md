@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft |
+| Status | Approved |
 | Sprint | S3 → v0.4.0 |
 | PRD refs | N-1 … N-6, §5.7 (sources: ADR-0011; the on/off switches are C-2 in SPEC-008) |
 | Design | `design/source/Dashboard.dc.html` + `Dashboard Mobile.dc.html` (only the calories card, macro bars and day meals are kept) |
@@ -153,9 +153,12 @@ Burned calories, activity, weight, water, sleep, off-plan food logging (the deci
 | Component | Ring and MacroBar in every dataviz state, CaloriesCard, ColumnChart (with a table view), ImportSheet in every state above |
 | E2E | AC-1 … AC-13 (and SPEC-008 AC-4…AC-6), with the clock fixed at Wed 2026-09-30 12:00. OFF is mocked with recorded fixtures; CIQUAL uses the real seed, which ships in a migration. CI never calls OFF |
 
-## 10. Open questions
-- Slot time boundaries for "next meal" (proposal above): OK?
-- Should ticking a future day's meal be allowed? Proposal: no (disabled), to keep the diary honest.
+## 10. Decisions and open questions
+**Decided (owner, 2026-10-15):**
+- "Next meal" slot boundaries are the ones in §7 (breakfast < 10:30 < lunch < 15:00 < snack < 18:00 < dinner).
+- Ticking a meal on a future day is not allowed: the check is disabled and `POST .../eaten` returns 400 for a date after today. Today stays tickable.
+
+**Open, decided with the import in S6:**
 - When OFF fails but CIQUAL is on, the search returns the CIQUAL items with `unavailable: ["off"]` instead of a 502 (AC-10). OK?
 - CIQUAL values below the detection limit: proposal "traces" → 0 and "< x" → 0; "-" → unknown (null), and rows missing energy or a macro are left out of the seed. OK?
 - The CIQUAL licence and credit wording are confirmed when writing the seed script (ADR-0011). The proposal is "Open Food Facts · CIQUAL (ANSES)" on the import sheet.
