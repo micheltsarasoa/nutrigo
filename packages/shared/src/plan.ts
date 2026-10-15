@@ -74,6 +74,8 @@ export const MealEntry = MealEntryInput.extend({
   position: z.number().int(),
   recipeName: z.string(),
   kcalPerServing: z.number(),
+  eatenServings: z.number().positive().nullish(),
+  eatenAt: z.string().nullish(),
 });
 export type MealEntry = z.infer<typeof MealEntry>;
 
