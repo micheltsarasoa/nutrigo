@@ -40,8 +40,8 @@ test("SPEC-001 AC-9: every component page fits the screen with no axe violations
   }
 });
 
-// Playground pages the owner approved (label design-approved) are the visual baselines.
-// Add a page here after approval; CI writes the missing Linux baseline on the first run (see docs/testing/strategy.md).
+// Playground pages with a committed visual baseline (Linux renders). Add a page here,
+// then write its baseline locally with CI=1 --update-snapshots=missing (ADR-0015, docs/testing/strategy.md).
 const APPROVED = [
   "atom/stepper",
   "molecule/menulistitem",
@@ -78,6 +78,13 @@ const APPROVED = [
   "organism/ingredienteditor",
   "organism/appshell",
   "organism/ingredientlist",
+  "molecule/weeknav",
+  "molecule/dayhead",
+  "molecule/mealminicard",
+  "molecule/mealaddslot",
+  "organism/mealplangrid",
+  "organism/recipepicker",
+  "organism/mealactionsmenu",
 ];
 
 for (const slug of APPROVED) {

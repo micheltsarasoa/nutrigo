@@ -24,6 +24,7 @@ const EXPECTED: IconName[] = [
   "health-score",
   "steps",
   "prev",
+  "next",
   "chevron",
   "settings",
   "prep",
@@ -31,7 +32,7 @@ const EXPECTED: IconName[] = [
 ];
 
 describe("Icon", () => {
-  it("has exactly the 23 in-scope icons", () => {
+  it("has exactly the 24 in-scope icons", () => {
     expect([...ICON_NAMES].sort()).toEqual([...EXPECTED].sort());
   });
 

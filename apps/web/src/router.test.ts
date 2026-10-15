@@ -44,6 +44,13 @@ describe("router", () => {
     unsubscribe();
   });
 
+  it("navigate(to, true) replaces the entry instead of adding one", () => {
+    const length = history.length;
+    navigate("/plan", true);
+    expect(location.pathname).toBe("/plan");
+    expect(history.length).toBe(length);
+  });
+
   it("notifies subscribers on back and forward", () => {
     const listener = vi.fn();
     const unsubscribe = subscribe(listener);

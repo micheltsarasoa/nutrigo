@@ -3,8 +3,9 @@ import { useSyncExternalStore } from "react";
 // ADR-0012: the History API and one click listener instead of a router.
 // navigate() fires popstate itself, so one event covers links, Back and Forward.
 
-export function navigate(to: string) {
-  history.pushState(null, "", to);
+export function navigate(to: string, replace = false) {
+  if (replace) history.replaceState(null, "", to);
+  else history.pushState(null, "", to);
   scrollTo(0, 0);
   dispatchEvent(new PopStateEvent("popstate"));
 }

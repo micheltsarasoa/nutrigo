@@ -13,6 +13,7 @@ const S1_TABLES = [
   "recipe_tool",
   "settings",
 ];
+const S2_TABLES = ["plan_week", "meal_entry"];
 
 const tables = (sqlite: ReturnType<typeof freshDb>["$client"]) =>
   sqlite
@@ -23,7 +24,9 @@ const tables = (sqlite: ReturnType<typeof freshDb>["$client"]) =>
 describe("migrations", () => {
   it("apply to an empty DB and create the S1 tables, without tags", () => {
     const names = tables(freshDb().$client);
-    expect(names).toEqual(expect.arrayContaining(["meta", ...S1_TABLES]));
+    expect(names).toEqual(
+      expect.arrayContaining(["meta", ...S1_TABLES, ...S2_TABLES]),
+    );
     expect(names).not.toContain("tag");
   });
 
@@ -129,5 +132,45 @@ describe("recipe tables (data-model.md)", () => {
       expect(sqlite.prepare(`select count(*) as n from ${t}`).get()).toEqual({
         n: 0,
       });
+  });
+});
+
+describe("meal plan tables (SPEC-003 §6)", () => {
+  const setup = () => {
+    const { $client: sqlite } = freshDb();
+    sqlite.exec(`insert into recipe (id, name, meal_type, servings, updated_at)
+      values (1, 'Bowl', 'lunch', 2, 'x');
+      insert into plan_week (iso_week) values ('2026-W40');`);
+    return sqlite;
+  };
+  const entry = (
+    sqlite: ReturnType<typeof setup>,
+    slot: string,
+    servings = 1,
+  ) =>
+    sqlite
+      .prepare(
+        `insert into meal_entry (iso_week, date, slot, recipe_id, servings, position)
+         values ('2026-W40', '2026-09-30', ?, 1, ?, 0)`,
+      )
+      .run(slot, servings);
+
+  it("rejects a recipe that does not exist, a bad slot and servings <= 0", () => {
+    const sqlite = setup();
+    expect(() => entry(sqlite, "lunch")).not.toThrow();
+    expect(() => entry(sqlite, "brunch")).toThrow();
+    expect(() => entry(sqlite, "lunch", 0)).toThrow();
+    expect(() =>
+      sqlite.exec(`insert into meal_entry (iso_week, date, slot, recipe_id, servings, position)
+        values ('2026-W40', '2026-09-30', 'lunch', 99, 1, 0)`),
+    ).toThrow();
+  });
+
+  it("restricts deleting a planned recipe (AC-12)", () => {
+    const sqlite = setup();
+    entry(sqlite, "lunch");
+    expect(() => sqlite.exec("delete from recipe where id = 1")).toThrow(
+      /FOREIGN KEY/,
+    );
   });
 });

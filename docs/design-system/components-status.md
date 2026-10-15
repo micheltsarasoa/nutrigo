@@ -15,8 +15,6 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 |---|---|
 | `later` | Planned, not started |
 | `draft` | Work started, pushed to its branch |
-| `awaiting-validation` | PR open, waiting for the owner's `design-approved` |
-| `design-approved` | Owner approved; baseline being added |
 | `done` | Merged to `main` with its visual baseline |
 
 ## Atoms
@@ -56,6 +54,10 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | NutritionRow | #100 | #132, #134 | `done` |
 | PhotoOrPlaceholder | #101 | #139 | `done` |
 | SettingRow | #102 | #141 | `done` |
+| WeekNav | #195 | #203 | `done` |
+| DayHead | #196 | #203 | `done` |
+| MealMiniCard | #197 | #203 | `done` |
+| MealAddSlot | #198 | #203 | `done` |
 
 ## Organisms
 
@@ -69,3 +71,12 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | IngredientEditor | #106, #156 | #148 (44 px Delete hit area since #157) | `done` |
 | IngredientList | #169 | #170 | `done` |
 | SettingsDialog | #107 | #149, #150 | `done` |
+| MealPlanGrid | #199 | #203 | `done` |
+| RecipePicker | #200 | #203 | `done` |
+| MealActionsMenu | #201 | #203 | `done` |
+
+## Pages
+
+| Page | Issue | Branch / PR | Status |
+|---|---|---|---|
+| PlanPage | #202 | #203 | `done` |

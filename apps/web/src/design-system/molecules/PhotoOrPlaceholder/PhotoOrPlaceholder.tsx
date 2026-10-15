@@ -6,12 +6,12 @@ type Props = {
   // Ingredient product images; only the first 4 are shown.
   mosaic: string[];
   mealType: "breakfast" | "lunch" | "snack" | "dinner";
-  size: "hero" | "thumb";
+  size: "hero" | "thumb" | "mini";
   // Decorative by default: a title sits next to it.
   alt?: string;
 };
 
-// .rd-hero (Recipe Details) and .menu-item__media (Healthy Menu).
+// .rd-hero (Recipe Details), .menu-item__media (Healthy Menu) and .meal-mini__media (Meal Plan).
 // Fallbacks (PRD §5.8): own photo, then ingredient mosaic, then meal-type placeholder.
 export function PhotoOrPlaceholder({
   photo,

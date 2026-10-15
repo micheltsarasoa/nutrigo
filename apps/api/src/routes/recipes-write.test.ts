@@ -205,4 +205,23 @@ describe("DELETE /api/recipes/:id", () => {
     expect((await send("DELETE", `/api/recipes/${id}`)).status).toBe(404);
     expect((await send("DELETE", "/api/recipes/abc")).status).toBe(404);
   });
+
+  it("SPEC-003 AC-12: returns 409 for a planned recipe and keeps it", async () => {
+    const { db, send } = setup();
+    const { id } = await json<Detail>(await send("POST", "/api/recipes", bowl));
+    db.$client.exec(`insert into plan_week (iso_week) values ('2026-W40');
+      insert into meal_entry (iso_week, date, slot, recipe_id, servings, position)
+      values ('2026-W40', '2026-09-30', 'lunch', ${id}, 1, 0)`);
+
+    const res = await send("DELETE", `/api/recipes/${id}`);
+    expect(res.status).toBe(409);
+    expect((await json(res)).error).toMatchObject({
+      code: "CONFLICT",
+      message: expect.stringContaining("2026-W40"),
+    });
+    expect((await send("GET", `/api/recipes/${id}`)).status).toBe(200);
+
+    db.$client.exec("delete from meal_entry");
+    expect((await send("DELETE", `/api/recipes/${id}`)).status).toBe(204);
+  });
 });

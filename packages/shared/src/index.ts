@@ -1,5 +1,6 @@
 export * from "./api-error.ts";
 export * from "./nutrition.ts";
+export * from "./plan.ts";
 export * from "./recipes.ts";
 export * from "./settings.ts";
 export * from "./format.ts";

@@ -73,8 +73,8 @@ The GitHub API can't change views or turn on the auto-add workflow. Do these onc
 
 ## 4. Definition of Done (DoD)
 
-- [ ] Tests first, CI green, coverage thresholds met
-- [ ] UI: `design-approved`, screenshot baseline committed, axe passes
+- [ ] Tests first, gates pass locally (no CI, ADR-0015), coverage thresholds met
+- [ ] UI: built from a sketch the owner validated, screenshot baseline committed, axe passes
 - [ ] `/ponytail-review` clean; docs updated (spec status, data model, ADR, CLAUDE.md)
 - [ ] Issue boxes ticked; squash-merged with a Conventional Commit title
 

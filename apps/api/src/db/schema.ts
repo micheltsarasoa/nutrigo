@@ -111,3 +111,32 @@ export const settings = sqliteTable(
   },
   (t) => [check("single_row", sql`${t.id} = 1`)],
 );
+
+// SPEC-003 §6. A plan_week row is created lazily on the first entry; the eaten columns arrive with SPEC-004.
+export const planWeek = sqliteTable("plan_week", {
+  isoWeek: text("iso_week").primaryKey(),
+});
+
+export const mealEntry = sqliteTable(
+  "meal_entry",
+  {
+    id: integer("id").primaryKey(),
+    isoWeek: text("iso_week")
+      .notNull()
+      .references(() => planWeek.isoWeek, { onDelete: "cascade" }),
+    date: text("date").notNull(),
+    slot: text("slot").$type<MealType>().notNull(),
+    recipeId: integer("recipe_id")
+      .notNull()
+      .references(() => recipe.id, { onDelete: "restrict" }),
+    servings: real("servings").notNull(),
+    position: integer("position").notNull(),
+  },
+  (t) => [
+    check("meal_servings_positive", sql`${t.servings} > 0`),
+    check(
+      "meal_slot",
+      sql`${t.slot} in ('breakfast', 'lunch', 'snack', 'dinner')`,
+    ),
+  ],
+);

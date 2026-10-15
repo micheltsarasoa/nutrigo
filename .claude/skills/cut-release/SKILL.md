@@ -5,6 +5,8 @@ description: Ship the NutriGo sprint release by checking readiness, reviewing th
 
 # Cut a release
 
+**Paused (ADR-0015):** release-please and CI are removed. Don't run this skill until workflows come back.
+
 Follow `docs/process/release.md` §3.
 
 1. Check that CI is green on `main` and that the sprint milestone has no open items, or that they've been moved.
