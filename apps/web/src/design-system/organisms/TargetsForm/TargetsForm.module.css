@@ -1,0 +1,26 @@
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.hint {
+  margin: calc(-1 * var(--space-2)) 0 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-neutral-muted);
+}
+
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-orange-on-light);
+}
+
+.actions button[aria-disabled="true"]:not([aria-busy]) {
+  opacity: var(--opacity-disabled);
+}
