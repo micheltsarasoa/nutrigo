@@ -55,6 +55,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | PhotoOrPlaceholder | #101 | #139 | `done` |
 | SettingRow | #102 | #141 | `done` |
 | WeekNav | #195 | #203 | `done` |
+| DayHead | #196 | #203 | `draft` |
 
 ## Organisms
 
