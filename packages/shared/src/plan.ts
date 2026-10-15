@@ -72,6 +72,8 @@ export const MealEntry = MealEntryInput.extend({
   id: z.number().int(),
   isoWeek: IsoWeek,
   position: z.number().int(),
+  recipeName: z.string(),
+  kcalPerServing: z.number(),
 });
 export type MealEntry = z.infer<typeof MealEntry>;
 

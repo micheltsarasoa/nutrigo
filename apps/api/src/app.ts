@@ -4,6 +4,7 @@ import { apiError } from "@nutrigo/shared";
 import type { Db } from "./db/client.ts";
 import { meta } from "./db/schema.ts";
 import { ingredientRoutes } from "./routes/ingredients.ts";
+import { planRoutes } from "./routes/plans.ts";
 import { recipeRoutes } from "./routes/recipes.ts";
 import { settingsRoutes } from "./routes/settings.ts";
 
@@ -29,6 +30,7 @@ export function createApp({
   });
 
   app.route("/api/ingredients", ingredientRoutes(db));
+  app.route("/api/plans", planRoutes(db));
   app.route("/api/recipes", recipeRoutes(db));
   app.route("/api/settings", settingsRoutes(db));
 

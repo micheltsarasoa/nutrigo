@@ -22,7 +22,7 @@ import {
 import { idParam, notFound, parseBody, validationFailed } from "./http.ts";
 
 // Recipes with their ordered lists and computed nutrition (SPEC-002 §5, §7).
-function loadRecipes(db: Db, where?: SQL): RecipeDetail[] {
+export function loadRecipes(db: Db, where?: SQL): RecipeDetail[] {
   const rows = db.select().from(recipe).where(where).all();
   const ids = rows.map((r) => r.id);
   const lines = db
