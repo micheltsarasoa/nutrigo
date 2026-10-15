@@ -142,3 +142,16 @@ export const mealEntry = sqliteTable(
     ),
   ],
 );
+
+// One row (SPEC-004 §6, data-model.md): the daily targets. Macros are NULL when cleared.
+export const targets = sqliteTable(
+  "targets",
+  {
+    id: integer("id").primaryKey().default(1),
+    kcal: real("kcal").notNull(),
+    carbsG: real("carbs_g"),
+    proteinG: real("protein_g"),
+    fatG: real("fat_g"),
+  },
+  (t) => [check("targets_single_row", sql`${t.id} = 1`)],
+);
