@@ -25,6 +25,8 @@ const apiServer = (port: number, dbFile: string) => ({
 });
 
 export default defineConfig({
+  // One worker: the specs share one API server and SQLite file, and some wipe it.
+  workers: 1,
   testDir: "e2e",
   forbidOnly: true,
   // Baselines are Linux renders made in CI; other OSes draw fonts differently, so only CI compares them.

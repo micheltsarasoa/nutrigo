@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Approved (2026-09-29; desktop only, see Scope) |
+| Status | Implemented in S2 (2026-10-15; desktop only, see Scope) |
 | Sprint | S2 → v0.3.0 |
 | PRD refs | P-1 … P-4 |
 | Design | `design/source/Meal Plan.dc.html` (desktop grid + mobile day view) |

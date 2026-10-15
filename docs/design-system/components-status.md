@@ -79,4 +79,4 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 
 | Page | Issue | Branch / PR | Status |
 |---|---|---|---|
-| PlanPage | #202 | #203 | `draft` |
+| PlanPage | #202 | #203 | `done` |
