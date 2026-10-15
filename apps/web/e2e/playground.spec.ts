@@ -80,6 +80,7 @@ const APPROVED = [
   "organism/ingredientlist",
   "molecule/weeknav",
   "molecule/dayhead",
+  "molecule/mealminicard",
 ];
 
 for (const slug of APPROVED) {

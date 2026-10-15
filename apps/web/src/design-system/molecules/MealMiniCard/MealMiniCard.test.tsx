@@ -63,7 +63,10 @@ describe("MealMiniCard", () => {
       <>
         <MealMiniCard {...props()} />
         <MealMiniCard {...props()} photo="/p.jpg" servings={2} />
-        <MealMiniCard {...props()} name="A very long recipe name ".repeat(4) />
+        <MealMiniCard
+          {...props()}
+          name={"A very long recipe name ".repeat(4)}
+        />
       </>,
     );
     expect(await axeViolations(container)).toEqual([]);
