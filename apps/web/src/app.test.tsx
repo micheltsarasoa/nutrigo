@@ -22,8 +22,6 @@ describe("App", () => {
   it.each([
     ["/", "Today"],
     ["/recipes", "Recipes"],
-    ["/plan", "Plan"],
-    ["/plan/2026-W40", "Plan"],
     ["/groceries", "Groceries"],
     ["/groceries/2026-W40", "Groceries"],
     ["/targets", "Targets"],
@@ -32,6 +30,17 @@ describe("App", () => {
     expect(heading().textContent).toBe(name);
     expect(current()).toEqual([name]);
   });
+
+  it.each(["/plan/2026-W40", "/plan/2026-W41"])(
+    "%s shows the meal plan inside the shell, marked current",
+    (path) => {
+      vi.stubGlobal("fetch", () => new Promise(() => {}));
+      render(<App path={path} wide={false} />);
+      expect(heading().textContent).toBe("Meal plan");
+      expect(current()).toEqual(["Plan"]);
+      vi.unstubAllGlobals();
+    },
+  );
 
   it.each(["/nope", "/recipes/", "/plan/next-week", "/plan/2026-W40/x"])(
     "%s shows Page not found, still inside the shell",
@@ -51,7 +60,7 @@ describe("App", () => {
   });
 
   it.each([false, true])("has no axe violations (wide: %s)", async (wide) => {
-    const { container } = render(<App path="/plan" wide={wide} />);
+    const { container } = render(<App path="/groceries" wide={wide} />);
     expect(await axeViolations(container)).toEqual([]);
   });
 

@@ -15,7 +15,13 @@ import {
   vi,
 } from "vitest";
 import { axeViolations } from "../axe.ts";
+import { usePath } from "../router.ts";
 import { PlanPage } from "./PlanPage.tsx";
+
+// What App does: the week comes from the URL, so navigating re-renders the page.
+function Routed() {
+  return <PlanPage isoWeek={/\d{4}-W\d{2}/.exec(usePath())?.[0]} />;
+}
 
 // jsdom has no modal dialogs yet: see SettingsDialog.test.tsx.
 beforeAll(() => {
@@ -98,10 +104,13 @@ function fakeApi(initial: Partial<MealEntry>[] = []) {
       if (body.mode === "replace")
         for (const e of entries.filter((e) => e.isoWeek === week))
           entries.splice(entries.indexOf(e), 1);
-      for (const { id: _id, isoWeek: _w, ...e } of entries.filter(
-        (e) => e.isoWeek === id,
-      ))
-        add({ ...e, date: weekDays(week!)[weekDays(id!).indexOf(e.date)]! });
+      for (const e of entries.filter((e) => e.isoWeek === id))
+        add({
+          date: weekDays(week!)[weekDays(id!).indexOf(e.date)]!,
+          slot: e.slot,
+          recipeId: e.recipeId,
+          servings: e.servings,
+        });
       return reply(planOf(week!));
     }
     if (method === "POST") add(body);
@@ -139,7 +148,7 @@ describe("PlanPage", () => {
   it("AC-1: /plan redirects to the current week and highlights today", async () => {
     fakeApi();
     history.replaceState(null, "", "/plan");
-    render(<PlanPage />);
+    render(<Routed />);
     await waitFor(() => expect(location.pathname).toBe("/plan/2026-W40"));
     expect(await screen.findByText("Sep 28 – Oct 4, 2026")).toBeTruthy();
     expect(button(/^Wed\s?30/).getAttribute("aria-current")).toBe("date");
@@ -148,10 +157,11 @@ describe("PlanPage", () => {
   it("AC-2: next and previous week change the URL and the label", async () => {
     fakeApi();
     history.replaceState(null, "", "/plan/2026-W40");
-    render(<PlanPage isoWeek="2026-W40" />);
+    render(<Routed />);
     await screen.findByText("Sep 28 – Oct 4, 2026");
     fireEvent.click(button("Next week"));
     expect(location.pathname).toBe("/plan/2026-W41");
+    expect(await screen.findByText("Oct 5 – 11, 2026")).toBeTruthy();
     fireEvent.click(button("Previous week"));
     expect(location.pathname).toBe("/plan/2026-W40");
   });
@@ -162,6 +172,9 @@ describe("PlanPage", () => {
     fireEvent.click(
       await screen.findByRole("button", { name: "Add lunch on Tue" }),
     );
+    expect(
+      await screen.findByRole("dialog", { name: "Add to Tue 29 · Lunch" }),
+    ).toBeTruthy();
     fireEvent.click(
       await screen.findByRole("button", { name: /Chicken curry/ }),
     );
