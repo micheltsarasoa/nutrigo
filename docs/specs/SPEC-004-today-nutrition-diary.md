@@ -141,6 +141,8 @@ One new table, `ciqual_food` (also in data-model.md). It's read-only seed data (
 | `activeSources`, `mergeCandidates` | As defined in SPEC-008 §7, reused here |
 
 ## 8. Out of scope
+**Moved to S6 (N-4, owner decision 2026-10-15):** the CIQUAL / Open Food Facts import: US-5, AC-9, AC-10, AC-12, AC-13, ImportCandidate, IngredientImport and `GET /api/ingredients/search`. S3 ships US-1…US-4 only.
+
 Burned calories, activity, weight, water, sleep, off-plan food logging (the decision was planned vs eaten only), and AI estimates (SPEC-006). USDA (dropped, ADR-0011). Updating CIQUAL from the app (a new release is a new migration). The Settings switches themselves (SPEC-008).
 
 ## 9. Test plan
