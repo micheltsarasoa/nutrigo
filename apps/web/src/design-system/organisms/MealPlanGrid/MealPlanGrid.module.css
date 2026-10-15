@@ -1,0 +1,54 @@
+.plan {
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-card);
+  overflow-x: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: var(--size-plan-slot) repeat(7, minmax(0, 1fr));
+  gap: var(--space-3);
+  min-width: var(--size-plan-min);
+}
+
+.slotCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--space-3) var(--space-2);
+  border-top: var(--size-border) solid var(--color-neutral-line);
+}
+
+.slotKcal {
+  font-size: var(--font-size-micro);
+  color: var(--color-neutral-muted);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-top: var(--size-border) solid var(--color-neutral-line);
+}
+
+.status {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-10) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-subtle);
+  font-size: var(--font-size-body);
+  color: var(--color-neutral-muted);
+  text-align: center;
+}
+
+.status p {
+  margin: 0;
+}

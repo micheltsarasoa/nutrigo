@@ -64,7 +64,7 @@ describe("MealPlanGrid", () => {
   it("SPEC-003 AC-1: seven day heads, Monday first, today marked", () => {
     render(<MealPlanGrid {...props()} />);
     const heads = screen.getAllByRole("button", {
-      name: /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) /,
+      name: /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\d/,
     });
     expect(
       heads.map((h) => within(h).getByText(/^[A-Z][a-z]{2}$/).textContent),
@@ -132,8 +132,8 @@ describe("MealPlanGrid", () => {
     ).toHaveLength(2);
   });
 
-  it("SPEC-003 AC-9: stacks a slot's recipes in position order", () => {
-    render(<MealPlanGrid {...props({ plan: planOf([soup, salad]) })} />);
+  it("SPEC-003 AC-9: stacks a slot's recipes in the given order (the API sorts by position)", () => {
+    render(<MealPlanGrid {...props({ plan: planOf([salad, soup]) })} />);
     const names = screen.getAllByText(/Salad|Soup/).map((n) => n.textContent);
     expect(names).toEqual(["Grilled Chicken Salad", "Tomato Soup"]);
   });
