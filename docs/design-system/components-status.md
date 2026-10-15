@@ -74,3 +74,9 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MealPlanGrid | #199 | #203 | `done` |
 | RecipePicker | #200 | #203 | `done` |
 | MealActionsMenu | #201 | #203 | `done` |
+
+## Pages
+
+| Page | Issue | Branch / PR | Status |
+|---|---|---|---|
+| PlanPage | #202 | #203 | `draft` |
