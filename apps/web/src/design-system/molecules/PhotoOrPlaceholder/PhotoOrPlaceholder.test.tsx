@@ -6,6 +6,18 @@ import { PhotoOrPlaceholder } from "./PhotoOrPlaceholder.tsx";
 const imgs = (container: HTMLElement) => [...container.querySelectorAll("img")];
 
 describe("PhotoOrPlaceholder", () => {
+  it("has a mini size for the meal plan card", () => {
+    const { container } = render(
+      <PhotoOrPlaceholder
+        photo={null}
+        mosaic={[]}
+        mealType="lunch"
+        size="mini"
+      />,
+    );
+    expect(container.firstElementChild?.className).toMatch(/mini/);
+  });
+
   it("shows the recipe's own photo first, even when ingredient images exist", () => {
     const { container } = render(
       <PhotoOrPlaceholder
