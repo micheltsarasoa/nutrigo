@@ -68,6 +68,10 @@ export const MealEntryPatch = MealEntryInput.omit({ recipeId: true })
   .extend({ position: z.number().int().min(0) })
   .partial();
 export type MealEntryPatch = z.infer<typeof MealEntryPatch>;
+/** SPEC-004 §5: eaten servings, 0.5 to 20 in steps of 0.5; omitted = the planned servings. */
+export const EatenInput = z.object({
+  servings: z.number().min(0.5).max(20).multipleOf(0.5).optional(),
+});
 export const MealEntry = MealEntryInput.extend({
   id: z.number().int(),
   isoWeek: IsoWeek,

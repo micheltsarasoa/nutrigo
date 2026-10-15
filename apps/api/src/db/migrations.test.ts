@@ -1,4 +1,13 @@
-import { copyFileSync, mkdtempSync } from "node:fs";
+import {
+  copyFileSync,
+  cpSync,
+  mkdtempSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -172,5 +181,30 @@ describe("meal plan tables (SPEC-003 §6)", () => {
     expect(() => sqlite.exec("delete from recipe where id = 1")).toThrow(
       /FOREIGN KEY/,
     );
+  });
+});
+
+describe("eaten columns (SPEC-004 §6)", () => {
+  it("are NULL on entries that existed before the migration", () => {
+    const dir = mkdtempSync(join(tmpdir(), "nutrigo-"));
+    // The migrations up to 0002 only, as an older install would have them.
+    const old = join(dir, "old");
+    cpSync(new URL("./migrations", import.meta.url), old, { recursive: true });
+    const journal = join(old, "meta/_journal.json");
+    const j = JSON.parse(readFileSync(journal, "utf8"));
+    j.entries = j.entries.slice(0, 3);
+    writeFileSync(journal, JSON.stringify(j));
+    const path = join(dir, "old.db");
+    const sqlite = new Database(path);
+    migrate(drizzle(sqlite), { migrationsFolder: old });
+    sqlite.exec(`insert into recipe (id, name, meal_type, servings, updated_at) values (1, 'R', 'lunch', 1, 'x');
+      insert into plan_week (iso_week) values ('2026-W40');
+      insert into meal_entry (id, iso_week, date, slot, recipe_id, servings, position) values (1, '2026-W40', '2026-09-30', 'lunch', 1, 2, 0)`);
+    sqlite.close();
+    expect(
+      openDb(path)
+        .$client.prepare("select eaten_servings, eaten_at from meal_entry")
+        .all(),
+    ).toEqual([{ eaten_servings: null, eaten_at: null }]);
   });
 });
