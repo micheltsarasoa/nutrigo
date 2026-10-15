@@ -56,7 +56,7 @@ export function Field({ label, error, unit, multiline, ...rest }: Props) {
         )}
       </div>
       {error && (
-        <p id={`${id}-error`} className={styles.error}>
+        <p id={`${id}-error`} role="alert" className={styles.error}>
           {error}
         </p>
       )}
