@@ -83,6 +83,7 @@ const APPROVED = [
   "molecule/mealminicard",
   "molecule/mealaddslot",
   "organism/mealplangrid",
+  "organism/recipepicker",
 ];
 
 for (const slug of APPROVED) {

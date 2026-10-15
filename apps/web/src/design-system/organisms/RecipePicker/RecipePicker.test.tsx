@@ -62,13 +62,13 @@ describe("RecipePicker", () => {
     renderPicker();
     expect(
       screen.getByRole("dialog", { name: "Add to Tuesday · Lunch" }),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
   });
 
   it("lists every recipe with its kcal per serving", () => {
     renderPicker();
-    expect(row(/Greek yoghurt bowl/)).toHaveTextContent("320 kcal");
-    expect(row(/Chicken curry/)).toHaveTextContent("640 kcal");
+    expect(row(/Greek yoghurt bowl/).textContent).toContain("320 kcal");
+    expect(row(/Chicken curry/).textContent).toContain("640 kcal");
   });
 
   it("reports what is typed in the search field", () => {
@@ -84,35 +84,37 @@ describe("RecipePicker", () => {
 
   it("says when nothing matches the search", () => {
     renderPicker({ recipes: [], query: "pizza" });
-    expect(screen.getByText("No recipes match")).toBeInTheDocument();
+    expect(screen.getByText("No recipes match")).toBeTruthy();
   });
 
   it("says when there are no recipes at all", () => {
     renderPicker({ recipes: [] });
-    expect(screen.getByText("No recipes yet")).toBeInTheDocument();
+    expect(screen.getByText("No recipes yet")).toBeTruthy();
   });
 
   it("shows a status instead of the list while loading", () => {
     renderPicker({ loading: true });
-    expect(screen.getByRole("status")).toHaveTextContent("Loading recipes");
-    expect(screen.queryByText("Chicken curry")).not.toBeInTheDocument();
+    expect(screen.getByRole("status").textContent).toContain("Loading recipes");
+    expect(screen.queryByText("Chicken curry")).toBeNull();
   });
 
   it("asks for servings after a recipe is picked, starting at 1", () => {
     renderPicker();
     fireEvent.click(row(/Chicken curry/));
     expect(
-      screen.getByRole("spinbutton", { name: "Servings" }),
-    ).toHaveAttribute("aria-valuenow", "1");
-    expect(screen.getByText("640 kcal")).toBeInTheDocument();
-    expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
+      screen
+        .getByRole("spinbutton", { name: "Servings" })
+        .getAttribute("aria-valuenow"),
+    ).toBe("1");
+    expect(screen.getByText("640 kcal")).toBeTruthy();
+    expect(screen.queryByRole("searchbox")).toBeNull();
   });
 
   it("doubles the kcal with 2 servings and adds with them", () => {
     const { onPick } = renderPicker();
     fireEvent.click(row(/Chicken curry/));
     fireEvent.click(screen.getByRole("button", { name: "Increase Servings" }));
-    expect(screen.getByText("1,280 kcal")).toBeInTheDocument();
+    expect(screen.getByText("1,280 kcal")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     expect(onPick).toHaveBeenCalledWith(recipes[1], 2);
   });
@@ -121,7 +123,7 @@ describe("RecipePicker", () => {
     renderPicker({ query: "curry" });
     fireEvent.click(row(/Chicken curry/));
     fireEvent.click(screen.getByRole("button", { name: "Back" }));
-    expect(screen.getByRole("searchbox")).toHaveValue("curry");
+    expect(screen.getByRole<HTMLInputElement>("searchbox").value).toBe("curry");
   });
 
   it("starts again at the list when reopened", () => {
@@ -137,7 +139,7 @@ describe("RecipePicker", () => {
     };
     rerender(<RecipePicker open={false} {...props} />);
     rerender(<RecipePicker open {...props} />);
-    expect(screen.getByRole("searchbox")).toBeInTheDocument();
+    expect(screen.getByRole("searchbox")).toBeTruthy();
   });
 
   it("closes once on Cancel", () => {
@@ -148,16 +150,15 @@ describe("RecipePicker", () => {
 
   it("shows an error and keeps the servings step", () => {
     renderPicker({ error: "Couldn’t add the meal." });
-    expect(screen.getByRole("alert")).toHaveTextContent("Couldn’t add");
+    expect(screen.getByRole("alert").textContent).toContain("Couldn’t add");
   });
 
   it("marks Add busy while saving", () => {
     renderPicker({ saving: true });
     fireEvent.click(row(/Chicken curry/));
-    expect(screen.getByRole("button", { name: "Add" })).toHaveAttribute(
-      "aria-busy",
-      "true",
-    );
+    expect(
+      screen.getByRole("button", { name: "Add" }).getAttribute("aria-busy"),
+    ).toBe("true");
   });
 
   it("has no axe violations on either step", async () => {
