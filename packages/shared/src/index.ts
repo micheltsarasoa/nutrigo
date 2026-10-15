@@ -1,4 +1,5 @@
 export * from "./api-error.ts";
+export * from "./diary.ts";
 export * from "./nutrition.ts";
 export * from "./plan.ts";
 export * from "./recipes.ts";
