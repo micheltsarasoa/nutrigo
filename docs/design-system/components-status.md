@@ -57,6 +57,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | WeekNav | #195 | #203 | `done` |
 | DayHead | #196 | #203 | `done` |
 | MealMiniCard | #197 | #203 | `done` |
+| MealAddSlot | #198 | #203 | `draft` |
 
 ## Organisms
 
