@@ -54,14 +54,14 @@ Before saying a task is done, run lint, typecheck and tests (scoped to the touch
 
 1. **Ponytail mode is on** (plugin `ponytail@ponytail`). Write the least code that works: platform built-ins first, then stdlib, then already-installed deps, and a new dependency only with an ADR. Run `/ponytail-review` on your diff before opening a PR.
 2. **Process stays rigorous even though the code stays lean.** Every change needs an issue, a spec (for features), tests, and a PR that meets the Definition of Done ([`workflow.md`](docs/process/workflow.md)).
-3. **Atomic design, bottom-up**: atoms → molecules → organisms → pages. Never build a level before the pieces below it exist and are approved. See [`docs/process/coding-policy.md`](docs/process/coding-policy.md).
+3. **Atomic design, bottom-up**: atoms → molecules → organisms → pages. Never build a level before the pieces below it exist and their sketches are validated. See [`docs/process/coding-policy.md`](docs/process/coding-policy.md).
 4. **Test first**. Write the failing test, then the code. No PR without tests for the code it adds or changes ([`docs/testing/strategy.md`](docs/testing/strategy.md)).
-5. **Playground before product**. Every new UI component is shown at `/playground/<level>/<name>` with all its states. The owner validates it (label `design-approved`) **before** it's used in a page.
+5. **Playground before product**. Every new UI component is shown at `/playground/<level>/<name>` with all its states. The design is a sketch the owner validated in Claude Design **before** the component is built (ADR-0015); the playground is a demo, not a gate. No sketch, no component: ask for it.
    **Never delete a playground element** unless the owner asks. Push each component to GitHub (branch + draft PR) as soon as its first file exists, and keep [`docs/design-system/components-status.md`](docs/design-system/components-status.md) up to date in the same commit. Read that list before building any component; never rebuild one that exists on `main` or a branch.
 6. **Design tokens only**. No raw colors, sizes or font values in components. Use the CSS custom properties generated from `docs/design-system/tokens.json`. `design/source/` is read-only (the Claude Design export), and its `support.js`/`image-slot.js` are never imported. Semantic colours: kcal green · carbs yellow · protein orange · fat grey. Weeks start Monday; money is EUR in integer cents; units are written `g`.
 7. **No auth code**: no login, sessions or user tables. Single user by design (ADR-0002).
 8. **No logging libraries**. Errors go to stderr only on the API; the web app shows user-facing error states.
-9. **Conventional Commits** (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`, `ci:`). PR titles follow the same format because PRs are squash-merged. Versions and the changelog come from them (release-please). **Keep them short.** A commit body is empty or 1–3 lines. A PR body fills the short template and nothing more: no feature tour, no restating the diff.
+9. **Conventional Commits** (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`, `ci:`). PR titles follow the same format because PRs are squash-merged. Versions and the changelog come from them (written by hand while release-please is paused, ADR-0015). **Keep them short.** A commit body is empty or 1–3 lines. A PR body fills the short template and nothing more: no feature tour, no restating the diff.
 10. **Never** skip, disable or `.only` a test to get green. Never commit secrets. The AI keys (`ANTHROPIC_API_KEY`, `MISTRAL_API_KEY`, `DEEPSEEK_API_KEY`; ADR-0010) and `RAILWAY_TOKEN` live in env / GitHub secrets, never in the DB or settings.
 11. Mermaid for every diagram in docs. Pick the right diagram type (see [`docs/README.md`](docs/README.md#diagram-conventions)).
 12. **No AI attribution.** Commits get no `Co-Authored-By: Claude …` trailer, and PRs, issues and comments get no "🤖 Generated with Claude Code" footer. Don't write either line into prompts or instructions for other agents either.
@@ -73,9 +73,9 @@ Before saying a task is done, run lint, typecheck and tests (scoped to the touch
 1. Pick an issue in **Ready** on the board. It must meet the Definition of Ready.
 2. Branch `feat/<issue#>-short-name` (or `fix/`, `docs/`, …).
 3. Feature? Check that a spec exists in `docs/specs/`. If not, use `/write-spec` first.
-4. UI component? Use `/new-component`: test → playground → owner validation → implementation.
-5. Open a PR using the template. Link it with `Closes #n`. CI must be green.
-6. Squash-merge. At the end of the sprint, `/cut-release` merges the release-please PR.
+4. UI component? Check the owner validated its sketch, then use `/new-component`: test → implementation → playground.
+5. Open a PR using the template. Link it with `Closes #n`. There is no CI (ADR-0015): lint, typecheck and tests must pass locally.
+6. Squash-merge. `/cut-release` is paused (ADR-0015).
 
 Skills in `.claude/skills/`: `/new-component` (any atom, molecule, organism), `/write-spec` (feature with no spec), `/sprint-plan` (plan or close a sprint), `/cut-release` (ship the sprint's version). From the plugin: `/ponytail-review`, `/ponytail-audit`, `/ponytail-debt`.
 

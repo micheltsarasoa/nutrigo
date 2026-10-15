@@ -1,7 +1,7 @@
 name: Component
-description: An atom, molecule or organism. It goes test → playground → owner validation → integration
+description: An atom, molecule or organism. The sketch is validated first, then test → component → playground
 title: "component: "
-labels: ["type:component", "awaiting-validation"]
+labels: ["type:component"]
 body:
   - type: dropdown
     id: level
@@ -30,5 +30,5 @@ body:
         - label: 1. Failing test committed
         - label: 2. Component implemented (tokens only)
         - label: 3. Playground demo with every state
-        - label: 4. Owner validated (label design-approved)
+        - label: 4. Sketch validated by the owner in Claude Design (before step 1)
         - label: 5. Screenshot baseline committed

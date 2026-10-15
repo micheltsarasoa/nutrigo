@@ -15,8 +15,6 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 |---|---|
 | `later` | Planned, not started |
 | `draft` | Work started, pushed to its branch |
-| `awaiting-validation` | PR open, waiting for the owner's `design-approved` |
-| `design-approved` | Owner approved; baseline being added |
 | `done` | Merged to `main` with its visual baseline |
 
 ## Atoms
