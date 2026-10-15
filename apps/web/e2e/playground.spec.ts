@@ -69,6 +69,7 @@ const APPROVED = [
   "atom/iconbadge",
   "molecule/toolitem",
   "atom/mealcheck",
+  "organism/columnchart",
   "molecule/noteitem",
   "atom/searchfield",
   "atom/card",

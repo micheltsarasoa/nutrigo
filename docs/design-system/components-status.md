@@ -76,6 +76,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipePicker | #200 | #203 | `done` |
 | MealActionsMenu | #201 | #203 | `done` |
 | Ring | #215 | #224 | `done` |
+| ColumnChart | #217 | | `done` |
 
 ## Pages
 
