@@ -1,0 +1,43 @@
+<!-- @dsCard height=320 -->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Cover</title>
+<style>
+body{margin:0}
+svg{display:block;width:960px;height:320px}
+.ground{fill:var(--color-neutral-cream)}
+.green{fill:var(--color-green-base)} .yellow{fill:var(--color-yellow-base)} .orange{fill:var(--color-orange-base)}
+.tint{fill:var(--color-green-medium)} .ink{fill:var(--color-neutral-ink)}
+.block{rx:var(--radius-2xl)}
+.name{font:var(--font-weight-extrabold) 96px var(--font-sans);letter-spacing:var(--font-tracking-tight);fill:var(--color-neutral-ink)}
+.tag{font:var(--font-weight-medium) 14px var(--font-sans);fill:var(--color-neutral-muted)}
+</style></head>
+<body>
+<svg viewBox="0 0 960 320" role="img" aria-label="NutriGo">
+<!--
+blocks: green-base 240x184, yellow-base 224x96, orange-base 112x208, green-medium 96x104, neutral-ink 240x120 (sides are 8-px multiples, corners radius-2xl).
+arrangement: a staggered stack from x=480 that bleeds off the top, right and bottom edges, with a 16-px gap (space-4).
+pattern: bowls. A literal motif row: the logo is two stacked bowls, so half-discs of radius 16 sit on the ink block in a 4x3 grid, coloured green, yellow and orange in turn.
+steps and radii: pitch 48 and 32, gap space-4, block corners radius-2xl.
+-->
+<rect class="ground" width="960" height="320"/>
+<rect class="green block" x="480" y="0" width="240" height="184"/>
+<rect class="yellow block" x="736" y="0" width="224" height="96"/>
+<rect class="orange block" x="736" y="112" width="112" height="208"/>
+<rect class="tint block" x="864" y="112" width="96" height="104"/>
+<rect class="ink block" x="480" y="200" width="240" height="120"/>
+<path class="green" d="M512 216h32a16 16 0 0 1-32 0z"/>
+<path class="yellow" d="M560 216h32a16 16 0 0 1-32 0z"/>
+<path class="orange" d="M608 216h32a16 16 0 0 1-32 0z"/>
+<path class="green" d="M656 216h32a16 16 0 0 1-32 0z"/>
+<path class="yellow" d="M512 248h32a16 16 0 0 1-32 0z"/>
+<path class="orange" d="M560 248h32a16 16 0 0 1-32 0z"/>
+<path class="green" d="M608 248h32a16 16 0 0 1-32 0z"/>
+<path class="yellow" d="M656 248h32a16 16 0 0 1-32 0z"/>
+<path class="orange" d="M512 280h32a16 16 0 0 1-32 0z"/>
+<path class="green" d="M560 280h32a16 16 0 0 1-32 0z"/>
+<path class="yellow" d="M608 280h32a16 16 0 0 1-32 0z"/>
+<path class="orange" d="M656 280h32a16 16 0 0 1-32 0z"/>
+<text class="name" x="32" y="268">NutriGo</text>
+<text class="tag" x="32" y="296">Plan weekly meals, track nutrition, shop from the list.</text>
+</svg>
+</body></html>

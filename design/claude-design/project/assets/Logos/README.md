@@ -1,0 +1,1 @@
+The NutriGo mark: two stacked bowls, yellow over green (`color-yellow-base` over `color-green-base`), on a 26 px grid. The wordmark "NutriGo" is set in Poppins next to it. Keep clear space of half the mark height; minimum 20 px. Never rotate, recolour or stretch.
