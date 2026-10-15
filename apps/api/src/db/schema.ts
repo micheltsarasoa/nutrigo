@@ -131,6 +131,8 @@ export const mealEntry = sqliteTable(
       .references(() => recipe.id, { onDelete: "restrict" }),
     servings: real("servings").notNull(),
     position: integer("position").notNull(),
+    eatenServings: real("eaten_servings"),
+    eatenAt: text("eaten_at"),
   },
   (t) => [
     check("meal_servings_positive", sql`${t.servings} > 0`),

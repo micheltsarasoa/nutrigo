@@ -12,10 +12,12 @@ export function createApp({
   db,
   version,
   webRoot,
+  now = () => new Date(),
 }: {
   db: Db;
   version: string;
   webRoot?: string;
+  now?: () => Date; // the clock, injectable for tests
 }) {
   const app = new Hono();
 
@@ -30,7 +32,7 @@ export function createApp({
   });
 
   app.route("/api/ingredients", ingredientRoutes(db));
-  app.route("/api/plans", planRoutes(db));
+  app.route("/api/plans", planRoutes(db, now));
   app.route("/api/recipes", recipeRoutes(db));
   app.route("/api/settings", settingsRoutes(db));
 

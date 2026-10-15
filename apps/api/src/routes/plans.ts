@@ -1,5 +1,6 @@
 import {
   CopyMode,
+  EatenInput,
   IsoWeek,
   MealEntryInput,
   MealEntryPatch,
@@ -21,7 +22,7 @@ const bad = (c: Context, field: string, message: string) =>
   c.json(apiError("VALIDATION_FAILED", message, { [field]: message }), 400);
 
 // SPEC-003 §5. Each entry carries its recipe's name and kcal per serving, so the grid needs no second fetch.
-export function planRoutes(db: Db) {
+export function planRoutes(db: Db, now: () => Date = () => new Date()) {
   const entries = (where: SQL): MealEntry[] => {
     const rows = db
       .select()
@@ -44,6 +45,8 @@ export function planRoutes(db: Db) {
       kcalPerServing: recipes.get(r.recipeId)?.nutritionPerServing.kcal ?? 0,
     }));
   };
+  const inWeek = (id: number | null, isoWeek: string) =>
+    entries(and(eq(mealEntry.id, id ?? 0), eq(mealEntry.isoWeek, isoWeek))!)[0];
   const one = (id: number) => entries(eq(mealEntry.id, id))[0];
   const weekParam = (c: Context) => {
     const week = IsoWeek.safeParse(c.req.param("isoWeek"));
@@ -183,6 +186,38 @@ export function planRoutes(db: Db) {
         for (const entry of add) append(tx, { ...entry, isoWeek: to });
       });
       return c.json(plan(to));
+    })
+    .post("/:isoWeek/entries/:id/eaten", async (c) => {
+      const isoWeek = weekParam(c);
+      if (!isoWeek) return badWeek(c);
+      const body = await parseBody(c, EatenInput.default({}));
+      if ("error" in body) return body.error;
+      const current = inWeek(idParam(c), isoWeek);
+      if (!current) return notFound(c, "Meal entry");
+      const at = now();
+      const today = new Date(at.getTime() - at.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 10); // the server's local date
+      if (current.date > today) return bad(c, "date", "Date is in the future");
+      db.update(mealEntry)
+        .set({
+          eatenServings: body.data.servings ?? current.servings,
+          eatenAt: at.toISOString(),
+        })
+        .where(eq(mealEntry.id, current.id))
+        .run();
+      return c.json(one(current.id));
+    })
+    .delete("/:isoWeek/entries/:id/eaten", (c) => {
+      const isoWeek = weekParam(c);
+      if (!isoWeek) return badWeek(c);
+      const current = inWeek(idParam(c), isoWeek);
+      if (!current) return notFound(c, "Meal entry");
+      db.update(mealEntry)
+        .set({ eatenServings: null, eatenAt: null })
+        .where(eq(mealEntry.id, current.id))
+        .run();
+      return c.json(one(current.id));
     })
     .delete("/:isoWeek/entries/:id", (c) => {
       const isoWeek = weekParam(c);
