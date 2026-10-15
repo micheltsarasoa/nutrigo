@@ -79,6 +79,7 @@ const APPROVED = [
   "organism/appshell",
   "organism/ingredientlist",
   "molecule/weeknav",
+  "molecule/dayhead",
 ];
 
 for (const slug of APPROVED) {
