@@ -87,6 +87,7 @@ const APPROVED = [
   "organism/mealactionsmenu",
   "organism/ring",
   "molecule/macrobar",
+  "organism/caloriescard",
 ];
 
 for (const slug of APPROVED) {
