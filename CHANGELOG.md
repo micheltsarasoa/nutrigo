@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.2.0...v0.3.0) (2026-10-15)
+
+
+### Features
+
+* **web:** add the IngredientList table ([#170](https://github.com/micheltsarasoa/nutrigo/issues/170)) ([520232a](https://github.com/micheltsarasoa/nutrigo/commit/520232adc22ebf5557a48b4d978c4680412ca3a7))
+* **web:** show ingredients in a table with search, category and sort ([#171](https://github.com/micheltsarasoa/nutrigo/issues/171)) ([f1cedc8](https://github.com/micheltsarasoa/nutrigo/commit/f1cedc858d3524b33cadae483403c39f8b244b1f))
+
+
+### Bug Fixes
+
+* **web:** lay the recipe detail out in 3 columns, with a green stepper and photos ([#176](https://github.com/micheltsarasoa/nutrigo/issues/176)) ([42493c7](https://github.com/micheltsarasoa/nutrigo/commit/42493c73885cebbb3a2cdf1000c71a4d3e0f91b4))
+
 ## [0.2.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.1.0...v0.2.0) (2026-09-29)
 
 
