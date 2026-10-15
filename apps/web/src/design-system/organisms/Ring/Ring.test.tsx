@@ -20,7 +20,9 @@ describe("Ring", () => {
     const { container } = render(<Ring kcal={1380} target={2000} />);
     const a = arc(container)!;
     expect(dash(a)).toBeCloseTo(C * 0.69, 1);
-    expect(a.getAttribute("stroke-dasharray")!.split(" ")[1]).toBe(C.toFixed(2));
+    expect(a.getAttribute("stroke-dasharray")!.split(" ")[1]).toBe(
+      C.toFixed(2),
+    );
     expect(a.getAttribute("transform")).toBe("rotate(-90 92 92)");
     expect(a.getAttribute("stroke-linecap")).toBe("round");
     expect(a.getAttribute("class")).not.toContain("over");
@@ -48,7 +50,9 @@ describe("Ring", () => {
     const { container } = render(<Ring kcal={1380} target={0} />);
     expect(arc(container)).toBeNull();
     expect(screen.getByText("no target")).toBeTruthy();
-    expect(screen.getByRole("img", { name: "1380 kcal, no target" })).toBeTruthy();
+    expect(
+      screen.getByRole("img", { name: "1380 kcal, no target" }),
+    ).toBeTruthy();
   });
 
   it("with 0 kcal, shows only the track", () => {
