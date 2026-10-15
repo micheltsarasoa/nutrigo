@@ -59,6 +59,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MealMiniCard | #197 | #203 | `done` |
 | MealAddSlot | #198 | #203 | `done` |
 | MacroBar | #212 | #223 | `done` |
+| MealItem | #213 | feat/213-mealitem | `done` |
 
 ## Organisms
 
