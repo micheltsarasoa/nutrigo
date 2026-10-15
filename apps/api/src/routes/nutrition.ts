@@ -36,14 +36,12 @@ export function nutritionRoutes(db: Db, now: () => Date = () => new Date()) {
       : null;
     return { entries, recipes, goal };
   };
-  const param = <T extends z.ZodType>(schema: T, v: string) =>
-    z.object({ v: schema }).safeParse({ v });
 
   return new Hono()
     .get("/day/:date", (c) => {
-      const p = param(IsoDate, c.req.param("date"));
+      const p = z.object({ date: IsoDate }).safeParse(c.req.param());
       if (!p.success) return validationFailed(c, p.error);
-      const { entries, recipes, goal } = load(eq(mealEntry.date, p.data.v));
+      const { entries, recipes, goal } = load(eq(mealEntry.date, p.data.date));
       const at = now();
       const local = new Date(at.getTime() - at.getTimezoneOffset() * 60000)
         .toISOString()
@@ -54,15 +52,17 @@ export function nutritionRoutes(db: Db, now: () => Date = () => new Date()) {
       });
     })
     .get("/week/:isoWeek", (c) => {
-      const p = param(IsoWeek, c.req.param("isoWeek"));
+      const p = z.object({ isoWeek: IsoWeek }).safeParse(c.req.param());
       if (!p.success) return validationFailed(c, p.error);
-      const { entries, recipes, goal } = load(eq(mealEntry.isoWeek, p.data.v));
+      const { entries, recipes, goal } = load(
+        eq(mealEntry.isoWeek, p.data.isoWeek),
+      );
       const at = now();
       const today = new Date(at.getTime() - at.getTimezoneOffset() * 60000)
         .toISOString()
         .slice(0, 10);
       return c.json({
-        ...weekNutrition(entries, recipes, p.data.v, today),
+        ...weekNutrition(entries, recipes, p.data.isoWeek, today),
         target: goal?.kcal ?? null,
       });
     });
