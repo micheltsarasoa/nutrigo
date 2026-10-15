@@ -59,7 +59,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MealMiniCard | #197 | #203 | `done` |
 | MealAddSlot | #198 | #203 | `done` |
 | MacroBar | #212 | #223 | `done` |
-| ServingsPrompt | #214 | feat/214-servingsprompt | `done` |
+| ServingsPrompt | #214 | #227 | `done` |
 
 ## Organisms
 
@@ -77,6 +77,8 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipePicker | #200 | #203 | `done` |
 | MealActionsMenu | #201 | #203 | `done` |
 | Ring | #215 | #224 | `done` |
+| CaloriesCard | #216 | #226 | `done` |
+| TargetsForm | #218 | #225 | `done` |
 
 ## Pages
 
