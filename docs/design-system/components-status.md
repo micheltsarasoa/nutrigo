@@ -64,6 +64,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MacroBar | #212 | #223 | `done` |
 | MealItem | #213 | #228 | `done` |
 | ServingsPrompt | #214 | #227 | `done` |
+| KpiCard | #251 | #282 | `draft` |
 
 ## Organisms
 
@@ -84,6 +85,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | ColumnChart | #217 | #229 | `done` |
 | CaloriesCard | #216 | #226 | `done` |
 | TargetsForm | #218 | #225 | `done` |
+| GroceryTable | #254 | #285 | `draft` |
 
 ## Pages
 
