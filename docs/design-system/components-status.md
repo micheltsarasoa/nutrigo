@@ -61,10 +61,12 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MealMiniCard | #197 | #203 | `done` |
 | MealAddSlot | #198 | #203 | `done` |
 | GroceryRow | #249 | #280 | `draft` |
+| CheckRow | #250 | #281 | `draft` |
 | MacroBar | #212 | #223 | `done` |
 | MealItem | #213 | #228 | `done` |
 | ServingsPrompt | #214 | #227 | `done` |
 | KpiCard | #251 | #282 | `draft` |
+| OfflineBanner | #252 | #283 | `draft` |
 
 ## Organisms
 
@@ -86,6 +88,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | CaloriesCard | #216 | #226 | `done` |
 | TargetsForm | #218 | #225 | `done` |
 | GroceryTable | #254 | #285 | `draft` |
+| GroceryList | #255 | #286 | `draft` |
 
 ## Pages
 

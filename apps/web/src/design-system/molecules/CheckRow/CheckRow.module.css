@@ -1,0 +1,59 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--size-touch-target);
+  padding: var(--space-1) var(--space-3) var(--space-1) 0;
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-surface);
+  box-shadow: var(--shadow-card);
+}
+
+/* A button when it opens the detail; reset to look like the plain body. */
+.body {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  min-height: var(--size-touch-target);
+  align-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+button.body {
+  cursor: pointer;
+}
+
+.name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+}
+
+.done .name {
+  text-decoration: line-through;
+  color: var(--color-neutral-muted);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-caption);
+  color: var(--color-neutral-muted);
+}
+
+.orphan {
+  background: var(--color-orange-light);
+}
+
+.sync {
+  box-shadow: inset var(--space-1) 0 0 var(--color-yellow-base);
+}
