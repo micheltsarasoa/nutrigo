@@ -93,6 +93,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Donut | #256 | #287 | `draft` |
 | StackedBar | #257 | #288 | `draft` |
 | ChartTable | #258 | #289 | `draft` |
+| SpendChart | #260 | #291 | `draft` |
 
 ## Pages
 

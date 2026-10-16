@@ -5,6 +5,7 @@ import {
 } from "./design-system/organisms/AppShell/index.ts";
 import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
 import { GroceriesPage } from "./pages/GroceriesPage.tsx";
+import { GroceryInsightsPage } from "./pages/GroceryInsightsPage.tsx";
 import { IngredientsPage } from "./pages/IngredientsPage.tsx";
 import { PlanPage } from "./pages/PlanPage.tsx";
 import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
@@ -33,7 +34,7 @@ const ROUTES: [RegExp, string][] = [
   [/^\/$/, "Today"],
   [/^\/recipes$/, "Recipes"],
   [/^\/plan(\/\d{4}-W\d{2})?$/, "Plan"],
-  [/^\/groceries(\/\d{4}-W\d{2})?$/, "Groceries"],
+  [/^\/groceries(\/\d{4}-W\d{2})?(\/insights)?$/, "Groceries"],
   [/^\/targets$/, "Targets"],
 ];
 // SPEC-002: ingredients and single recipes live under the Recipes tab.
@@ -41,6 +42,7 @@ const INGREDIENTS_PATH = /^\/ingredients(\/new|\/\d+)?$/;
 const RECIPE_EDIT_PATH = /^\/recipes\/(?:new|(\d+)\/edit)$/;
 const RECIPE_PATH = /^\/recipes\/(\d+)$/;
 const PLAN_PATH = /^\/plan(?:\/(\d{4}-W\d{2}))?$/;
+const INSIGHTS_PATH = /^\/groceries\/(\d{4}-W\d{2})\/insights$/;
 const GROCERIES_PATH = /^\/groceries(?:\/(\d{4}-W\d{2}))?$/;
 
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
@@ -60,6 +62,7 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
   const recipeEdit = RECIPE_EDIT_PATH.exec(path);
   const recipe = RECIPE_PATH.exec(path);
   const plan = PLAN_PATH.exec(path);
+  const insights = INSIGHTS_PATH.exec(path);
   const groceries = GROCERIES_PATH.exec(path);
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
@@ -83,6 +86,8 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
           <RecipesPage />
         ) : plan ? (
           <PlanPage isoWeek={plan[1]} />
+        ) : insights ? (
+          <GroceryInsightsPage isoWeek={insights[1]!} />
         ) : groceries ? (
           <GroceriesPage isoWeek={groceries[1]} wide={wide} />
         ) : path === "/" ? (
