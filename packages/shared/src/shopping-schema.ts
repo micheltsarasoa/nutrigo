@@ -38,7 +38,11 @@ export const ItemPatch = z.object({
   quantity: z.number().positive().optional(),
 });
 export const ItemPatchBatch = z.array(
-  z.object({ id: z.number().int(), patch: ItemPatch, updatedAt: z.string() }),
+  z.object({
+    id: z.number().int(),
+    patch: ItemPatch,
+    updatedAt: z.string().refine((d) => !Number.isNaN(Date.parse(d))),
+  }),
 );
 export type ItemPatchBatch = z.infer<typeof ItemPatchBatch>;
 
