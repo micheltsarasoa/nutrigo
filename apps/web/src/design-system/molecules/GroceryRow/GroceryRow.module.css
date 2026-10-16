@@ -1,0 +1,56 @@
+.row {
+  display: grid;
+  grid-template-columns: var(--size-touch-target) 2fr 1fr 1.5fr 0.7fr 1fr 2fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  box-shadow: var(--shadow-hairline);
+}
+
+.name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+}
+
+.done .name {
+  text-decoration: line-through;
+  color: var(--color-neutral-muted);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* The price box is named for screen readers; the row shows no label. */
+.actual label {
+  position: absolute;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  height: 0;
+}
+
+.orphan {
+  background: var(--color-orange-light);
+}
+
+.sync {
+  box-shadow: inset var(--space-1) 0 0 var(--color-yellow-base);
+}
