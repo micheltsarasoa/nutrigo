@@ -23,6 +23,7 @@ import {
   GroceryTable,
   type GroceryTableItem,
 } from "../design-system/organisms/GroceryTable/index.ts";
+import { useLocale } from "../locale.tsx";
 import { navigate } from "../router.ts";
 import {
   type SyncQueue,
@@ -32,8 +33,6 @@ import {
 } from "../sync-queue.ts";
 import styles from "./GroceriesPage.module.css";
 
-// Pages don't read the locale setting yet (see RecipePage); the sketches use en-IE.
-const LOCALE = "en-IE";
 const DAY = 24 * 60 * 60 * 1000;
 const SAVE_ERROR =
   "Couldn’t save the change. Check the connection and try again.";
@@ -97,6 +96,7 @@ export function GroceriesPage({
   wide: boolean;
   queue?: SyncQueue;
 }) {
+  const locale = useLocale();
   const today = new Date().toLocaleDateString("en-CA");
   const [view, setView] = useState<View>({ status: "loading" });
   const [previous, setPrevious] = useState<ShoppingList | null>(null);
@@ -318,9 +318,9 @@ export function GroceriesPage({
   const kpis: ComponentProps<typeof KpiCard>[] = [
     {
       label: "Estimated cost",
-      value: `~${formatEUR(estimated, LOCALE)}`,
+      value: `~${formatEUR(estimated, locale)}`,
       delta: delta(estimated, previous?.estimatedCents, (n) =>
-        formatEUR(n, LOCALE),
+        formatEUR(n, locale),
       ),
       hint: excluded > 0 ? `Estimate excludes ${plural(excluded)}` : undefined,
     },
@@ -424,7 +424,7 @@ export function GroceriesPage({
             weekLabel={`week ${Number(week.slice(-2))}`}
             items={rows}
             kpis={kpis}
-            locale={LOCALE}
+            locale={locale}
             onToggle={(id, purchased) => void change(id, { purchased })}
             onQuantity={(id, quantity) => void change(id, { quantity })}
             onActual={(id, cents) =>
@@ -440,7 +440,7 @@ export function GroceriesPage({
             state={state}
             weekLabel={`week ${Number(week.slice(-2))}`}
             items={rows}
-            locale={LOCALE}
+            locale={locale}
             onToggle={(id, purchased) => void change(id, { purchased })}
             onOpen={setOpened}
             onAdd={() => setAdding(true)}
@@ -458,7 +458,7 @@ export function GroceriesPage({
           <MoneyField
             label={`Actual price of ${openedRow.name}`}
             value={openedRow.actualCents}
-            locale={LOCALE}
+            locale={locale}
             onChange={(cents) =>
               void change(openedRow.id, { actualCostCents: cents })
             }

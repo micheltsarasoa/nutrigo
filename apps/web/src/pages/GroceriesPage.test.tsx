@@ -2,6 +2,7 @@ import type { ShoppingItem, ShoppingList } from "@nutrigo/shared";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { axeViolations } from "../axe.ts";
+import { LocaleProvider } from "../locale.tsx";
 import { createSyncQueue, memoryStore } from "../sync-queue.ts";
 import { GroceriesPage } from "./GroceriesPage.tsx";
 
@@ -65,8 +66,12 @@ const W = "/api/shopping-lists/2026-W40";
 const withList = (items = ITEMS) => {
   routes[`GET ${W}`] = () => json(list(items));
 };
-const page = (wide = true) =>
-  render(<GroceriesPage isoWeek="2026-W40" wide={wide} />);
+const page = (wide = true, locale: "fr-FR" | "en-IE" = "en-IE") =>
+  render(
+    <LocaleProvider value={locale}>
+      <GroceriesPage isoWeek="2026-W40" wide={wide} />
+    </LocaleProvider>,
+  );
 
 describe("GroceriesPage", () => {
   it("shows the KPIs and one row per item on desktop", async () => {
@@ -76,6 +81,13 @@ describe("GroceriesPage", () => {
     expect(screen.getByLabelText("Mark Carrots as bought")).toBeTruthy();
     expect(screen.getByText("~€2.10")).toBeTruthy();
     expect(screen.getByText("Estimate excludes 1 item")).toBeTruthy();
+  });
+
+  it("writes money in the saved locale (C-1)", async () => {
+    withList();
+    page(true, "fr-FR");
+    expect(await screen.findByLabelText("Mark Oats as bought")).toBeTruthy();
+    expect(screen.getByText(/~2,10\s€/)).toBeTruthy();
   });
 
   it("compares the estimate with last week and says so", async () => {

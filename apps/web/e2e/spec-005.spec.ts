@@ -125,7 +125,7 @@ test("SPEC-005 AC-1, AC-3, AC-4: merged quantity, priced estimate, excluded item
   await expect(
     page.getByRole("spinbutton", { name: "Quantity of Oats" }),
   ).toHaveText("180");
-  await expect(page.getByText("~€1.20").first()).toBeVisible();
+  await expect(page.getByText(/~1,20\s€/).first()).toBeVisible();
   await expect(page.getByText("Estimate excludes 1 item")).toBeVisible();
   await expectNoAxeViolations(page);
   await expect(page).toHaveScreenshot("groceries-1280.png", { fullPage: true });
@@ -285,4 +285,21 @@ test("SPEC-005 AC-11: the phone list is grouped, has progress and a sticky Add i
   await expect(add).toBeInViewport();
   await expectNoAxeViolations(page);
   await expect(page).toHaveScreenshot("groceries-390.png", { fullPage: true });
+});
+
+test("PRD C-1: the saved locale writes the grocery amounts", async ({
+  page,
+  request,
+}) => {
+  await seed(request);
+  await request.post(`${LIST}/generate`, { data: { mode: "regenerate" } });
+  try {
+    await request.put("/api/settings", { data: { locale: "en-IE" } });
+    await page.goto(`/groceries/${W}`);
+    await expect(page.getByText("~€1.20").first()).toBeVisible();
+  } finally {
+    await request.put("/api/settings", { data: { locale: "fr-FR" } });
+  }
+  await page.reload();
+  await expect(page.getByText(/~1,20\s€/).first()).toBeVisible();
 });

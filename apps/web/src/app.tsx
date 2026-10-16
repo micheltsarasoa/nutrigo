@@ -13,6 +13,7 @@ import { RecipePage } from "./pages/RecipePage.tsx";
 import { RecipesPage } from "./pages/RecipesPage.tsx";
 import { TodayPage } from "./pages/TodayPage.tsx";
 import { TargetsPage } from "./pages/TargetsPage.tsx";
+import { LocaleProvider } from "./locale.tsx";
 import { useSettings } from "./use-settings.ts";
 
 // Dev and preview builds only (ADR-0006). In production this is a constant false,
@@ -48,7 +49,7 @@ const GROCERIES_PATH = /^\/groceries(?:\/(\d{4}-W\d{2}))?$/;
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
 export function App({ path, wide }: { path: string; wide: boolean }) {
   // Before the /playground return, so the hook always runs.
-  const { shellProps, dialogProps } = useSettings();
+  const { locale, shellProps, dialogProps } = useSettings();
   if (path.startsWith("/playground")) {
     return PlaygroundPage ? (
       <Suspense>
@@ -67,7 +68,7 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
   return (
-    <>
+    <LocaleProvider value={locale ?? null}>
       <AppShell
         items={NAV}
         current={
@@ -101,7 +102,7 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
         )}
       </AppShell>
       <SettingsDialog {...dialogProps} />
-    </>
+    </LocaleProvider>
   );
 }
 

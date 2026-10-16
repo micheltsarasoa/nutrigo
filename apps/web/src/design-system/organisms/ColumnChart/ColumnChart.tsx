@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { ChartTable } from "../ChartTable/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./ColumnChart.module.css";
 
 // Week trend from the #217 sketch: Mon..Sun columns, eaten solid, planned hatched,
@@ -26,6 +27,7 @@ const overText = (d: ChartDay, target: number) =>
   d.kcal > target ? ` ▲ +${d.kcal - target} over` : "";
 
 export function ColumnChart({ days, target }: Props) {
+  const n = useNumber();
   const [view, setView] = useState<"chart" | "table">("chart");
   const [tip, setTip] = useState<number | null>(null);
   const id = useId();
@@ -69,7 +71,7 @@ export function ColumnChart({ days, target }: Props) {
             className={styles.svg}
             viewBox={`0 0 ${W} ${H}`}
             role="img"
-            aria-label={`Calories per day this week against a target of ${target} kcal`}
+            aria-label={`Calories per day this week against a target of ${n(target)} kcal`}
           >
             <defs>
               {(["green", "orange"] as const).map((c) => (
@@ -182,7 +184,7 @@ export function ColumnChart({ days, target }: Props) {
               <i className={`${styles.sw} ${styles.orange}`} />
               Over target ▲
             </span>
-            <span>{`- - Target ${target} kcal`}</span>
+            <span>{`- - Target ${n(target)} kcal`}</span>
           </div>
           {empty && (
             <p className={styles.hint}>

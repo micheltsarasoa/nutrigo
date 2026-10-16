@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { axeViolations } from "../axe.ts";
+import { LocaleProvider } from "../locale.tsx";
 import { GroceryInsightsPage } from "./GroceryInsightsPage.tsx";
 
 const SPENDING = {
@@ -29,7 +30,11 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("GroceryInsightsPage", () => {
   it("draws the weekly spend (estimate hatched) and the category donut", async () => {
-    render(<GroceryInsightsPage isoWeek="2026-W40" />);
+    render(
+      <LocaleProvider value="en-IE">
+        <GroceryInsightsPage isoWeek="2026-W40" />
+      </LocaleProvider>,
+    );
     expect(
       await screen.findByRole("img", {
         name: /Weekly grocery spend, highest in W39 at €71\.00/,

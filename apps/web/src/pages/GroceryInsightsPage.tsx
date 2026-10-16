@@ -9,10 +9,9 @@ import {
   SpendChart,
   type SpendWeek,
 } from "../design-system/organisms/SpendChart/index.ts";
+import { useLocale } from "../locale.tsx";
 import { navigate } from "../router.ts";
 import styles from "./GroceryInsightsPage.module.css";
-
-const LOCALE = "en-IE";
 
 type Spending = {
   weeks: { isoWeek: string; estimatedCents: number; actualCents: number }[];
@@ -26,6 +25,7 @@ type View =
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export function GroceryInsightsPage({ isoWeek }: { isoWeek: string }) {
+  const locale = useLocale();
   const [view, setView] = useState<View>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
 
@@ -83,16 +83,16 @@ export function GroceryInsightsPage({ isoWeek }: { isoWeek: string }) {
           <Card>
             <h2>Expense overview</h2>
             <p className={styles.sub}>€ per week · last 8 weeks</p>
-            <SpendChart weeks={weeks} locale={LOCALE} />
+            <SpendChart weeks={weeks} locale={locale} />
           </Card>
           <Card>
             <h2>Expense breakdown</h2>
             <p className={styles.sub}>
-              Last 8 weeks{total > 0 && ` · ${formatEUR(total, LOCALE)}`}
+              Last 8 weeks{total > 0 && ` · ${formatEUR(total, locale)}`}
             </p>
             <Donut
               slices={slices}
-              locale={LOCALE}
+              locale={locale}
               caption="Spend by category"
             />
           </Card>
