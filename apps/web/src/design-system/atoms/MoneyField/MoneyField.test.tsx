@@ -5,8 +5,7 @@ import { axeViolations } from "../../../axe.ts";
 import { MoneyField } from "./MoneyField.tsx";
 
 const box = () => screen.getByRole("textbox", { name: "Price" });
-const type = (value: string) =>
-  fireEvent.change(box(), { target: { value } });
+const type = (value: string) => fireEvent.change(box(), { target: { value } });
 
 describe("MoneyField", () => {
   it("is a decimal text box named by its label, with a € suffix as its description", () => {
@@ -23,7 +22,12 @@ describe("MoneyField", () => {
     );
     expect((box() as HTMLInputElement).value).toBe("3,00");
     rerender(
-      <MoneyField label="Price" value={120} locale="en-IE" onChange={() => {}} />,
+      <MoneyField
+        label="Price"
+        value={120}
+        locale="en-IE"
+        onChange={() => {}}
+      />,
     );
     expect((box() as HTMLInputElement).value).toBe("1.20");
   });
@@ -91,13 +95,20 @@ describe("MoneyField", () => {
 
   it("shows an error given by the parent", () => {
     render(
-      <MoneyField label="Price" value={null} error="Enter a pack size too" onChange={() => {}} />,
+      <MoneyField
+        label="Price"
+        value={null}
+        error="Enter a pack size too"
+        onChange={() => {}}
+      />,
     );
     expect(screen.getByRole("alert").textContent).toBe("Enter a pack size too");
   });
 
   it("can be disabled", () => {
-    render(<MoneyField label="Price" value={120} disabled onChange={() => {}} />);
+    render(
+      <MoneyField label="Price" value={120} disabled onChange={() => {}} />,
+    );
     expect((box() as HTMLInputElement).disabled).toBe(true);
   });
 
