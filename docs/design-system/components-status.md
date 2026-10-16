@@ -61,7 +61,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MacroBar | #212 | #223 | `done` |
 | MealItem | #213 | #228 | `done` |
 | ServingsPrompt | #214 | #227 | `done` |
-| Legend | #253 | #TBD | `draft` |
+| Legend | #253 | #284 | `draft` |
 
 ## Organisms
 
