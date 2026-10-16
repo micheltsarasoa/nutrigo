@@ -6,7 +6,12 @@ test.describe("restore drill smoke", { tag: "@smoke" }, () => {
   test("the API is healthy and its lists answer", async ({ request }) => {
     const health = await request.get("/api/health");
     expect(await health.json()).toMatchObject({ status: "ok", db: "ok" });
-    for (const path of ["/api/recipes", "/api/ingredients", "/api/settings"]) {
+    for (const path of [
+      "/api/recipes",
+      "/api/ingredients",
+      "/api/settings",
+      "/api/spending",
+    ]) {
       expect((await request.get(path)).ok(), path).toBe(true);
     }
   });
