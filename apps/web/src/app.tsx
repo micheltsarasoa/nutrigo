@@ -10,6 +10,7 @@ import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
 import { RecipePage } from "./pages/RecipePage.tsx";
 import { RecipesPage } from "./pages/RecipesPage.tsx";
 import { TodayPage } from "./pages/TodayPage.tsx";
+import { TargetsPage } from "./pages/TargetsPage.tsx";
 import { useSettings } from "./use-settings.ts";
 
 // Dev and preview builds only (ADR-0006). In production this is a constant false,
@@ -81,6 +82,8 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
           <PlanPage isoWeek={plan[1]} />
         ) : path === "/" ? (
           <TodayPage />
+        ) : path === "/targets" ? (
+          <TargetsPage />
         ) : title ? (
           <Placeholder title={title} />
         ) : (
