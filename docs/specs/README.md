@@ -17,7 +17,7 @@ stateDiagram-v2
 | [SPEC-002 Recipes & ingredients](SPEC-002-recipes-ingredients.md) | S1 | Approved |
 | [SPEC-003 Weekly meal plan](SPEC-003-meal-plan.md) | S2 | Approved |
 | [SPEC-004 Today, nutrition & food diary](SPEC-004-today-nutrition-diary.md) | S3 (imports: S6, ADR-0014) | Draft |
-| [SPEC-005 Grocery list, costs & offline](SPEC-005-grocery-list.md) | S4 | Draft |
+| [SPEC-005 Grocery list, costs & offline](SPEC-005-grocery-list.md) | S4 | Approved |
 | SPEC-006 AI assist (Claude, Mistral, DeepSeek; ADR-0010) | S6 | not written |
 | SPEC-007 Production on Railway | S5 | not written |
 | [SPEC-008 Settings](SPEC-008-settings.md) | S1 → S6 (staged, ADR-0014) | Approved |
