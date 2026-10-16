@@ -107,9 +107,13 @@ async function seed(request: APIRequestContext) {
   return { oats, rice };
 }
 
+// A list from an earlier run may still exist (items are wiped, the list row stays).
 const generate = async (page: import("@playwright/test").Page) => {
   await page.goto(`/groceries/${W}`);
-  await page.getByRole("button", { name: "Generate list" }).click();
+  const first = page.getByRole("button", { name: "Generate list" });
+  const again = page.getByRole("button", { name: "Regenerate" });
+  await expect(first.or(again)).toBeVisible();
+  await ((await first.isVisible()) ? first : again).click();
   await expect(page.getByLabel("Mark Oats as bought")).toBeVisible();
 };
 
@@ -119,7 +123,7 @@ test("SPEC-005 AC-1, AC-3, AC-4: merged quantity, priced estimate, excluded item
 }) => {
   await seed(request);
   await generate(page);
-  await expect(page.getByText("180 g").first()).toBeVisible();
+  await expect(page.getByLabel("Quantity of Oats")).toHaveValue("180");
   await expect(page.getByText("~€1.20").first()).toBeVisible();
   await expect(page.getByText("Estimate excludes 1 item")).toBeVisible();
   await expectNoAxeViolations(page);
@@ -139,7 +143,7 @@ test("SPEC-005 AC-5: regenerate keeps ticks and manual items", async ({
   await expect(page.getByText("Tape")).toBeVisible();
   await recipe(request, "Muesli", [[oats.id, 20]], "2026-10-01");
   await page.getByRole("button", { name: "Regenerate" }).click();
-  await expect(page.getByText("200 g").first()).toBeVisible();
+  await expect(page.getByLabel("Quantity of Oats")).toHaveValue("200");
   await expect(page.getByLabel("Mark Oats as not bought")).toBeVisible();
   await expect(page.getByText("Tape")).toBeVisible();
 });
