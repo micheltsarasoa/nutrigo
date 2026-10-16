@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.0.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.4.0...v1.0.0) (2026-10-16)
+
+Grocery list, costs and offline (SPEC-005), and the first release that meets every Must requirement for local use: generate the week's shopping list from the plan, tick items off in the shop (also offline), see what it costs, and follow your spending. The saved locale now sets how numbers and money are written everywhere.
+
+### Features
+
+* **web:** add the Groceries page at `/groceries/:isoWeek`: generate and regenerate the list, tick items, change quantities, enter the price paid, add your own items ([#259](https://github.com/micheltsarasoa/nutrigo/issues/259))
+* **web:** add the Insights page at `/groceries/:isoWeek/insights`: weekly spend and a category breakdown, each with a table view ([#260](https://github.com/micheltsarasoa/nutrigo/issues/260))
+* **web:** keep changes made offline in a queue and send them when the connection returns, with a banner for offline, syncing and error; the last list opens offline ([#261](https://github.com/micheltsarasoa/nutrigo/issues/261))
+* **web:** add the GroceryTable and GroceryList organisms (desktop table, phone list grouped by category) ([#254](https://github.com/micheltsarasoa/nutrigo/issues/254)) ([#255](https://github.com/micheltsarasoa/nutrigo/issues/255))
+* **web:** add the Donut, StackedBar, ChartTable and SpendChart organisms ([#256](https://github.com/micheltsarasoa/nutrigo/issues/256)) ([#257](https://github.com/micheltsarasoa/nutrigo/issues/257)) ([#258](https://github.com/micheltsarasoa/nutrigo/issues/258)) ([#260](https://github.com/micheltsarasoa/nutrigo/issues/260))
+* **web:** add the KpiCard, OfflineBanner, Legend, GroceryRow and CheckRow molecules ([#251](https://github.com/micheltsarasoa/nutrigo/issues/251)) ([#252](https://github.com/micheltsarasoa/nutrigo/issues/252)) ([#253](https://github.com/micheltsarasoa/nutrigo/issues/253)) ([#249](https://github.com/micheltsarasoa/nutrigo/issues/249)) ([#250](https://github.com/micheltsarasoa/nutrigo/issues/250))
+* **web:** add the MoneyField and Checkbox atoms ([#248](https://github.com/micheltsarasoa/nutrigo/issues/248)) ([#247](https://github.com/micheltsarasoa/nutrigo/issues/247))
+* **web:** add a price per pack on the ingredient form ([#246](https://github.com/micheltsarasoa/nutrigo/issues/246))
+* **api:** add the shopping-list routes (generate, read, add item, batch update, delete) and `GET /api/spending` ([#244](https://github.com/micheltsarasoa/nutrigo/issues/244)) ([#245](https://github.com/micheltsarasoa/nutrigo/issues/245))
+* **api:** add the shopping-list tables and the ingredient price columns ([#243](https://github.com/micheltsarasoa/nutrigo/issues/243))
+* **shared:** add `buildList`, `estimateCost`, `regenerate` and `resolveConflict` for the shopping list ([#242](https://github.com/micheltsarasoa/nutrigo/issues/242))
+
+### Bug Fixes
+
+* **web:** apply the saved locale (`fr-FR` or `en-IE`) to kcal and money on every page ([#294](https://github.com/micheltsarasoa/nutrigo/issues/294))
+* **web:** heading order on the Targets page and the phone grocery list (found by the new axe pass over every route) ([#263](https://github.com/micheltsarasoa/nutrigo/issues/263))
+
+### Tests
+
+* **e2e:** cover SPEC-005 AC-1 to AC-11, offline cases included, and run axe over every route at 1280 and 390 px ([#262](https://github.com/micheltsarasoa/nutrigo/issues/262)) ([#263](https://github.com/micheltsarasoa/nutrigo/issues/263))
+
+### Known gaps
+
+* Total kcal on the grocery list shows "–": the list API returns no calories.
+* The per-week category StackedBar is not on the Insights page: the spending API has no per-week split.
+* The Playwright screenshot baselines for the new components and the grocery pages still have to be generated.
+* Deployment to Railway (D-1 to D-4) is v1.1.0.
+
 ## [0.4.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.3.0...v0.4.0) (2026-10-16)
 
 Today screen (SPEC-004): tick meals as eaten, see kcal and macros against daily targets, and a week trend. The CIQUAL/OpenFoodFacts import moved to Sprint 6.
