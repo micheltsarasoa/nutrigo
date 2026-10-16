@@ -21,6 +21,56 @@ const fields = (result: {
   error?: { issues: { path: PropertyKey[] }[] };
 }) => result.error?.issues.map((i) => i.path.join("."));
 
+describe("IngredientInput price (SPEC-005 US-4)", () => {
+  const priced = {
+    ...oats,
+    priceCents: 120,
+    pricePackQty: 500,
+    pricePackUnit: "g",
+  };
+
+  it("takes a price with its pack, or none at all", () => {
+    expect(IngredientInput.parse(priced)).toMatchObject({ priceCents: 120 });
+    expect(IngredientInput.parse(oats).priceCents).toBeUndefined();
+    expect(
+      IngredientInput.parse({
+        ...oats,
+        priceCents: null,
+        pricePackQty: null,
+        pricePackUnit: null,
+      }).priceCents,
+    ).toBeNull();
+  });
+
+  it.each([
+    { pricePackQty: null },
+    { pricePackUnit: null },
+    { priceCents: null },
+    { priceCents: -1 },
+    { priceCents: 1.5 },
+    { pricePackQty: 0 },
+    { pricePackUnit: "kg" },
+  ])("rejects %j", (bad) => {
+    expect(IngredientInput.safeParse({ ...priced, ...bad }).success).toBe(
+      false,
+    );
+  });
+
+  it("a patch carries the whole price or none of it", () => {
+    expect(IngredientPatch.parse({ name: "Rolled oats" })).toEqual({
+      name: "Rolled oats",
+    });
+    expect(
+      IngredientPatch.parse({
+        priceCents: 90,
+        pricePackQty: 1,
+        pricePackUnit: "piece",
+      }).priceCents,
+    ).toBe(90);
+    expect(IngredientPatch.safeParse({ priceCents: 90 }).success).toBe(false);
+  });
+});
+
 describe("IngredientInput", () => {
   it("SPEC-002 AC-1: accepts Oats with its four nutrients per 100 g", () => {
     expect(IngredientInput.parse(oats)).toEqual(oats);

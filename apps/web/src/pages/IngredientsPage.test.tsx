@@ -62,6 +62,9 @@ const oatsInput: IngredientInput = {
   sodiumMg100g: 2,
   defaultUnit: "g",
   gramsPerUnit: null,
+  priceCents: null,
+  pricePackQty: null,
+  pricePackUnit: null,
 };
 const oatsIngredient: Ingredient = {
   ...oatsInput,

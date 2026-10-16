@@ -8,6 +8,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "../../atoms/Button/index.ts";
 import { Card } from "../../atoms/Card/index.ts";
 import { Field } from "../../atoms/Field/index.ts";
+import { MoneyField } from "../../atoms/MoneyField/index.ts";
 import { Pill } from "../../atoms/Pill/index.ts";
 import { Select } from "../../atoms/Select/index.ts";
 import styles from "./IngredientEditor.module.css";
@@ -50,6 +51,8 @@ const MESSAGES: Record<string, string> = {
   name: "Enter a name, up to 100 characters.",
   category: "Choose a category.",
   gramsPerUnit: "Enter a weight above 0.",
+  priceCents: "Add the pack size and unit, or clear the price.",
+  pricePackQty: "Enter a size above 0.",
   ...Object.fromEntries(NUTRIENTS.map((n) => [n.key, AMOUNT])),
 };
 
@@ -58,6 +61,9 @@ type Draft = Record<Nutrient, string> & {
   category: Category | "";
   defaultUnit: Unit;
   gramsPerUnit: string;
+  priceCents: number | null;
+  pricePackQty: string;
+  pricePackUnit: Unit | "";
 };
 
 const text = (n: number | null | undefined) => (n == null ? "" : String(n));
@@ -72,6 +78,9 @@ function toDraft(i: IngredientInput | undefined): Draft {
     ) as Record<Nutrient, string>),
     defaultUnit: i?.defaultUnit ?? "g",
     gramsPerUnit: text(i?.gramsPerUnit),
+    priceCents: i?.priceCents ?? null,
+    pricePackQty: text(i?.pricePackQty),
+    pricePackUnit: i?.pricePackUnit ?? "",
   };
 }
 
@@ -83,6 +92,9 @@ function toInput(d: Draft) {
     ...Object.fromEntries(NUTRIENTS.map((n) => [n.key, numOrNull(d[n.key])])),
     defaultUnit: d.defaultUnit,
     gramsPerUnit: numOrNull(d.gramsPerUnit),
+    priceCents: d.priceCents,
+    pricePackQty: numOrNull(d.pricePackQty),
+    pricePackUnit: d.pricePackUnit || null,
   };
 }
 
@@ -220,6 +232,33 @@ export function IngredientEditor({
             value={draft.gramsPerUnit}
             error={errors.gramsPerUnit}
             onChange={(e) => set({ gramsPerUnit: e.target.value })}
+          />
+        </div>
+      </Card>
+
+      <Card>
+        <h2 className={styles.cardTitle}>Price (optional)</h2>
+        <div className={styles.fields}>
+          <MoneyField
+            label="Price per pack"
+            value={draft.priceCents}
+            error={errors.priceCents}
+            onChange={(priceCents) => set({ priceCents })}
+          />
+          <Field
+            label="Pack size"
+            type="number"
+            min={0}
+            value={draft.pricePackQty}
+            error={errors.pricePackQty}
+            onChange={(e) => set({ pricePackQty: e.target.value })}
+          />
+          <Select
+            label="Pack unit"
+            placeholder="Choose…"
+            options={UNITS}
+            value={draft.pricePackUnit}
+            onChange={(e) => set({ pricePackUnit: e.target.value as Unit })}
           />
         </div>
       </Card>

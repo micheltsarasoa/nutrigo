@@ -42,9 +42,9 @@ function Category({
   const id = useId();
   return (
     <section aria-labelledby={id} className={styles.category}>
-      <h3 id={id} className={styles.caption}>
+      <h2 id={id} className={styles.caption}>
         {name}
-      </h3>
+      </h2>
       <ul className={styles.rows}>
         {rows.map((i) => (
           <li key={i.id}>

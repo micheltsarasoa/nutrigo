@@ -279,4 +279,38 @@ describe("GroceriesPage offline", () => {
     await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
     expect(calls.filter((c) => c.method === "PATCH")).toHaveLength(2);
   });
+
+  it("sends changes left by an earlier visit and reloads the list", async () => {
+    const queue = createSyncQueue(memoryStore(), (method, to, body) =>
+      fetch(to, {
+        method,
+        headers: { "content-type": "application/json" },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      }),
+    );
+    await queue.enqueue({
+      kind: "patch",
+      isoWeek: "2026-W40",
+      id: 1,
+      patch: { purchased: true },
+      updatedAt: "2026-10-01T10:00:00.000Z",
+    });
+    let sent = false;
+    routes[`GET ${W}`] = () =>
+      json(
+        list(
+          sent
+            ? [item({ id: 1, purchasedAt: "2026-10-01T10:00:00.000Z" })]
+            : [item({ id: 1 })],
+        ),
+      );
+    routes[`PATCH ${W}/items`] = () => {
+      sent = true;
+      return json([]);
+    };
+    render(<GroceriesPage isoWeek="2026-W40" wide={true} queue={queue} />);
+    expect(
+      await screen.findByLabelText("Mark Oats as not bought"),
+    ).toBeTruthy();
+  });
 });
