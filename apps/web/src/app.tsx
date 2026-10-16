@@ -4,6 +4,7 @@ import {
   type NavItem,
 } from "./design-system/organisms/AppShell/index.ts";
 import { SettingsDialog } from "./design-system/organisms/SettingsDialog/index.ts";
+import { GroceriesPage } from "./pages/GroceriesPage.tsx";
 import { IngredientsPage } from "./pages/IngredientsPage.tsx";
 import { PlanPage } from "./pages/PlanPage.tsx";
 import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
@@ -40,6 +41,7 @@ const INGREDIENTS_PATH = /^\/ingredients(\/new|\/\d+)?$/;
 const RECIPE_EDIT_PATH = /^\/recipes\/(?:new|(\d+)\/edit)$/;
 const RECIPE_PATH = /^\/recipes\/(\d+)$/;
 const PLAN_PATH = /^\/plan(?:\/(\d{4}-W\d{2}))?$/;
+const GROCERIES_PATH = /^\/groceries(?:\/(\d{4}-W\d{2}))?$/;
 
 /** `wide`: the viewport is at least --breakpoint-desktop (1200 px). */
 export function App({ path, wide }: { path: string; wide: boolean }) {
@@ -58,6 +60,7 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
   const recipeEdit = RECIPE_EDIT_PATH.exec(path);
   const recipe = RECIPE_PATH.exec(path);
   const plan = PLAN_PATH.exec(path);
+  const groceries = GROCERIES_PATH.exec(path);
   const title = ROUTES.find(([pattern]) => pattern.test(path))?.[1];
   // On a not-found page no tab is current, even under /recipes/…
   return (
@@ -80,6 +83,8 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
           <RecipesPage />
         ) : plan ? (
           <PlanPage isoWeek={plan[1]} />
+        ) : groceries ? (
+          <GroceriesPage isoWeek={groceries[1]} wide={wide} />
         ) : path === "/" ? (
           <TodayPage />
         ) : path === "/targets" ? (

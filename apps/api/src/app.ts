@@ -7,7 +7,9 @@ import { ingredientRoutes } from "./routes/ingredients.ts";
 import { nutritionRoutes } from "./routes/nutrition.ts";
 import { planRoutes } from "./routes/plans.ts";
 import { recipeRoutes } from "./routes/recipes.ts";
+import { shoppingListRoutes } from "./routes/shopping-lists.ts";
 import { settingsRoutes } from "./routes/settings.ts";
+import { spendingRoutes } from "./routes/spending.ts";
 import { targetsRoutes } from "./routes/targets.ts";
 
 export function createApp({
@@ -38,6 +40,8 @@ export function createApp({
   app.route("/api/plans", planRoutes(db, now));
   app.route("/api/recipes", recipeRoutes(db));
   app.route("/api/settings", settingsRoutes(db));
+  app.route("/api/shopping-lists", shoppingListRoutes(db, now));
+  app.route("/api/spending", spendingRoutes(db));
   app.route("/api/targets", targetsRoutes(db));
 
   if (webRoot) {
