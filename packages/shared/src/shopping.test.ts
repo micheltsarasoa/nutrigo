@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
+import type { Category } from "./recipes.ts";
 import { buildList, estimateCost } from "./shopping.ts";
+
+type Ing = {
+  id: number;
+  name: string;
+  category: Category;
+  gramsPerUnit?: number | null;
+};
 
 const oats = {
   id: 1,
@@ -16,9 +24,14 @@ const egg = {
   gramsPerUnit: 50,
 };
 const milk = { id: 3, name: "Milk", category: "dairy" as const };
-const salt = { id: 4, name: "Salt", category: "others" as const };
+const salt = {
+  id: 4,
+  name: "Salt",
+  category: "others" as const,
+  priceCents: null,
+};
 const line = (
-  ingredient: { id: number },
+  ingredient: Ing,
   quantity: number,
   unit: "g" | "ml" | "piece",
 ) => ({ ingredient, quantity, unit });
