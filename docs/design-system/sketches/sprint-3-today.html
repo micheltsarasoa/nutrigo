@@ -1,0 +1,289 @@
+<title>NutriGo Sprint 3 Sketches</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;800&display=swap">
+<style>
+/* Layout: one section per issue, each state in a labelled cell on a 1200px-first grid. Tokens from docs/design-system/tokens.json. */
+:root{
+  --green:#C2E66E;--green-l:#EDFFC4;--green-d:#5F7F12;
+  --yellow:#FFCA65;--yellow-l:#FFF1D6;
+  --orange:#FFA257;--orange-l:#FFF2E8;--orange-d:#D97426;
+  --fat:#9CA3AF;
+  --ink:#1F2937;--muted:#6B7280;--faint:#9CA3AF;
+  --bg:#FBF8F3;--surface:#FFFFFF;--subtle:#F8F6F1;--line:#F0EDE7;--track:#EEEEEE;--red:#DC2626;
+  --shadow:0 1px 2px rgba(31,41,55,.04),0 8px 24px rgba(31,41,55,.04);
+  --font:'Poppins',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --green-l:#2c3a12;--green-d:#C2E66E;--yellow-l:#3a2d12;--orange-l:#3a2614;--orange-d:#FFA257;
+  --ink:#F3F4F6;--muted:#A8AFBA;--bg:#14161a;--surface:#1d2025;--subtle:#23272d;--line:#2d3138;--track:#2f343b;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --green-l:#2c3a12;--green-d:#C2E66E;--yellow-l:#3a2d12;--orange-l:#3a2614;--orange-d:#FFA257;
+  --ink:#F3F4F6;--muted:#A8AFBA;--bg:#14161a;--surface:#1d2025;--subtle:#23272d;--line:#2d3138;--track:#2f343b;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;margin:0;
+  padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:1200px;margin:0 auto;display:grid;gap:48px}
+h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px;text-wrap:balance}
+h2{font-size:18px;font-weight:600;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:0;max-width:65ch}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+section{display:grid;gap:16px}
+.head{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.head p{margin:0;color:var(--muted);flex-basis:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.cell{display:grid;gap:8px;align-content:start;min-width:0}
+.cell>.cap{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:20px;min-width:0}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* MacroBar */
+.mb{display:grid;gap:6px}
+.mb__row{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.mb__name{font-weight:600}.mb__val{color:var(--muted)}
+.mb__val b{color:var(--ink);font-weight:600}
+.mb__bar{height:8px;border-radius:99px;background:var(--track);overflow:hidden}
+.mb__fill{height:100%;border-radius:99px;background:var(--c)}
+.mb__over{font-size:12px;font-weight:600;color:var(--orange-d)}
+.carbs{--c:var(--yellow)}.protein{--c:var(--orange)}.fat{--c:var(--fat)}
+/* MealCheck + MealItem */
+.mi{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+.chk{flex:none;width:44px;height:44px;display:grid;place-items:center}
+.chk i{width:18px;height:18px;border-radius:50%;border:2px solid var(--faint);display:grid;place-items:center;font-style:normal;font-size:11px;line-height:1}
+.chk.done i{background:var(--green);border-color:var(--green);color:var(--ink)}
+.chk.next i{border-color:var(--ink)}
+.chk.off i{border-color:var(--line);background:var(--subtle)}
+.mi__thumb{flex:none;width:44px;height:44px;border-radius:10px;background:var(--orange-l)}
+.mi__body{min-width:0;flex:1}
+.mi__slot{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mi__title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi__meta{font-size:12px;color:var(--muted)}
+.mi.off{opacity:.55;box-shadow:none;background:var(--subtle)}
+.mi.next{outline:2px solid var(--green);outline-offset:-2px}
+.mi.eaten .mi__title{color:var(--muted)}
+.srv{font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--yellow-l);color:var(--ink);white-space:nowrap}
+.kc{font-weight:600;white-space:nowrap}
+/* Buttons / fields */
+.btn{font:inherit;font-weight:600;border:0;border-radius:99px;padding:0 18px;min-height:44px;cursor:pointer;background:var(--green);color:#1F2937}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.fld{display:grid;gap:4px}
+.fld label{font-size:13px;font-weight:600}
+.inp{display:flex;align-items:center;gap:8px;min-height:44px;border-radius:12px;background:var(--subtle);box-shadow:inset 0 0 0 1.5px var(--line);padding:0 12px}
+.inp span.v{flex:1;min-width:0;font-variant-numeric:tabular-nums}
+.inp span.u{color:var(--muted);font-size:13px}
+.inp.err{box-shadow:inset 0 0 0 1.5px var(--red);background:var(--surface)}
+.inp .ph{color:var(--faint)}
+.msg{font-size:12px;color:var(--red)}
+.hint{font-size:12px;color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--c)}
+/* ServingsPrompt */
+.sp{display:grid;gap:14px;max-width:320px}
+.sp h3{margin:0;font-size:15px;font-weight:600}
+.step{display:flex;align-items:center;gap:8px}
+.step .b{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:20px;box-shadow:inset 0 0 0 1.5px var(--line);background:var(--surface)}
+.step .inp{width:96px;justify-content:center}
+.acts{display:flex;gap:8px;justify-content:flex-end}
+/* Ring + CaloriesCard */
+.ring{position:relative;width:184px;height:184px;margin:0 auto}
+.ring svg{display:block;width:100%;height:100%}
+.ring__l{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center}
+.ring__v{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.ring__v small{font-size:14px;font-weight:600}
+.ring__c{font-size:11px;color:var(--muted)}
+.ring__c.over{color:var(--orange-d);font-weight:600;font-size:12px}
+.cc{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.cc__bars{display:grid;gap:16px;min-width:0}
+.cc h3{margin:0 0 12px;font-size:15px;font-weight:600}
+.cc.none{grid-template-columns:1fr}
+.tot{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.tot b{display:block;font-size:20px;font-weight:800}
+.tot span{font-size:12px;color:var(--muted)}
+.link{color:var(--orange-d);font-weight:600;text-decoration:underline}
+@media(max-width:620px){.cc{grid-template-columns:1fr}}
+/* ColumnChart */
+.cols{width:100%;height:auto;display:block}
+.cols text{font-family:var(--font);fill:var(--muted);font-size:11px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.tip{display:inline-block;background:var(--ink);color:var(--surface);font-size:12px;padding:6px 10px;border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tgl{display:inline-flex;border-radius:99px;box-shadow:inset 0 0 0 1.5px var(--line);overflow:hidden;margin-bottom:12px}
+.tgl button{font:inherit;font-size:13px;font-weight:600;border:0;background:transparent;color:var(--muted);padding:0 16px;min-height:36px;cursor:pointer}
+.tgl button[aria-pressed="true"]{background:var(--green);color:#1F2937}
+/* TargetsForm */
+.tf{display:grid;gap:16px;max-width:460px}
+.tf h3{margin:0;font-size:15px;font-weight:600}
+.tf .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:420px){.tf .two{grid-template-columns:1fr}}
+.note{background:var(--subtle);border-radius:12px;padding:12px 14px;color:var(--muted);max-width:65ch}
+</style>
+
+<main>
+  <header>
+    <h1>Sprint 3 sketches</h1>
+    <p class="lead">Seven components for SPEC-004, issues #212 to #218, drawn at desktop width with NutriGo tokens. Colours: kcal green, carbs yellow, protein orange, fat grey. Weeks start Monday, units are written g. Tell me what to change and I update the sketch; once you validate one, it can be built.</p>
+  </header>
+
+  <section id="s212">
+    <div class="head"><span class="tag">#212 · molecule</span><h2>MacroBar</h2>
+      <p>Label, eaten of target, then a bar in the macro colour. Over target keeps the bar full and adds "▲ +N g over" in text, so colour is never the only signal.</p></div>
+    <div class="grid" id="macrobars"></div>
+  </section>
+
+  <section id="s213">
+    <div class="head"><span class="tag">#213 · molecule</span><h2>MealItem with check</h2>
+      <p>The MealMiniCard row with a MealCheck in front (44 px hit area, 18 px visual). The next meal gets a green outline and an outlined check. A future day is dimmed and the check is disabled.</p></div>
+    <div class="grid wide">
+      <div class="cell"><div class="cap">Planned</div>
+        <div class="mi"><div class="chk" role="checkbox" aria-checked="false" aria-label="Mark lunch as eaten"><i></i></div><div class="mi__thumb"></div><div class="mi__body"><div class="mi__slot">Lunch</div><div class="mi__title">Lentil and carrot soup</div><div class="mi__meta">2 servings</div></div><div class="kc num">540 kcal</div></div></div>
+      <div class="cell"><div class="cap">Eaten</div>
+        <div class="mi eaten"><div class="chk done" role="checkbox" aria-checked="true" aria-label="Mark breakfast as not eaten"><i>✓</i></div><div class="mi__thumb"></div><div class="mi__body"><div class="mi__slot">Breakfast</div><div class="mi__title">Overnight oats with berries</div><div class="mi__meta">1 serving</div></div><div class="kc num">380 kcal</div></div></div>
+      <div class="cell"><div class="cap">Eaten, different servings</div>
+        <div class="mi eaten"><div class="chk done" role="checkbox" aria-checked="true" aria-label="Mark dinner as not eaten"><i>✓</i></div><div class="mi__thumb"></div><div class="mi__body"><div class="mi__slot">Dinner</div><div class="mi__title">Chickpea curry with rice</div><div class="mi__meta">Planned 2</div></div><span class="srv">1.5 eaten</span><div class="kc num">610 kcal</div></div></div>
+      <div class="cell"><div class="cap">Next meal</div>
+        <div class="mi next"><div class="chk next" role="checkbox" aria-checked="false" aria-label="Mark lunch as eaten"><i></i></div><div class="mi__thumb"></div><div class="mi__body"><div class="mi__slot">Lunch · next</div><div class="mi__title">Quinoa bowl with roasted veg</div><div class="mi__meta">1 serving</div></div><div class="kc num">520 kcal</div></div></div>
+      <div class="cell"><div class="cap">Disabled (future day)</div>
+        <div class="mi off"><div class="chk off" role="checkbox" aria-checked="false" aria-disabled="true" aria-label="Mark dinner as eaten, available on the day"><i></i></div><div class="mi__thumb"></div><div class="mi__body"><div class="mi__slot">Dinner</div><div class="mi__title">Baked salmon and greens</div><div class="mi__meta">2 servings</div></div><div class="kc num">650 kcal</div></div></div>
+    </div>
+  </section>
+
+  <section id="s214">
+    <div class="head"><span class="tag">#214 · molecule</span><h2>ServingsPrompt</h2>
+      <p>Opens when a meal is ticked (SPEC-004 AC-3). Starts on the planned servings. Enter saves, Escape cancels. Steps of 0.5, from 0.5 to 20.</p></div>
+    <div class="grid">
+      <div class="cell"><div class="cap">Default, planned servings</div>
+        <div class="card sp"><h3>Servings eaten</h3><div class="hint">Chickpea curry with rice, planned 2</div>
+          <div class="step"><div class="b" aria-hidden="true">−</div><div class="inp"><span class="v">2</span></div><div class="b" aria-hidden="true">+</div></div>
+          <div class="acts"><button class="btn ghost">Cancel</button><button class="btn">Mark as eaten</button></div></div></div>
+      <div class="cell"><div class="cap">Custom value</div>
+        <div class="card sp"><h3>Servings eaten</h3><div class="hint">Chickpea curry with rice, planned 2</div>
+          <div class="step"><div class="b" aria-hidden="true">−</div><div class="inp"><span class="v">1.5</span></div><div class="b" aria-hidden="true">+</div></div>
+          <div class="hint num">≈ 458 kcal</div>
+          <div class="acts"><button class="btn ghost">Cancel</button><button class="btn">Mark as eaten</button></div></div></div>
+      <div class="cell"><div class="cap">Invalid</div>
+        <div class="card sp"><h3>Servings eaten</h3><div class="hint">Chickpea curry with rice, planned 2</div>
+          <div class="step"><div class="b" aria-hidden="true">−</div><div class="inp err"><span class="v">0</span></div><div class="b" aria-hidden="true">+</div></div>
+          <div class="msg" role="alert">Enter a number from 0.5 to 20.</div>
+          <div class="acts"><button class="btn ghost">Cancel</button><button class="btn" aria-disabled="true" style="opacity:.5">Mark as eaten</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="s215">
+    <div class="head"><span class="tag">#215 · organism, chart</span><h2>Ring</h2>
+      <p>Calories ring, 184 px. Green arc is kcal eaten. Over target is a full orange ring with "+N kcal over ▲" in the centre. Reduced motion draws the arc with no animation.</p></div>
+    <div class="grid" id="rings"></div>
+  </section>
+
+  <section id="s216">
+    <div class="head"><span class="tag">#216 · organism</span><h2>CaloriesCard</h2>
+      <p>Ring on the left, three MacroBars on the right. The burned-calories part of the original is removed. Without targets it shows totals only and a link to /targets.</p></div>
+    <div class="grid wide" id="cards"></div>
+  </section>
+
+  <section id="s217">
+    <div class="head"><span class="tag">#217 · organism, chart</span><h2>ColumnChart, the week trend</h2>
+      <p>Mon to Sun. Eaten days are solid green, planned days hatched, over-target days orange with ▲ in the tooltip (AC-8). A dashed line marks the target. "Table" gives the same numbers for screen readers and keyboard users.</p></div>
+    <div class="grid wide">
+      <div class="cell"><div class="cap">Empty week</div><div class="card" id="col-empty"></div></div>
+      <div class="cell"><div class="cap">Mixed eaten and planned</div><div class="card" id="col-mixed"></div></div>
+      <div class="cell"><div class="cap">Over-target days (tooltip on Wed)</div><div class="card" id="col-over"></div></div>
+      <div class="cell"><div class="cap">Table view</div><div class="card" id="col-table"></div></div>
+    </div>
+  </section>
+
+  <section id="s218">
+    <div class="head"><span class="tag">#218 · organism</span><h2>TargetsForm</h2>
+      <p>One card, four fields. Saving needs a kcal target; macros are optional and can stay empty. Each error says what to fix.</p></div>
+    <div class="grid" id="forms"></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var C=2*Math.PI*80;
+  function mb(name,cls,v,t){
+    if(!t) return '<div class="mb '+cls+'"><div class="mb__row"><span class="mb__name"><span class="dot"></span>'+name+'</span><span class="mb__val num"><b>'+v+' g</b> · no target</span></div></div>';
+    var p=Math.min(100,Math.round(v/t*100)),over=v>t;
+    return '<div class="mb '+cls+'"><div class="mb__row"><span class="mb__name"><span class="dot"></span>'+name+'</span><span class="mb__val num"><b>'+v+'</b> / '+t+' g</span></div>'+
+      '<div class="mb__bar" role="progressbar" aria-label="'+name+'" aria-valuenow="'+v+'" aria-valuemin="0" aria-valuemax="'+t+'"><div class="mb__fill" style="width:'+p+'%"></div></div>'+
+      (over?'<div class="mb__over">▲ +'+(v-t)+' g over</div>':'')+'</div>';
+  }
+  var macroStates=[['0 %','carbs',0,250],['Typical','protein',68,120],['100 %','carbs',250,250],['Over target','fat',92,70],['No target','protein',68,0]];
+  document.getElementById('macrobars').innerHTML=macroStates.map(function(s){
+    return '<div class="cell"><div class="cap">'+s[0]+'</div><div class="card">'+mb(s[1].charAt(0).toUpperCase()+s[1].slice(1),s[1],s[2],s[3])+'</div></div>';
+  }).join('');
+
+  function ring(v,t,rm){
+    var over=t&&v>t,p=t?Math.min(1,v/t):0,col=over?'var(--orange)':'var(--green)',da=(over?C:C*p)+' '+C;
+    var cap=!t?'no target':over?'+'+(v-t)+' kcal over ▲':'of '+t+' kcal',
+        big=v+(t?'':'');
+    return '<div class="ring" role="img" aria-label="'+v+' kcal'+(t?' of '+t:', no target')+(over?', over target':'')+'"><svg viewBox="0 0 184 184"><circle cx="92" cy="92" r="80" fill="none" stroke="var(--track)" stroke-width="12"/>'+
+      (v>0&&t||over?'<circle cx="92" cy="92" r="80" fill="none" stroke="'+col+'" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+da+'" transform="rotate(-90 92 92)"/>':'')+
+      '</svg><div class="ring__l"><div class="ring__v num">'+big+' <small>kcal</small></div><div class="ring__c'+(over?' over':'')+'">'+cap+'</div></div></div>';
+  }
+  var ringStates=[['0',0,2000],['Typical',1380,2000],['100 %',2000,2000],['Over target',2340,2000],['No target',1380,0],['Reduced motion (arc drawn instantly)',1380,2000]];
+  document.getElementById('rings').innerHTML=ringStates.map(function(s){
+    return '<div class="cell"><div class="cap">'+s[0]+'</div><div class="card">'+ring(s[1],s[2])+'</div></div>';
+  }).join('');
+
+  function card(v,t,m){
+    return '<div class="card cc"><div>'+ring(v,t)+'</div><div class="cc__bars"><h3>Calories intake</h3>'+
+      mb('Carbs','carbs',m[0],t?250:0)+mb('Protein','protein',m[1],t?120:0)+mb('Fat','fat',m[2],t?70:0)+'</div></div>';
+  }
+  document.getElementById('cards').innerHTML=
+    '<div class="cell"><div class="cap">Typical</div>'+card(1380,2000,[160,68,41])+'</div>'+
+    '<div class="cell"><div class="cap">Ring over, macros mixed</div>'+card(2340,2000,[260,122,92])+'</div>'+
+    '<div class="cell"><div class="cap">Empty day</div>'+card(0,2000,[0,0,0])+'</div>'+
+    '<div class="cell"><div class="cap">No targets</div><div class="card cc none"><div><h3>Calories intake</h3><div class="tot num"><div><b>1380</b><span>kcal</span></div><div><b>160 g</b><span>carbs</span></div><div><b>68 g</b><span>protein</span></div><div><b>41 g</b><span>fat</span></div></div><p class="hint" style="margin:16px 0 0">Set your daily targets to see the ring and bars. <a class="link" href="#s218">Set targets</a></p></div></div></div>';
+
+  var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],T=2000;
+  var empty=days.map(function(d){return{d:d,v:0,s:'none'}});
+  var mixed=[1850,1920,1760,2050,1500,1700,1600].map(function(v,i){return{d:days[i],v:v,s:i<3?'eaten':'planned'}});
+  var over=[1850,2210,2340,1980,1500,1700,1600].map(function(v,i){return{d:days[i],v:v,s:i<4?'eaten':'planned'}});
+  function chart(data,tipIdx){
+    var W=360,H=200,L=34,B=24,Tp=14,max=2600,pw=(W-L-8)/7,bw=pw*.58;
+    function y(v){return Tp+(H-Tp-B)*(1-v/max)}
+    var g='<defs><pattern id="h" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--green-l)"/><rect width="2.5" height="6" fill="var(--green)"/></pattern><pattern id="ho" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--orange-l)"/><rect width="2.5" height="6" fill="var(--orange)"/></pattern></defs>';
+    [0,1000,2000].forEach(function(t){g+='<line x1="'+L+'" x2="'+W+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="var(--line)"/><text x="'+(L-6)+'" y="'+(y(t)+4)+'" text-anchor="end">'+t+'</text>'});
+    data.forEach(function(r,i){
+      var x=L+8+i*pw+(pw-bw)/2,isOver=r.v>T,fill=r.s==='eaten'?(isOver?'var(--orange)':'var(--green)'):r.s==='planned'?(isOver?'url(#ho)':'url(#h)'):'none';
+      if(r.v>0) g+='<rect x="'+x+'" y="'+y(r.v)+'" width="'+bw+'" height="'+(y(0)-y(r.v))+'" rx="4" fill="'+fill+'"'+(r.s==='planned'?' stroke="'+(isOver?'var(--orange)':'var(--green)')+'" stroke-width="1"':'')+'/>';
+      else g+='<line x1="'+x+'" x2="'+(x+bw)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>';
+      g+='<text x="'+(x+bw/2)+'" y="'+(H-6)+'" text-anchor="middle">'+r.d+'</text>';
+    });
+    g+='<line x1="'+L+'" x2="'+W+'" y1="'+y(T)+'" y2="'+y(T)+'" stroke="var(--ink)" stroke-dasharray="4 4" stroke-opacity=".5"/>';
+    var out='<svg class="cols" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Calories per day this week against a target of '+T+' kcal">'+g+'</svg>';
+    out+='<div class="legend"><span><i class="sw" style="background:var(--green)"></i>Eaten</span><span><i class="sw" style="background:repeating-linear-gradient(45deg,var(--green-l) 0 3px,var(--green) 3px 5px)"></i>Planned</span><span><i class="sw" style="background:var(--orange)"></i>Over target ▲</span><span>- - Target '+T+' kcal</span></div>';
+    if(tipIdx!=null){var r=data[tipIdx];out+='<p style="margin:12px 0 0"><span class="tip num">'+r.d+' · '+r.v+' kcal · ▲ +'+(r.v-T)+' over</span></p>'}
+    return out;
+  }
+  function tbl(data){
+    return '<table><thead><tr><th>Day</th><th class="n">kcal</th><th>Status</th></tr></thead><tbody>'+data.map(function(r){
+      var st=r.s==='eaten'?'Eaten':'Planned';if(r.v>T)st+=' ▲ +'+(r.v-T)+' over';
+      return '<tr><td>'+r.d+'</td><td class="n">'+r.v+'</td><td>'+st+'</td></tr>'}).join('')+'</tbody></table>';
+  }
+  function tgl(on){return '<div class="tgl" role="group" aria-label="View"><button aria-pressed="'+(on==='chart')+'">Chart</button><button aria-pressed="'+(on==='table')+'">Table</button></div>'}
+  document.getElementById('col-empty').innerHTML=tgl('chart')+chart(empty)+'<p class="hint" style="margin:8px 0 0">Nothing planned or eaten this week yet.</p>';
+  document.getElementById('col-mixed').innerHTML=tgl('chart')+chart(mixed);
+  document.getElementById('col-over').innerHTML=tgl('chart')+chart(over,2);
+  document.getElementById('col-table').innerHTML=tgl('table')+tbl(over);
+
+  function fld(id,label,unit,val,err,ph){
+    return '<div class="fld"><label for="'+id+'">'+label+'</label><div class="inp'+(err?' err':'')+'"><span class="v">'+(val?val:'<span class="ph">'+(ph||'')+'</span>')+'</span><span class="u">'+unit+'</span></div>'+(err?'<div class="msg" role="alert">'+err+'</div>':'')+'</div>';
+  }
+  function form(vals,errs,btnOff){
+    return '<div class="card tf"><h3>Daily targets</h3><p class="hint" style="margin:-8px 0 0">Used by the Today ring and the week chart.</p>'+
+      fld('t-k','Calories','kcal',vals[0],errs[0],'e.g. 2000')+
+      '<div class="two">'+fld('t-c','Carbs','g',vals[1],errs[1],'optional')+fld('t-p','Protein','g',vals[2],errs[2],'optional')+'</div>'+
+      fld('t-f','Fat','g',vals[3],errs[3],'optional')+
+      '<div class="acts"><button class="btn"'+(btnOff?' aria-disabled="true" style="opacity:.5"':'')+'>Save targets</button></div></div>';
+  }
+  document.getElementById('forms').innerHTML=
+    '<div class="cell"><div class="cap">Empty</div>'+form(['','','',''],[],true)+'</div>'+
+    '<div class="cell"><div class="cap">Filled</div>'+form(['2000','250','120','70'],[])+'</div>'+
+    '<div class="cell"><div class="cap">Errors</div>'+form(['','abc','-20','70'],['Enter your daily calories, for example 2000.','Carbs must be a number, for example 250.','Protein can’t be negative. Enter 0 or more, or leave it empty.',''])+'</div>';
+})();
+</script>
