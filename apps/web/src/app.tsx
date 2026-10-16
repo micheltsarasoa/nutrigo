@@ -9,6 +9,7 @@ import { PlanPage } from "./pages/PlanPage.tsx";
 import { RecipeEditPage } from "./pages/RecipeEditPage.tsx";
 import { RecipePage } from "./pages/RecipePage.tsx";
 import { RecipesPage } from "./pages/RecipesPage.tsx";
+import { TodayPage } from "./pages/TodayPage.tsx";
 import { TargetsPage } from "./pages/TargetsPage.tsx";
 import { useSettings } from "./use-settings.ts";
 
@@ -79,6 +80,8 @@ export function App({ path, wide }: { path: string; wide: boolean }) {
           <RecipesPage />
         ) : plan ? (
           <PlanPage isoWeek={plan[1]} />
+        ) : path === "/" ? (
+          <TodayPage />
         ) : path === "/targets" ? (
           <TargetsPage />
         ) : title ? (
