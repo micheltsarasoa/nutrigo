@@ -66,6 +66,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MealItem | #213 | #228 | `done` |
 | ServingsPrompt | #214 | #227 | `done` |
 | KpiCard | #251 | #282 | `draft` |
+| OfflineBanner | #252 | #283 | `draft` |
 
 ## Organisms
 
