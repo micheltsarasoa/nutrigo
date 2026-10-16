@@ -39,6 +39,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Segmented | #90 | #118 | `done` |
 | FilterTabs | #91 | #119 | `done` |
 | IconButton | #92 | #124 | `done` |
+| MoneyField | #248 | feat/248-money-field | `draft` |
 
 ## Molecules
 
