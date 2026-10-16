@@ -21,7 +21,7 @@ export const meta = sqliteTable("meta", {
   value: text("value").notNull(),
 });
 
-// data-model.md. Tags wait for a tag filter (SPEC-002 §10); prices come in S4.
+// data-model.md. Tags wait for a tag filter (SPEC-002 §10). The price is per pack (SPEC-005 §6); its CHECKs are column-level in migration 0005.
 export const ingredient = sqliteTable("ingredient", {
   id: integer("id").primaryKey(),
   name: text("name").notNull().unique(),
@@ -37,6 +37,9 @@ export const ingredient = sqliteTable("ingredient", {
   sodiumMg100g: real("sodium_mg_100g"),
   defaultUnit: text("default_unit").$type<Unit>().notNull(),
   gramsPerUnit: real("grams_per_unit"),
+  priceCents: integer("price_cents"),
+  pricePackQty: real("price_pack_qty"),
+  pricePackUnit: text("price_pack_unit").$type<Unit>(),
   updatedAt: text("updated_at").notNull(),
 });
 
@@ -154,4 +157,50 @@ export const targets = sqliteTable(
     fatG: real("fat_g"),
   },
   (t) => [check("targets_single_row", sql`${t.id} = 1`)],
+);
+
+// SPEC-005 §6. Money is integer cents; est_cost_cents is frozen at generation.
+export const shoppingList = sqliteTable("shopping_list", {
+  id: integer("id").primaryKey(),
+  isoWeek: text("iso_week")
+    .notNull()
+    .unique()
+    .references(() => planWeek.isoWeek, { onDelete: "cascade" }),
+  generatedAt: text("generated_at").notNull(),
+});
+
+// ingredient_id is NULL for manual items; quantity and unit are optional there.
+export const shoppingItem = sqliteTable(
+  "shopping_item",
+  {
+    id: integer("id").primaryKey(),
+    listId: integer("list_id")
+      .notNull()
+      .references(() => shoppingList.id, { onDelete: "cascade" }),
+    ingredientId: integer("ingredient_id").references(() => ingredient.id, {
+      onDelete: "restrict",
+    }),
+    label: text("label").notNull(),
+    category: text("category").$type<Category>().notNull(),
+    quantity: real("quantity"),
+    unit: text("unit").$type<Unit>(),
+    estCostCents: integer("est_cost_cents"),
+    actualCostCents: integer("actual_cost_cents"),
+    purchasedAt: text("purchased_at"),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (t) => [
+    check(
+      "item_quantity_positive",
+      sql`${t.quantity} is null or ${t.quantity} > 0`,
+    ),
+    check(
+      "item_est_cost_valid",
+      sql`${t.estCostCents} is null or ${t.estCostCents} >= 0`,
+    ),
+    check(
+      "item_actual_cost_valid",
+      sql`${t.actualCostCents} is null or ${t.actualCostCents} >= 0`,
+    ),
+  ],
 );

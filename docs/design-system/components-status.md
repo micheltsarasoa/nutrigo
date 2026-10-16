@@ -72,7 +72,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipeList | #103 | #143 | `done` |
 | RecipeDetail | #104, #175 | #146; #176 makes it 3 columns | `done` |
 | RecipeEditor | #105 | #147 | `done` |
-| IngredientEditor | #106, #156 | #148 (44 px Delete hit area since #157) | `done` |
+| IngredientEditor | #106, #156, #246 | #148 (44 px Delete hit area since #157); #278 adds the price per pack | `done` |
 | IngredientList | #169 | #170 | `done` |
 | SettingsDialog | #107 | #149, #150 | `done` |
 | MealPlanGrid | #199 | #203 | `done` |
