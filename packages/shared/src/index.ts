@@ -5,4 +5,6 @@ export * from "./plan.ts";
 export * from "./recipes.ts";
 export * from "./settings.ts";
 export * from "./format.ts";
+export * from "./shopping.ts";
+export * from "./shopping-sync.ts";
 export * from "./shopping-schema.ts";
