@@ -1,9 +1,12 @@
+import type { Unit } from "./recipes.ts";
 import type { BuiltItem } from "./shopping.ts";
 
 // SPEC-005 §7. Items are matched on (ingredientId, unit); manual items have no ingredientId.
-export type ListItem = Omit<BuiltItem, "ingredientId"> & {
+export type ListItem = Omit<BuiltItem, "ingredientId" | "quantity" | "unit"> & {
   id?: number;
   ingredientId: number | null;
+  quantity: number | null; // manual items may have none
+  unit: Unit | null;
   estCostCents: number | null;
   actualCostCents: number | null;
   purchasedAt: string | null;
@@ -15,8 +18,10 @@ export type FreshItem = Pick<
   "ingredientId" | "label" | "category" | "quantity" | "unit" | "estCostCents"
 >;
 
-const same = (a: { ingredientId: number | null; unit: string }, b: typeof a) =>
-  a.ingredientId === b.ingredientId && a.unit === b.unit;
+const same = (
+  a: { ingredientId: number | null; unit: string | null },
+  b: typeof a,
+) => a.ingredientId === b.ingredientId && a.unit === b.unit;
 
 /** AC-5: planned quantities update; ticks, actual prices and manual items stay. */
 export function regenerate(old: ListItem[], fresh: FreshItem[]): ListItem[] {
