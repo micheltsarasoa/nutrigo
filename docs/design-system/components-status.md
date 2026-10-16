@@ -91,6 +91,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | GroceryTable | #254 | #285 | `draft` |
 | GroceryList | #255 | #286 | `draft` |
 | Donut | #256 | #287 | `draft` |
+| StackedBar | #257 | #288 | `draft` |
 
 ## Pages
 
