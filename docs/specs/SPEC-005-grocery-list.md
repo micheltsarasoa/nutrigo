@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| Status | Draft |
-| Sprint | S4 → v0.5.0 |
+| Status | Approved |
+| Sprint | S4 → v1.0.0 |
 | PRD refs | S-1 … S-7, NFR offline |
 | Design | `design/source/Grocery List.dc.html` (desktop). The mobile list is derived (design-system §10) |
 
@@ -60,13 +60,15 @@ sequenceDiagram
 ### Component inventory
 | Level | Component | New? | States |
 |---|---|---|---|
-| Atom | Tabs (category), Checkbox (meal-check look), MoneyField | new | n/a |
+| Atom | Tabs (category) | exists: FilterTabs (#91) | n/a |
+| Atom | Checkbox (square, purchased), MoneyField | new | n/a |
 | Molecule | CheckRow (mobile item) | new | pending, purchased, manual, no longer in plan, offline-pending |
 | Molecule | GroceryRow (desktop table row) | new | same states + qty stepper |
 | Molecule | KpiCard | new | with delta up or down, no previous week |
 | Molecule | OfflineBanner | new | offline, n pending, syncing, sync error |
 | Organism | GroceryList (mobile), GroceryTable (desktop) | new | empty (no plan), generated, all purchased |
-| Organism | ColumnChart, Donut, StackedBar, Legend, ChartTable | new/reuse S3 | dataviz states |
+| Organism | ColumnChart | exists (S3) | dataviz states |
+| Organism | Donut, StackedBar, Legend, ChartTable | new | dataviz states |
 | Page | GroceriesPage, GroceryInsightsPage | new | n/a |
 
 ## 5. API
@@ -102,6 +104,9 @@ Multiple stores, price history per store, barcode scanning, sharing the list, an
 | Component | All components; OfflineBanner states; charts with a table view |
 | E2E | AC-1 … AC-11; offline tested with Playwright `context.setOffline(true)` |
 
-## 10. Open questions
-- Round estimated cost up to whole packs (proposal), or pro-rate by quantity?
-- Should Insights be its own route or a section under the list? Proposal: a section on desktop, a tab on mobile.
+## 10. Decisions
+**Decided (owner, 2026-10-16):**
+- The estimated cost rounds up to whole packs (AC-3).
+- Insights is a section under the list on desktop and a tab on mobile, so there is one route per list plus `/insights`.
+- The mobile list (AC-11, GroceryList, CheckRow) ships in S4: see ADR-0016.
+- Sketches: `docs/design-system/sketches/sprint-4-groceries.html`. Category Tabs reuse FilterTabs.
