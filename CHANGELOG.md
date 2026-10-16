@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.4.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.3.0...v0.4.0) (2026-10-16)
+
+Today screen (SPEC-004): tick meals as eaten, see kcal and macros against daily targets, and a week trend. The CIQUAL/OpenFoodFacts import moved to Sprint 6.
+
+### Features
+
+* **web:** add the Today page at `/`: tick meals as eaten (with custom servings), calories ring, macros and the week trend ([#219](https://github.com/micheltsarasoa/nutrigo/issues/219)) ([2e83b90](https://github.com/micheltsarasoa/nutrigo/commit/2e83b903ec085377b44a17b1b04e4ffac2416f84))
+* **web:** add the Targets page at `/targets` to set daily kcal, carbs, protein and fat ([#220](https://github.com/micheltsarasoa/nutrigo/issues/220)) ([cca472a](https://github.com/micheltsarasoa/nutrigo/commit/cca472a7859c9465e24b5ee016f2fafa287b08cc))
+* **api:** add `GET /api/nutrition/day/:date` and `/week/:isoWeek` ([#210](https://github.com/micheltsarasoa/nutrigo/issues/210)) ([06f931d](https://github.com/micheltsarasoa/nutrigo/commit/06f931d0f37d3bd07344c1e4a84590810f614d6d))
+* **api:** add `GET` and `PUT /api/targets` ([#211](https://github.com/micheltsarasoa/nutrigo/issues/211)) ([c24b6eb](https://github.com/micheltsarasoa/nutrigo/commit/c24b6eb5e304ffab8fac85347b7a5e9af7882644))
+* **api:** add the eaten columns and the `POST`/`DELETE …/entries/:id/eaten` endpoints ([#209](https://github.com/micheltsarasoa/nutrigo/issues/209)) ([98d9c17](https://github.com/micheltsarasoa/nutrigo/commit/98d9c1735cff72949b2acbaa652891f2fe35a1d8))
+* **shared:** add `dayNutrition`, `nextMealId`, `weekNutrition` and the `Targets` schema ([#208](https://github.com/micheltsarasoa/nutrigo/issues/208)) ([b9723d9](https://github.com/micheltsarasoa/nutrigo/commit/b9723d9de03ef0661be9a568d867c39c78c6c1b7))
+* **web:** add the ColumnChart organism ([#217](https://github.com/micheltsarasoa/nutrigo/issues/217)) ([a0b87c3](https://github.com/micheltsarasoa/nutrigo/commit/a0b87c36e20c7d7d4c7aa27591f6b24b11313ef0))
+* **web:** add the CaloriesCard organism ([#216](https://github.com/micheltsarasoa/nutrigo/issues/216)) ([69c9f8b](https://github.com/micheltsarasoa/nutrigo/commit/69c9f8b18039bf11d336823560b210c39dcc483b))
+* **web:** add the TargetsForm organism ([#218](https://github.com/micheltsarasoa/nutrigo/issues/218)) ([8b3b272](https://github.com/micheltsarasoa/nutrigo/commit/8b3b272a9fb2cd9ea856efdb05efb9af4b0acc49))
+* **web:** add the Ring organism ([#215](https://github.com/micheltsarasoa/nutrigo/issues/215)) ([ad9cf71](https://github.com/micheltsarasoa/nutrigo/commit/ad9cf711d8d9bc1465bd6be6ee39056c716deea9))
+* **web:** add the MealItem molecule ([#213](https://github.com/micheltsarasoa/nutrigo/issues/213)) ([89ce1ef](https://github.com/micheltsarasoa/nutrigo/commit/89ce1efa84fffacc206fbd2e4a54474485e45942))
+* **web:** add the ServingsPrompt molecule ([#214](https://github.com/micheltsarasoa/nutrigo/issues/214)) ([2998690](https://github.com/micheltsarasoa/nutrigo/commit/2998690ff825936acf5161f4439d0dacef82ed1c))
+* **web:** add the MacroBar molecule ([#212](https://github.com/micheltsarasoa/nutrigo/issues/212)) ([c3dacf1](https://github.com/micheltsarasoa/nutrigo/commit/c3dacf1a835b401388b0bc42980730e0d5dbe611))
+
+### Bug Fixes
+
+* **web:** skip axe `landmark-unique` on playground galleries ([#235](https://github.com/micheltsarasoa/nutrigo/issues/235)) ([95386ff](https://github.com/micheltsarasoa/nutrigo/commit/95386fffde1c13068d58288d014443f1021ab9e1))
+
+## [0.3.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.2.0...v0.3.0) (2026-10-15)
+
+Weekly meal plan (SPEC-003): plan a week from your recipes. Also a searchable, sortable ingredients table.
+
+### Features
+
+* add the weekly meal plan: API, week functions, components and the PlanPage ([#203](https://github.com/micheltsarasoa/nutrigo/issues/203)) ([e4a1a89](https://github.com/micheltsarasoa/nutrigo/commit/e4a1a89fc2fddeb97f69b12e9590a9c874da4cd9))
+* **web:** show ingredients in a table with search, category and sort ([#171](https://github.com/micheltsarasoa/nutrigo/issues/171)) ([f1cedc8](https://github.com/micheltsarasoa/nutrigo/commit/f1cedc858d3524b33cadae483403c39f8b244b1f))
+* **web:** add the IngredientList table ([#170](https://github.com/micheltsarasoa/nutrigo/issues/170)) ([520232a](https://github.com/micheltsarasoa/nutrigo/commit/520232adc22ebf5557a48b4d978c4680412ca3a7))
+
+### Bug Fixes
+
+* **web:** lay the recipe detail out in 3 columns, with a green stepper and photos ([#176](https://github.com/micheltsarasoa/nutrigo/issues/176)) ([42493c7](https://github.com/micheltsarasoa/nutrigo/commit/42493c73885cebbb3a2cdf1000c71a4d3e0f91b4))
+
 ## [0.2.0](https://github.com/micheltsarasoa/nutrigo/compare/v0.1.0...v0.2.0) (2026-09-29)
 
 
