@@ -1,9 +1,9 @@
 import { type APIRequestContext, expect, test } from "@playwright/test";
-import { expectNoAxeViolations } from "./helpers.ts";
+import { expectNoAxeViolations, expectTapTargets } from "./helpers.ts";
 
-// SPEC-005 AC-1 to AC-11 on the desktop project (its own API server and SQLite file). The browser
-// clock is fixed at Wed 2026-09-30 12:00 (2026-W40); the API keeps the real clock, which only
-// stamps updated_at. Offline cases use context.setOffline.
+// SPEC-005 AC-1 to AC-11 on the desktop project (its own API server and SQLite file). The pages
+// open 2026-W40 by URL, so the clock stays real: a faked past clock would make every edit older
+// than the server's updated_at and lose last-write-wins. Offline cases use context.setOffline.
 const W = "2026-W40";
 const LIST = `/api/shopping-lists/${W}`;
 const MONDAYS = (n: number) =>
@@ -12,7 +12,6 @@ const MONDAYS = (n: number) =>
     .slice(0, 10);
 
 test.beforeEach(async ({ page, request }) => {
-  await page.clock.install({ time: new Date("2026-09-30T12:00:00") });
   await wipe(request);
 });
 test.afterEach(async ({ request }) => wipe(request));
@@ -123,7 +122,9 @@ test("SPEC-005 AC-1, AC-3, AC-4: merged quantity, priced estimate, excluded item
 }) => {
   await seed(request);
   await generate(page);
-  await expect(page.getByLabel("Quantity of Oats")).toHaveValue("180");
+  await expect(
+    page.getByRole("spinbutton", { name: "Quantity of Oats" }),
+  ).toHaveText("180");
   await expect(page.getByText("~€1.20").first()).toBeVisible();
   await expect(page.getByText("Estimate excludes 1 item")).toBeVisible();
   await expectNoAxeViolations(page);
@@ -143,7 +144,7 @@ test("SPEC-005 AC-5: regenerate keeps ticks and manual items", async ({
   await expect(page.getByText("Tape")).toBeVisible();
   await recipe(request, "Muesli", [[oats.id, 20]], "2026-10-01");
   await page.getByRole("button", { name: "Regenerate" }).click();
-  await expect(page.getByLabel("Quantity of Oats")).toHaveValue("200");
+  await expect(page.getByText("200 g")).toBeVisible();
   await expect(page.getByLabel("Mark Oats as not bought")).toBeVisible();
   await expect(page.getByText("Tape")).toBeVisible();
 });
@@ -154,6 +155,9 @@ test("SPEC-005 AC-9: the actual price is kept", async ({ page, request }) => {
   await page.getByLabel("Mark Oats as bought").click();
   await page.getByLabel("Actual price of Oats").fill("3,00");
   await page.getByLabel("Actual price of Oats").blur();
+  await expect
+    .poll(async () => (await (await request.get(LIST)).json()).actualCents)
+    .toBe(300);
   await page.reload();
   await expect(page.getByLabel("Actual price of Oats")).toHaveValue(/3[.,]00/);
   const list = await (await request.get(LIST)).json();
@@ -177,9 +181,15 @@ test("SPEC-005 AC-6, AC-7: offline changes show at once and sync when back onlin
   await expect(page.getByLabel("Mark Oats as not bought")).toBeVisible();
 
   await context.setOffline(false);
-  await expect(page.getByText(/changes? pending/)).toBeHidden();
+  await expect
+    .poll(async () =>
+      (await (await request.get(LIST)).json()).items.map(
+        (i: { label: string }) => i.label,
+      ),
+    )
+    .toContain("Tape");
+  await expect(page.getByRole("status")).toBeHidden();
   const list = await (await request.get(LIST)).json();
-  expect(list.items.map((i: { label: string }) => i.label)).toContain("Tape");
   const bought = list.items.filter(
     (i: { purchasedAt: string | null }) => i.purchasedAt,
   );
@@ -209,7 +219,7 @@ test("SPEC-005 AC-8: the latest edit wins after an offline conflict", async ({
     ],
   });
   await context.setOffline(false);
-  await expect(page.getByText(/change pending/)).toBeHidden();
+  await expect(page.getByRole("status")).toBeHidden();
   const after = await (await request.get(LIST)).json();
   const item = after.items.find((i: { label: string }) => i.label === "Oats");
   expect(item.purchasedAt).toBeNull();
@@ -238,7 +248,7 @@ test("SPEC-005 AC-10: insights show the weekly spend and the category donut", as
       week,
     );
     await request.post(`/api/shopping-lists/${week}/generate`, {
-      data: { mode: "create" },
+      data: { mode: "regenerate" },
     });
   }
   await page.goto(`/groceries/${W}/insights`);
@@ -259,14 +269,16 @@ test("SPEC-005 AC-11: the phone list is grouped, has progress and a sticky Add i
   request,
 }) => {
   await seed(request);
-  await request.post(`${LIST}/generate`, { data: { mode: "create" } });
+  await request.post(`${LIST}/generate`, { data: { mode: "regenerate" } });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`/groceries/${W}`);
   await expect(page.getByText("0 of 2")).toBeVisible();
   await expect(page.getByRole("heading", { name: /Grains/i })).toBeVisible();
-  const row = page.getByLabel("Mark Oats as bought");
-  const box = await row.boundingBox();
-  expect(box!.height).toBeGreaterThanOrEqual(44);
+  // The checkbox sits in a 44 px label (Checkbox atom); that label is the tap target.
+  await expectTapTargets(
+    page,
+    page.locator("label").filter({ has: page.getByRole("checkbox") }),
+  );
   const add = page.getByRole("button", { name: "Add item" });
   await expect(add).toBeVisible();
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight));

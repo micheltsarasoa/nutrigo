@@ -184,7 +184,11 @@ export function GroceriesPage({
   // Changes left from an earlier visit go out when the page opens and whenever the network returns.
   useEffect(() => {
     const go = () => void syncNow.current();
-    go();
+    // Changes left by an earlier visit were not in the list just loaded: reload it once they are sent.
+    void queue.pending().then((n) => {
+      if (n > 0) stale.current = true;
+      go();
+    });
     addEventListener("online", go);
     addEventListener("offline", go);
     return () => {

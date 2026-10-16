@@ -48,7 +48,7 @@ describe("GroceryList", () => {
     expect(
       sections.map(
         (s) =>
-          s.getAttribute("aria-label") ?? s.querySelector("h3")?.textContent,
+          s.getAttribute("aria-label") ?? s.querySelector("h2")?.textContent,
       ),
     ).toEqual(["Produce", "Grains"]);
     expect(within(sections[0]!).getAllByRole("checkbox")).toHaveLength(2);
