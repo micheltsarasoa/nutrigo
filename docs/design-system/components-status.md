@@ -67,6 +67,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | ServingsPrompt | #214 | #227 | `done` |
 | KpiCard | #251 | #282 | `draft` |
 | OfflineBanner | #252 | #283 | `draft` |
+| Legend | #253 | #284 | `draft` |
 
 ## Organisms
 
@@ -89,6 +90,10 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | TargetsForm | #218 | #225 | `done` |
 | GroceryTable | #254 | #285 | `draft` |
 | GroceryList | #255 | #286 | `draft` |
+| Donut | #256 | #287 | `draft` |
+| StackedBar | #257 | #288 | `draft` |
+| ChartTable | #258 | #289 | `draft` |
+| SpendChart | #260 | #291 | `draft` |
 
 ## Pages
 

@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { ChartTable } from "../ChartTable/index.ts";
 import styles from "./ColumnChart.module.css";
 
 // Week trend from the #217 sketch: Mon..Sun columns, eaten solid, planned hatched,
@@ -46,29 +47,22 @@ export function ColumnChart({ days, target }: Props) {
         ))}
       </div>
       {view === "table" ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th className={styles.n}>kcal</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {days.map((d) => (
-              <tr key={d.day}>
-                <td>{d.day}</td>
-                <td className={styles.n}>{d.kcal}</td>
-                <td>
-                  {d.status === "none"
-                    ? "None"
-                    : (d.status === "eaten" ? "Eaten" : "Planned") +
-                      overText(d, target)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ChartTable
+          caption="Calories per day this week"
+          columns={[
+            { label: "Day" },
+            { label: "kcal", numeric: true },
+            { label: "Status" },
+          ]}
+          rows={days.map((d) => [
+            d.day,
+            String(d.kcal),
+            d.status === "none"
+              ? "None"
+              : (d.status === "eaten" ? "Eaten" : "Planned") +
+                overText(d, target),
+          ])}
+        />
       ) : (
         <>
           <svg
