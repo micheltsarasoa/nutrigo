@@ -133,7 +133,9 @@ export function StackedBar({ categories, weeks, locale = "fr-FR" }: Props) {
               );
             })}
           </svg>
-          <Legend items={legend} locale={locale} label="Spend by category" />
+          <div className={styles.legend}>
+            <Legend items={legend} locale={locale} label="Spend by category" />
+          </div>
         </>
       )}
     </div>

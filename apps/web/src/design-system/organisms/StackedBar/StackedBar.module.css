@@ -26,6 +26,7 @@
 .svg {
   display: block;
   width: 100%;
+  max-width: var(--size-aside);
   margin-bottom: var(--space-3);
 }
 
@@ -77,4 +78,8 @@
   font-size: var(--font-size-title);
   font-weight: var(--font-weight-bold);
   color: var(--color-neutral-ink);
+}
+
+.legend {
+  max-width: var(--size-aside);
 }
