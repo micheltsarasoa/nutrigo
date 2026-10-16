@@ -2,6 +2,7 @@ import type { ShoppingItem, ShoppingList } from "@nutrigo/shared";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { axeViolations } from "../axe.ts";
+import { createSyncQueue, memoryStore } from "../sync-queue.ts";
 import { GroceriesPage } from "./GroceriesPage.tsx";
 
 const item = (over: Partial<ShoppingItem>): ShoppingItem => ({
@@ -214,5 +215,68 @@ describe("GroceriesPage", () => {
     const { container } = page();
     await screen.findByLabelText("Mark Oats as bought");
     expect(await axeViolations(container)).toEqual([]);
+  });
+});
+
+describe("GroceriesPage offline", () => {
+  const online = (on: boolean) =>
+    vi.spyOn(navigator, "onLine", "get").mockReturnValue(on);
+  const freshPage = () => {
+    const queue = createSyncQueue(memoryStore(), (method, to, body) =>
+      fetch(to, {
+        method,
+        headers: { "content-type": "application/json" },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      }),
+    );
+    return render(
+      <GroceriesPage isoWeek="2026-W40" wide={true} queue={queue} />,
+    );
+  };
+  afterEach(() => vi.restoreAllMocks());
+
+  it("keeps ticks and a new item locally and counts them (AC-6)", async () => {
+    online(false);
+    withList();
+    freshPage();
+    fireEvent.click(await screen.findByLabelText("Mark Oats as bought"));
+    fireEvent.click(screen.getByLabelText("Mark Carrots as bought"));
+    fireEvent.click(screen.getByRole("button", { name: "Add item" }));
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Tape" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save item" }));
+    expect(await screen.findByText("Offline · 3 changes pending")).toBeTruthy();
+    expect(screen.getByText("Tape")).toBeTruthy();
+    expect(screen.getByLabelText("Mark Oats as not bought")).toBeTruthy();
+    expect(calls.filter((c) => c.method !== "GET")).toEqual([]);
+  });
+
+  it("sends the queue when the connection returns and clears the banner (AC-7)", async () => {
+    const net = online(false);
+    withList();
+    routes[`PATCH ${W}/items`] = () => json([]);
+    routes[`POST ${W}/items`] = () =>
+      json({ ...item({ id: 9, label: "Tape", ingredientId: null }) }, 201);
+    freshPage();
+    fireEvent.click(await screen.findByLabelText("Mark Oats as bought"));
+    await screen.findByText("Offline · 1 change pending");
+    net.mockReturnValue(true);
+    dispatchEvent(new Event("online"));
+    await waitFor(() => expect(screen.queryByRole("status")).toBeNull());
+    const patch = calls.find((c) => c.method === "PATCH");
+    expect(patch?.body).toMatchObject([{ id: 1, patch: { purchased: true } }]);
+  });
+
+  it("shows a sync error with Retry, and keeps the changes (AC-7 failure)", async () => {
+    withList();
+    routes[`PATCH ${W}/items`] = () => json({}, 500);
+    freshPage();
+    fireEvent.click(await screen.findByLabelText("Mark Oats as bought"));
+    expect(await screen.findByRole("alert")).toBeTruthy();
+    routes[`PATCH ${W}/items`] = () => json([]);
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
+    expect(calls.filter((c) => c.method === "PATCH")).toHaveLength(2);
   });
 });

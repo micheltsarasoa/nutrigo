@@ -10,11 +10,12 @@ import {
   weekDays,
   weekLabel,
 } from "@nutrigo/shared";
-import { type ComponentProps, useEffect, useState } from "react";
+import { type ComponentProps, useEffect, useRef, useState } from "react";
 import { Button } from "../design-system/atoms/Button/index.ts";
 import { Field } from "../design-system/atoms/Field/index.ts";
 import { MoneyField } from "../design-system/atoms/MoneyField/index.ts";
 import { Select } from "../design-system/atoms/Select/index.ts";
+import { OfflineBanner } from "../design-system/molecules/OfflineBanner/index.ts";
 import { KpiCard } from "../design-system/molecules/KpiCard/index.ts";
 import { WeekNav } from "../design-system/molecules/WeekNav/index.ts";
 import { GroceryList } from "../design-system/organisms/GroceryList/index.ts";
@@ -23,6 +24,12 @@ import {
   type GroceryTableItem,
 } from "../design-system/organisms/GroceryTable/index.ts";
 import { navigate } from "../router.ts";
+import {
+  type SyncQueue,
+  createSyncQueue,
+  idbStore,
+  memoryStore,
+} from "../sync-queue.ts";
 import styles from "./GroceriesPage.module.css";
 
 // Pages don't read the locale setting yet (see RecipePage); the sketches use en-IE.
@@ -52,6 +59,11 @@ const send = (method: string, to: string, body?: unknown) =>
     body: body === undefined ? undefined : JSON.stringify(body),
   });
 
+const defaultQueue = createSyncQueue(
+  typeof indexedDB === "undefined" ? memoryStore() : idbStore(),
+  send,
+);
+
 const toRow = (i: ShoppingItem): GroceryTableItem => ({
   id: String(i.id),
   name: i.label,
@@ -79,9 +91,11 @@ type View =
 export function GroceriesPage({
   isoWeek,
   wide,
+  queue = defaultQueue,
 }: {
   isoWeek?: string;
   wide: boolean;
+  queue?: SyncQueue;
 }) {
   const today = new Date().toLocaleDateString("en-CA");
   const [view, setView] = useState<View>({ status: "loading" });
@@ -97,6 +111,12 @@ export function GroceriesPage({
     unit: "",
   });
   const [opened, setOpened] = useState<string | null>(null);
+  const [pending, setPending] = useState(0);
+  const [net, setNet] = useState<"idle" | "offline" | "syncing" | "error">(
+    navigator.onLine ? "idle" : "offline",
+  );
+  // After a failed send, the server may have newer values: reload the list once it goes through.
+  const stale = useRef(false);
 
   // /groceries has no week yet: replace it, so Back doesn't land on the redirect.
   useEffect(() => {
@@ -137,6 +157,41 @@ export function GroceriesPage({
     })();
     return () => controller.abort();
   }, [isoWeek, attempt]);
+
+  // Sends what is queued. Quiet when there is nothing to send.
+  async function sync() {
+    const waiting = await queue.pending();
+    setPending(waiting);
+    if (waiting === 0) return setNet(navigator.onLine ? "idle" : "offline");
+    if (!navigator.onLine) return setNet("offline");
+    setNet("syncing");
+    const done = await queue.flush();
+    setPending(await queue.pending());
+    if (!done.ok) {
+      stale.current = true;
+      return setNet(navigator.onLine ? "error" : "offline");
+    }
+    setNet("idle");
+    if (isoWeek && (stale.current || done.added > 0)) {
+      stale.current = false;
+      const res = await fetch(url(isoWeek)).catch(() => null);
+      if (res?.ok) setItems(((await res.json()) as ShoppingList).items);
+    }
+  }
+  const syncNow = useRef(sync);
+  syncNow.current = sync;
+
+  // Changes left from an earlier visit go out when the page opens and whenever the network returns.
+  useEffect(() => {
+    const go = () => void syncNow.current();
+    go();
+    addEventListener("online", go);
+    addEventListener("offline", go);
+    return () => {
+      removeEventListener("online", go);
+      removeEventListener("offline", go);
+    };
+  }, []);
 
   const items = view.status === "ready" ? view.items : null;
   const rows = (items ?? []).map(toRow);
@@ -190,37 +245,48 @@ export function GroceriesPage({
       ),
     );
     setProblem(null);
-    try {
-      const res = await send("PATCH", `${url(isoWeek!)}/items`, [
-        { id: Number(id), patch, updatedAt: at },
-      ]);
-      if (!res.ok) throw new Error();
-    } catch {
-      setProblem(SAVE_ERROR);
-      setAttempt((n) => n + 1);
-    }
+    await queue.enqueue({
+      kind: "patch",
+      isoWeek: isoWeek!,
+      id: Number(id),
+      patch,
+      updatedAt: at,
+    });
+    await sync();
   }
 
   async function addItem() {
-    setSaving(true);
-    setProblem(null);
-    try {
-      const quantity = Number(draft.quantity);
-      const res = await send("POST", `${url(isoWeek!)}/items`, {
-        label: draft.label,
-        category: draft.category,
-        quantity: draft.quantity && quantity > 0 ? quantity : null,
-        unit: draft.unit || null,
-      });
-      if (!res.ok) throw new Error();
-      setItems([...(items ?? []), (await res.json()) as ShoppingItem]);
-      setAdding(false);
-      setDraft({ label: "", category: "others", quantity: "", unit: "" });
-    } catch {
-      setProblem(SAVE_ERROR);
-    } finally {
-      setSaving(false);
-    }
+    const quantity = Number(draft.quantity);
+    const input = {
+      label: draft.label,
+      category: draft.category as Category,
+      quantity: draft.quantity && quantity > 0 ? quantity : null,
+      unit: (draft.unit || null) as ShoppingItem["unit"],
+    };
+    const at = new Date().toISOString();
+    const tempId = -Date.now();
+    setItems([
+      ...(items ?? []),
+      {
+        ...input,
+        id: tempId,
+        ingredientId: null,
+        estCostCents: null,
+        actualCostCents: null,
+        purchasedAt: null,
+        updatedAt: at,
+      },
+    ]);
+    setAdding(false);
+    setDraft({ label: "", category: "others", quantity: "", unit: "" });
+    await queue.enqueue({
+      kind: "add",
+      isoWeek: isoWeek!,
+      tempId,
+      input,
+      updatedAt: at,
+    });
+    await sync();
   }
 
   const state =
@@ -285,6 +351,13 @@ export function GroceriesPage({
           </Button>
         )}
       </div>
+      {net !== "idle" && (net !== "syncing" || pending > 0) && (
+        <OfflineBanner
+          state={net}
+          pending={pending}
+          onRetry={() => void sync()}
+        />
+      )}
       {problem && (
         <p role="alert" className={styles.alert}>
           {problem}

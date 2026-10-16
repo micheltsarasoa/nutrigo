@@ -55,6 +55,16 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         globPatterns: ["**/*.{js,css,html,woff2}"],
         navigateFallbackDenylist: [/^\/api\//, /^\/playground/],
+        // SPEC-005 AC-6: the last list opens offline. Online it is always the fresh one.
+        runtimeCaching: [
+          {
+            urlPattern: ({ url, request }) =>
+              request.method === "GET" &&
+              /^\/api\/(shopping-lists|plans)\//.test(url.pathname),
+            handler: "NetworkFirst",
+            options: { cacheName: "api-lists", networkTimeoutSeconds: 3 },
+          },
+        ],
       },
     }),
   ],
