@@ -208,3 +208,108 @@ describe("eaten columns (SPEC-004 §6)", () => {
     ).toEqual([{ eaten_servings: null, eaten_at: null }]);
   });
 });
+
+describe("shopping list (SPEC-005 §6)", () => {
+  const seed = () => {
+    const { $client: db } = freshDb();
+    db.prepare("insert into plan_week (iso_week) values ('2026-W40')").run();
+    db.prepare(
+      "insert into shopping_list (iso_week, generated_at) values ('2026-W40', '2026-10-01T10:00:00Z')",
+    ).run();
+    return db;
+  };
+  const addItem = (db: ReturnType<typeof seed>, extra = "") =>
+    db
+      .prepare(
+        `insert into shopping_item (list_id, label, category, updated_at${extra ? ", " + extra.split("=")[0] : ""}) values (1, 'Candles', 'others', '2026-10-01T10:00:00Z'${extra ? ", " + extra.split("=")[1] : ""})`,
+      )
+      .run();
+
+  it("creates both tables and the ingredient price columns", () => {
+    const db = seed();
+    expect(tables(db)).toEqual(
+      expect.arrayContaining(["shopping_list", "shopping_item"]),
+    );
+    const cols = db.prepare("pragma table_info(ingredient)").all();
+    expect(cols.map((c) => (c as { name: string }).name)).toEqual(
+      expect.arrayContaining([
+        "price_cents",
+        "price_pack_qty",
+        "price_pack_unit",
+      ]),
+    );
+  });
+
+  it("allows a manual item without ingredient, quantity or costs", () => {
+    expect(() => addItem(seed())).not.toThrow();
+  });
+
+  it("allows one list per week", () => {
+    const db = seed();
+    expect(() =>
+      db
+        .prepare(
+          "insert into shopping_list (iso_week, generated_at) values ('2026-W40', 'x')",
+        )
+        .run(),
+    ).toThrow(/UNIQUE/);
+  });
+
+  it("rejects negative cents and a non-positive quantity", () => {
+    const db = seed();
+    expect(() => addItem(db, "est_cost_cents=-1")).toThrow(/CHECK/);
+    expect(() => addItem(db, "actual_cost_cents=-1")).toThrow(/CHECK/);
+    expect(() => addItem(db, "quantity=0")).toThrow(/CHECK/);
+  });
+
+  it("deletes the items with their list", () => {
+    const db = seed();
+    addItem(db);
+    db.prepare("delete from shopping_list").run();
+    expect(db.prepare("select count(*) n from shopping_item").get()).toEqual({
+      n: 0,
+    });
+  });
+
+  it("rejects a negative price or a non-positive pack", () => {
+    const { $client: db } = freshDb();
+    const ins = (price: number, qty: number) =>
+      db
+        .prepare(
+          "insert into ingredient (name, category, source, kcal_100g, carbs_100g, protein_100g, fat_100g, default_unit, updated_at, price_cents, price_pack_qty, price_pack_unit) values (?, 'grains', 'manual', 0, 0, 0, 0, 'g', 'now', ?, ?, 'g')",
+        )
+        .run(`x${price}${qty}`, price, qty);
+    expect(() => ins(-1, 500)).toThrow(/CHECK/);
+    expect(() => ins(120, 0)).toThrow(/CHECK/);
+    expect(() => ins(120, 500)).not.toThrow();
+  });
+});
+
+describe("0005 ingredient columns", () => {
+  it("keeps the ingredients and the recipe links to them", () => {
+    const dir = mkdtempSync(join(tmpdir(), "nutrigo-"));
+    const old = join(dir, "old");
+    cpSync(new URL("./migrations", import.meta.url), old, { recursive: true });
+    const journal = join(old, "meta/_journal.json");
+    const j = JSON.parse(readFileSync(journal, "utf8"));
+    j.entries = j.entries.filter(
+      (e: { tag: string }) => !e.tag.startsWith("0005"),
+    );
+    writeFileSync(journal, JSON.stringify(j));
+    const path = join(dir, "old.db");
+    const sqlite = new Database(path);
+    migrate(drizzle(sqlite), { migrationsFolder: old });
+    sqlite.exec(`insert into ingredient (id, name, category, source, kcal_100g, carbs_100g, protein_100g, fat_100g, default_unit, updated_at) values (1, 'Oats', 'grains', 'manual', 370, 60, 13, 7, 'g', 'x');
+      insert into recipe (id, name, meal_type, servings, updated_at) values (1, 'R', 'lunch', 1, 'x');
+      insert into recipe_ingredient (recipe_id, ingredient_id, quantity, unit, position) values (1, 1, 50, 'g', 0)`);
+    sqlite.close();
+    const { $client: db } = openDb(path);
+    expect(
+      db.prepare("select name, price_cents from ingredient").all(),
+    ).toEqual([{ name: "Oats", price_cents: null }]);
+    expect(
+      db.prepare("select count(*) n from recipe_ingredient").get(),
+    ).toEqual({ n: 1 });
+    expect(db.pragma("foreign_key_check")).toEqual([]);
+  });
+});
