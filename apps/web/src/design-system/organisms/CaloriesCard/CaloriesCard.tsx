@@ -1,5 +1,6 @@
 import { MacroBar } from "../../molecules/MacroBar/MacroBar.tsx";
 import { Ring } from "../Ring/Ring.tsx";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./CaloriesCard.module.css";
 
 type Macros = { carbs: number; protein: number; fat: number };
@@ -22,13 +23,14 @@ export function CaloriesCard({
   targets,
   planned,
 }: Props) {
+  const n = useNumber();
   if (target <= 0) {
     return (
       <section className={styles.card}>
         <h3 className={styles.title}>Calories intake</h3>
         <div className={styles.totals}>
           <div>
-            <b>{kcal}</b>
+            <b>{n(kcal)}</b>
             <span>kcal</span>
           </div>
           <div>
@@ -59,7 +61,7 @@ export function CaloriesCard({
       <div className={styles.bars}>
         <h3 className={styles.title}>Calories intake</h3>
         {planned !== undefined && (
-          <p className={styles.hint}>{planned} kcal planned</p>
+          <p className={styles.hint}>{n(planned)} kcal planned</p>
         )}
         <MacroBar
           macro="carbs"

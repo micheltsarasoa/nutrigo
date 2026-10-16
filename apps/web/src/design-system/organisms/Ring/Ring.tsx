@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./Ring.module.css";
 
 // Calories ring from the Today sketch (sprint-3-today.html). Over target follows dataviz.html:
@@ -15,15 +16,16 @@ type Props = {
 };
 
 export function Ring({ kcal, target = 0, still = false }: Props) {
+  const n = useNumber();
   const over = target > 0 && kcal > target;
   const drawn = target > 0 && kcal > 0 ? Math.min(1, kcal / target) : 0;
-  const label = `${kcal} kcal${target > 0 ? ` of ${target}` : ", no target"}${over ? ", over target" : ""}`;
+  const label = `${n(kcal)} kcal${target > 0 ? ` of ${n(target)}` : ", no target"}${over ? ", over target" : ""}`;
   const caption =
     target <= 0
       ? "no target"
       : over
-        ? `+${kcal - target} kcal over ▲`
-        : `of ${target} kcal`;
+        ? `+${n(kcal - target)} kcal over ▲`
+        : `of ${n(target)} kcal`;
   const arc = [styles.arc, over && styles.over, still && styles.still]
     .filter(Boolean)
     .join(" ");
@@ -46,7 +48,7 @@ export function Ring({ kcal, target = 0, still = false }: Props) {
       </svg>
       <div className={styles.label}>
         <div className={styles.value}>
-          {kcal} <small>kcal</small>
+          {n(kcal)} <small>kcal</small>
         </div>
         <div className={over ? styles.captionOver : styles.caption}>
           {caption}

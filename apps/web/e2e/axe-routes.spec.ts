@@ -48,6 +48,20 @@ test.beforeAll(async ({ request }) => {
   });
 });
 
+// The shared e2e DB must be left as found: items point at ingredients, so they go first.
+test.afterAll(async ({ request }) => {
+  const plan = await (await request.get("/api/plans/2026-W40")).json();
+  for (const day of plan.days)
+    for (const entry of Object.values<{ id: number }[]>(day.slots).flat())
+      await request.delete(`/api/plans/2026-W40/entries/${entry.id}`);
+  const list = await (await request.get("/api/shopping-lists/2026-W40")).json();
+  for (const item of list.items ?? [])
+    await request.delete(`/api/shopping-lists/2026-W40/items/${item.id}`);
+  await request.delete(`/api/recipes/${recipeId}`);
+  for (const i of await (await request.get("/api/ingredients")).json())
+    await request.delete(`/api/ingredients/${i.id}`);
+});
+
 const routes = [
   "/",
   "/recipes",

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Icon } from "../../atoms/Icon/index.ts";
 import { Pill } from "../../atoms/Pill/index.ts";
 import { StarRating } from "../../atoms/StarRating/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./MenuListItem.module.css";
 
 const MEAL_PILL = {
@@ -38,6 +39,7 @@ export function MenuListItem({
   rating,
   variant,
 }: Props) {
+  const n = useNumber();
   return (
     <a className={`${styles.item} ${styles[variant]}`} href={href}>
       <div className={styles.media}>{media}</div>
@@ -52,7 +54,7 @@ export function MenuListItem({
         <div className={styles.foot}>
           <span className={styles.fact}>
             <Icon name="kcal" size="sm" />
-            {kcal} kcal
+            {n(kcal)} kcal
           </span>
           <span className={styles.fact}>
             <Icon name="time" size="sm" />

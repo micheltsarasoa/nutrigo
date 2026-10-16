@@ -2,6 +2,7 @@ import { useId, type ComponentProps } from "react";
 import { MealCheck } from "../../atoms/MealCheck/index.ts";
 import { Pill } from "../../atoms/Pill/index.ts";
 import { PhotoOrPlaceholder } from "../PhotoOrPlaceholder/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./MealItem.module.css";
 
 type Props = Pick<
@@ -39,6 +40,7 @@ export function MealItem({
   mosaic,
   onToggle,
 }: Props) {
+  const n = useNumber();
   const hintId = useId();
   const slot = mealType.charAt(0).toUpperCase() + mealType.slice(1);
   const differs = eaten && eatenServings != null && eatenServings !== servings;
@@ -82,7 +84,7 @@ export function MealItem({
         </div>
       </div>
       {differs && <Pill variant="yellow">{eatenServings} eaten</Pill>}
-      <div className={styles.kcal}>{kcal} kcal</div>
+      <div className={styles.kcal}>{n(kcal)} kcal</div>
     </div>
   );
 }

@@ -70,6 +70,8 @@ async function seed(request: APIRequestContext) {
   });
 }
 
+// The settings default to fr-FR, so 2990 reads "2 990" (C-1).
+const fr = (n: number) => new Intl.NumberFormat("fr-FR").format(n);
 const ring = (page: import("@playwright/test").Page, label: string) =>
   page.getByRole("img", { name: label });
 const check = (page: import("@playwright/test").Page, slot: string) =>
@@ -81,8 +83,8 @@ test("SPEC-004 AC-1: the ring shows 0 eaten of 2990 and 2150 planned", async ({
 }) => {
   await seed(request);
   await page.goto("/");
-  await expect(ring(page, "0 kcal of 2990")).toBeVisible();
-  await expect(page.getByText("2150 kcal planned")).toBeVisible();
+  await expect(ring(page, `0 kcal of ${fr(2990)}`)).toBeVisible();
+  await expect(page.getByText(`${fr(2150)} kcal planned`)).toBeVisible();
   await expectNoAxeViolations(page);
 });
 
@@ -94,13 +96,13 @@ test("SPEC-004 AC-2 and AC-4: tick Breakfast, then untick it", async ({
   await page.goto("/");
   await check(page, "breakfast").click();
   await page.getByRole("button", { name: "Mark as eaten" }).click();
-  await expect(ring(page, "300 kcal of 2990")).toBeVisible();
+  await expect(ring(page, `300 kcal of ${fr(2990)}`)).toBeVisible();
   await expect(check(page, "breakfast")).toBeChecked();
   await expect(
     page.getByRole("progressbar", { name: "Carbs" }),
   ).toHaveAttribute("aria-valuenow", "30");
   await check(page, "breakfast").click();
-  await expect(ring(page, "0 kcal of 2990")).toBeVisible();
+  await expect(ring(page, `0 kcal of ${fr(2990)}`)).toBeVisible();
   await expect(check(page, "breakfast")).not.toBeChecked();
 });
 
@@ -113,7 +115,7 @@ test("SPEC-004 AC-3: tick Lunch with 1.5 servings adds 675 kcal", async ({
   await check(page, "lunch").click();
   await page.getByRole("button", { name: "Increase Servings eaten" }).click();
   await page.getByRole("button", { name: "Mark as eaten" }).click();
-  await expect(ring(page, "675 kcal of 2990")).toBeVisible();
+  await expect(ring(page, `675 kcal of ${fr(2990)}`)).toBeVisible();
 });
 
 test("SPEC-004 AC-5: over the target shows the full orange ring and +N kcal over", async ({

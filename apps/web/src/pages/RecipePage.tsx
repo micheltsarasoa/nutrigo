@@ -3,6 +3,7 @@
 // stays props-only.
 import { RecipeDetail, scaleQuantities } from "@nutrigo/shared";
 import { useEffect, useState } from "react";
+import { useNumber } from "../locale.tsx";
 import { Button } from "../design-system/atoms/Button/index.ts";
 import {
   RecipeDetail as Detail,
@@ -17,11 +18,13 @@ const LOAD_ERROR =
 const DELETE_ERROR = "Couldn't delete the recipe. Try again.";
 const DIFFICULTY = { easy: "Easy", medium: "Medium", hard: "Hard" };
 
-// ponytail: numbers aren't formatted for the locale setting yet, as on
-// RecipesPage; use formatNumber with the settings' locale once a page reads it.
 const round = (n: number) => String(Math.round(n));
 
-function toDetail(recipe: RecipeDetail, servings: number): RecipeDetailData {
+function toDetail(
+  recipe: RecipeDetail,
+  servings: number,
+  num: (n: number) => string,
+): RecipeDetailData {
   const n = recipe.nutritionPerServing;
   return {
     title: recipe.name,
@@ -35,7 +38,7 @@ function toDetail(recipe: RecipeDetail, servings: number): RecipeDetailData {
     healthScore: recipe.healthScore,
     rating: recipe.rating ?? null,
     macros: {
-      kcal: round(n.kcal),
+      kcal: num(Math.round(n.kcal)),
       carbs: round(n.carbs),
       protein: round(n.protein),
       fat: round(n.fat),
@@ -63,6 +66,7 @@ function toDetail(recipe: RecipeDetail, servings: number): RecipeDetailData {
 }
 
 export function RecipePage({ id }: { id: string }) {
+  const num = useNumber();
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -149,7 +153,7 @@ export function RecipePage({ id }: { id: string }) {
       )}
       <Detail
         loading={!recipe && !notFound}
-        recipe={recipe && toDetail(recipe, servings)}
+        recipe={recipe && toDetail(recipe, servings, num)}
         servings={servings}
         onServingsChange={setServings}
         onBack={() => navigate("/recipes")}

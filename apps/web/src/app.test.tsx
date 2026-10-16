@@ -188,7 +188,6 @@ describe("App settings (SPEC-008)", () => {
 
       const field = await select();
       expect(field.value).toBe("fr-FR");
-      expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith("/api/settings");
     },
   );
@@ -259,7 +258,8 @@ describe("App settings (SPEC-008)", () => {
     async (_label, failOnce) => {
       const fetchMock = vi
         .fn()
-        .mockImplementationOnce(failOnce)
+        .mockImplementationOnce(failOnce) // at start
+        .mockImplementationOnce(failOnce) // on open
         .mockImplementationOnce(() =>
           Promise.resolve(jsonResponse({ locale: "fr-FR" })),
         );
@@ -275,7 +275,7 @@ describe("App settings (SPEC-008)", () => {
       fireEvent.click(screen.getByRole("button", { name: "Retry" }));
       const field = await select();
       expect(field.value).toBe("fr-FR");
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledTimes(3);
     },
   );
 
@@ -301,10 +301,15 @@ describe("App settings (SPEC-008)", () => {
     expect(field.value).toBe("en-IE");
   });
 
-  it("fetches nothing until Settings is pressed", () => {
-    const fetchMock = vi.fn();
+  it("loads the settings once at start, for the locale, and not again until Settings is pressed", () => {
+    const fetchMock = vi.fn<(url: string) => Promise<Response>>(
+      () => new Promise(() => {}),
+    );
     vi.stubGlobal("fetch", fetchMock);
-    render(<App path="/groceries" wide={false} />);
-    expect(fetchMock).not.toHaveBeenCalled();
+    render(<App path="/targets" wide={false} />);
+    const settingsCalls = fetchMock.mock.calls.filter(
+      ([url]) => url === "/api/settings",
+    );
+    expect(settingsCalls).toHaveLength(1);
   });
 });
