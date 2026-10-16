@@ -175,7 +175,7 @@ describe("App settings (SPEC-008)", () => {
         Promise.resolve(jsonResponse({ locale: "fr-FR" })),
       );
       vi.stubGlobal("fetch", fetchMock);
-      render(<App path="/" wide={wide} />);
+      render(<App path="/groceries" wide={wide} />);
 
       const button = settingsButton();
       expect(button.getAttribute("aria-expanded")).toBe("false");
@@ -198,7 +198,7 @@ describe("App settings (SPEC-008)", () => {
       Promise.resolve(jsonResponse({ locale: init ? "en-IE" : "fr-FR" })),
     );
     vi.stubGlobal("fetch", fetchMock);
-    render(<App path="/" wide={false} />);
+    render(<App path="/groceries" wide={false} />);
 
     const button = settingsButton();
     fireEvent.click(button);
@@ -233,7 +233,7 @@ describe("App settings (SPEC-008)", () => {
       (url: string, init?: RequestInit) => Promise<unknown>
     >(() => Promise.resolve(jsonResponse({ locale: "fr-FR" })));
     vi.stubGlobal("fetch", fetchMock);
-    render(<App path="/" wide={false} />);
+    render(<App path="/groceries" wide={false} />);
 
     fireEvent.click(settingsButton());
     const field = await select();
@@ -264,7 +264,7 @@ describe("App settings (SPEC-008)", () => {
           Promise.resolve(jsonResponse({ locale: "fr-FR" })),
         );
       vi.stubGlobal("fetch", fetchMock);
-      render(<App path="/" wide={false} />);
+      render(<App path="/groceries" wide={false} />);
 
       fireEvent.click(settingsButton());
       const alert = await screen.findByRole("alert");
@@ -286,7 +286,7 @@ describe("App settings (SPEC-008)", () => {
         : Promise.resolve(jsonResponse({ locale: "fr-FR" })),
     );
     vi.stubGlobal("fetch", fetchMock);
-    render(<App path="/" wide={false} />);
+    render(<App path="/groceries" wide={false} />);
 
     fireEvent.click(settingsButton());
     const field = await selectSettled();
@@ -304,7 +304,7 @@ describe("App settings (SPEC-008)", () => {
   it("fetches nothing until Settings is pressed", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
-    render(<App path="/" wide={false} />);
+    render(<App path="/groceries" wide={false} />);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

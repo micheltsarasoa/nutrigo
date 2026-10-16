@@ -1,0 +1,64 @@
+.mb {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.carbs {
+  --c: var(--color-yellow-base);
+}
+
+.protein {
+  --c: var(--color-orange-base);
+}
+
+.fat {
+  --c: var(--color-neutral-faint);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-body);
+}
+
+.name {
+  font-weight: var(--font-weight-semibold);
+}
+
+.val {
+  color: var(--color-neutral-muted);
+}
+
+.val b {
+  color: var(--color-neutral-ink);
+  font-weight: var(--font-weight-semibold);
+}
+
+.dot {
+  display: inline-block;
+  width: var(--space-2);
+  height: var(--space-2);
+  margin-inline-end: var(--space-2);
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.bar {
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-track);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--c);
+}
+
+.over {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-orange-on-light);
+}

@@ -74,6 +74,7 @@
   --font-size-body: 14px;
   --font-size-title: 16px;
   --font-size-figure-sm: 20px;
+  --font-size-ring-value: 23px;
   --font-size-figure: 28px;
   --font-size-page: 26px;
   --size-badge-sm: 28px;
@@ -96,6 +97,8 @@
   --size-pill: 26px;
   --size-pill-lg: 34px;
   --size-progress-bar: 6px;
+  --size-ring: 184px;
+  --size-ring-stroke: 12px;
   --size-progress-bar-thin: 5px;
   --size-icon-xs: 12px;
   --size-icon-sm: 16px;

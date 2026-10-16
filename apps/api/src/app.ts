@@ -4,18 +4,22 @@ import { apiError } from "@nutrigo/shared";
 import type { Db } from "./db/client.ts";
 import { meta } from "./db/schema.ts";
 import { ingredientRoutes } from "./routes/ingredients.ts";
+import { nutritionRoutes } from "./routes/nutrition.ts";
 import { planRoutes } from "./routes/plans.ts";
 import { recipeRoutes } from "./routes/recipes.ts";
 import { settingsRoutes } from "./routes/settings.ts";
+import { targetsRoutes } from "./routes/targets.ts";
 
 export function createApp({
   db,
   version,
   webRoot,
+  now = () => new Date(),
 }: {
   db: Db;
   version: string;
   webRoot?: string;
+  now?: () => Date; // the clock, injectable for tests
 }) {
   const app = new Hono();
 
@@ -30,9 +34,11 @@ export function createApp({
   });
 
   app.route("/api/ingredients", ingredientRoutes(db));
-  app.route("/api/plans", planRoutes(db));
+  app.route("/api/nutrition", nutritionRoutes(db, now));
+  app.route("/api/plans", planRoutes(db, now));
   app.route("/api/recipes", recipeRoutes(db));
   app.route("/api/settings", settingsRoutes(db));
+  app.route("/api/targets", targetsRoutes(db));
 
   if (webRoot) {
     // One image serves web + api (ADR-0005): built files first, then index.html for client-side routes.

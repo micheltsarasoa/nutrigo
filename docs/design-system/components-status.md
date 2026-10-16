@@ -58,6 +58,9 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | DayHead | #196 | #203 | `done` |
 | MealMiniCard | #197 | #203 | `done` |
 | MealAddSlot | #198 | #203 | `done` |
+| MacroBar | #212 | #223 | `done` |
+| MealItem | #213 | #228 | `done` |
+| ServingsPrompt | #214 | #227 | `done` |
 
 ## Organisms
 
@@ -74,9 +77,15 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | MealPlanGrid | #199 | #203 | `done` |
 | RecipePicker | #200 | #203 | `done` |
 | MealActionsMenu | #201 | #203 | `done` |
+| Ring | #215 | #224 | `done` |
+| ColumnChart | #217 | #229 | `done` |
+| CaloriesCard | #216 | #226 | `done` |
+| TargetsForm | #218 | #225 | `done` |
 
 ## Pages
 
 | Page | Issue | Branch / PR | Status |
 |---|---|---|---|
 | PlanPage | #202 | #203 | `done` |
+| TodayPage | #219 | #236 | `done` |
+| TargetsPage | #220 | #234 | `done` |

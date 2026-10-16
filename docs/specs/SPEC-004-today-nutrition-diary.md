@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Approved |
+| Status | Approved; Today page (AC-1 to AC-6, AC-8, AC-11) implemented in S3 (#219), the rest pending |
 | Sprint | S3 → v0.4.0 |
 | PRD refs | N-1 … N-6, §5.7 (sources: ADR-0011; the on/off switches are C-2 in SPEC-008) |
 | Design | `design/source/Dashboard.dc.html` + `Dashboard Mobile.dc.html` (only the calories card, macro bars and day meals are kept) |

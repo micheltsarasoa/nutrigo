@@ -131,6 +131,8 @@ export const mealEntry = sqliteTable(
       .references(() => recipe.id, { onDelete: "restrict" }),
     servings: real("servings").notNull(),
     position: integer("position").notNull(),
+    eatenServings: real("eaten_servings"),
+    eatenAt: text("eaten_at"),
   },
   (t) => [
     check("meal_servings_positive", sql`${t.servings} > 0`),
@@ -139,4 +141,17 @@ export const mealEntry = sqliteTable(
       sql`${t.slot} in ('breakfast', 'lunch', 'snack', 'dinner')`,
     ),
   ],
+);
+
+// One row (SPEC-004 §6, data-model.md): the daily targets. Macros are NULL when cleared.
+export const targets = sqliteTable(
+  "targets",
+  {
+    id: integer("id").primaryKey().default(1),
+    kcal: real("kcal").notNull(),
+    carbsG: real("carbs_g"),
+    proteinG: real("protein_g"),
+    fatG: real("fat_g"),
+  },
+  (t) => [check("targets_single_row", sql`${t.id} = 1`)],
 );
