@@ -22,6 +22,9 @@ const OATS: IngredientInput & { source: Source } = {
   sodiumMg100g: null,
   defaultUnit: "g",
   gramsPerUnit: null,
+  priceCents: 120,
+  pricePackQty: 500,
+  pricePackUnit: "g",
   source: "manual",
 };
 

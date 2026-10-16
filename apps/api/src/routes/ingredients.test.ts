@@ -34,6 +34,46 @@ const setup = () => {
   return { db, send, create };
 };
 
+describe("ingredient price (SPEC-005 US-4)", () => {
+  const price = { priceCents: 120, pricePackQty: 500, pricePackUnit: "g" };
+
+  it("saves and returns the price per pack, on create and on patch", async () => {
+    const { send } = setup();
+    const res = await send("POST", "/api/ingredients", { ...oats, ...price });
+    expect(res.status).toBe(201);
+    const row = await json<{ id: number }>(res);
+    expect(row).toMatchObject(price);
+    const patched = await send("PATCH", `/api/ingredients/${row.id}`, {
+      priceCents: 150,
+      pricePackQty: 1000,
+      pricePackUnit: "g",
+    });
+    expect(await patched.json()).toMatchObject({
+      priceCents: 150,
+      pricePackQty: 1000,
+    });
+  });
+
+  it("an ingredient without a price has nulls (AC-4)", async () => {
+    const { send } = setup();
+    const res = await send("POST", "/api/ingredients", oats);
+    expect(await res.json()).toMatchObject({
+      priceCents: null,
+      pricePackQty: null,
+      pricePackUnit: null,
+    });
+  });
+
+  it("400 when the price comes without its pack", async () => {
+    const { send } = setup();
+    const res = await send("POST", "/api/ingredients", {
+      ...oats,
+      priceCents: 120,
+    });
+    expect(res.status).toBe(400);
+  });
+});
+
 describe("POST /api/ingredients", () => {
   it("SPEC-002 AC-1: creates Oats with source manual and returns 201", async () => {
     const { send } = setup();

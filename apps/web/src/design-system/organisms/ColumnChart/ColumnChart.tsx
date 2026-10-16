@@ -1,4 +1,6 @@
 import { useId, useState } from "react";
+import { ChartTable } from "../ChartTable/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./ColumnChart.module.css";
 
 // Week trend from the #217 sketch: Mon..Sun columns, eaten solid, planned hatched,
@@ -25,6 +27,7 @@ const overText = (d: ChartDay, target: number) =>
   d.kcal > target ? ` ▲ +${d.kcal - target} over` : "";
 
 export function ColumnChart({ days, target }: Props) {
+  const n = useNumber();
   const [view, setView] = useState<"chart" | "table">("chart");
   const [tip, setTip] = useState<number | null>(null);
   const id = useId();
@@ -46,36 +49,29 @@ export function ColumnChart({ days, target }: Props) {
         ))}
       </div>
       {view === "table" ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th className={styles.n}>kcal</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {days.map((d) => (
-              <tr key={d.day}>
-                <td>{d.day}</td>
-                <td className={styles.n}>{d.kcal}</td>
-                <td>
-                  {d.status === "none"
-                    ? "None"
-                    : (d.status === "eaten" ? "Eaten" : "Planned") +
-                      overText(d, target)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ChartTable
+          caption="Calories per day this week"
+          columns={[
+            { label: "Day" },
+            { label: "kcal", numeric: true },
+            { label: "Status" },
+          ]}
+          rows={days.map((d) => [
+            d.day,
+            String(d.kcal),
+            d.status === "none"
+              ? "None"
+              : (d.status === "eaten" ? "Eaten" : "Planned") +
+                overText(d, target),
+          ])}
+        />
       ) : (
         <>
           <svg
             className={styles.svg}
             viewBox={`0 0 ${W} ${H}`}
             role="img"
-            aria-label={`Calories per day this week against a target of ${target} kcal`}
+            aria-label={`Calories per day this week against a target of ${n(target)} kcal`}
           >
             <defs>
               {(["green", "orange"] as const).map((c) => (
@@ -188,7 +184,7 @@ export function ColumnChart({ days, target }: Props) {
               <i className={`${styles.sw} ${styles.orange}`} />
               Over target ▲
             </span>
-            <span>{`- - Target ${target} kcal`}</span>
+            <span>{`- - Target ${n(target)} kcal`}</span>
           </div>
           {empty && (
             <p className={styles.hint}>

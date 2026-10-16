@@ -1,4 +1,5 @@
 import { Pill } from "../../atoms/Pill/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./DayHead.module.css";
 
 type Props = {
@@ -21,6 +22,7 @@ export function DayHead({
   isSelected,
   onSelect,
 }: Props) {
+  const n = useNumber((v) => v.toLocaleString("en"));
   return (
     <button
       type="button"
@@ -32,7 +34,7 @@ export function DayHead({
       <span className={styles.dow}>{dow}</span>
       <span className={styles.num}>{dayNumber}</span>
       <Pill variant={kcal > 0 ? "green" : "outline"}>
-        {kcal > 0 ? `${kcal.toLocaleString("en")} kcal` : "No meals"}
+        {kcal > 0 ? `${n(kcal)} kcal` : "No meals"}
       </Pill>
     </button>
   );

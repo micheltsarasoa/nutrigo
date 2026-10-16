@@ -1,0 +1,61 @@
+/*
+ * The label is a 44 px touch target (clicks on it toggle the box); the box
+ * and the tick share one grid cell.
+ */
+.check {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--size-touch-target);
+  height: var(--size-touch-target);
+  color: var(--color-neutral-ink);
+  cursor: pointer;
+}
+
+.check > * {
+  grid-area: 1 / 1;
+}
+
+/* Taps on the tick reach the box itself. */
+.check svg {
+  pointer-events: none;
+}
+
+.box {
+  appearance: none;
+  width: var(--size-icon-lg);
+  height: var(--size-icon-lg);
+  margin: 0;
+  border-radius: var(--radius-xs);
+  background: var(--color-neutral-surface);
+  box-shadow: inset 0 0 0 var(--size-checkbox-border) var(--color-neutral-faint);
+  cursor: inherit;
+  transition: background var(--motion-fast);
+}
+
+.box:checked {
+  background: var(--status-done);
+  box-shadow: inset 0 0 0 var(--size-checkbox-border) var(--status-done);
+}
+
+.box:not(:checked) + svg {
+  visibility: hidden;
+}
+
+.box:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.check:has(.box:disabled) {
+  cursor: not-allowed;
+}
+
+.box:disabled {
+  background: var(--color-neutral-subtle);
+  box-shadow: inset 0 0 0 var(--size-checkbox-border) var(--color-neutral-line);
+}
+
+.box:disabled:checked {
+  opacity: var(--opacity-disabled);
+}

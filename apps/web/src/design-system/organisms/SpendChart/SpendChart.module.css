@@ -1,0 +1,120 @@
+.root {
+  font-size: var(--font-size-body);
+}
+
+.toggle {
+  display: inline-flex;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-outline);
+  overflow: hidden;
+}
+
+.toggle button {
+  font: inherit;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  border: 0;
+  background: transparent;
+  color: var(--color-neutral-muted);
+  padding: 0 var(--space-4);
+  min-height: var(--size-touch-target);
+  cursor: pointer;
+}
+
+.toggle button[aria-pressed="true"] {
+  background: var(--color-yellow-base);
+  color: var(--color-neutral-ink);
+}
+
+.svg {
+  width: 100%;
+  max-width: var(--size-aside);
+  height: auto;
+  display: block;
+}
+
+.svg text {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-micro);
+  fill: var(--color-neutral-muted);
+}
+
+.grid {
+  stroke: var(--color-neutral-line);
+}
+
+.yellow {
+  fill: var(--color-yellow-base);
+  background: var(--color-yellow-base);
+}
+
+.orange {
+  fill: var(--color-orange-base);
+  background: var(--color-orange-base);
+}
+
+.yellowLight {
+  fill: var(--color-yellow-light);
+}
+
+.hit {
+  fill: transparent;
+}
+
+.col {
+  outline: none;
+}
+
+.col:focus-visible .hit {
+  stroke: var(--focus-color);
+  stroke-width: 2;
+  rx: 4;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-2);
+  font-size: var(--font-size-caption);
+  color: var(--color-neutral-muted);
+}
+
+.sw {
+  display: inline-block;
+  width: var(--size-icon-xs);
+  height: var(--size-icon-xs);
+  border-radius: var(--radius-xs);
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+
+.hatch {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-yellow-light) 0 var(--space-1),
+    var(--color-yellow-base) var(--space-1) var(--space-2)
+  );
+}
+
+.hint {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-neutral-muted);
+}
+
+.tipRow {
+  margin: var(--space-3) 0 0;
+  min-height: 1lh;
+}
+
+.tip {
+  display: inline-block;
+  background: var(--color-neutral-ink);
+  color: var(--color-neutral-surface);
+  font-size: var(--font-size-caption);
+  font-variant-numeric: tabular-nums;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+}

@@ -105,7 +105,7 @@ export function TargetsForm({
   );
 
   return (
-    <Card title="Daily targets" headingLevel={3}>
+    <Card title="Daily targets">
       <form className={styles.form} onSubmit={submit} noValidate>
         <p className={styles.hint}>
           Used by the Today ring and the week chart.

@@ -126,7 +126,9 @@ test("SPEC-003 AC-4: changing servings to 2 doubles the kcal", async ({
   await page.getByRole("button", { name: "Change servings" }).click();
   await page.getByRole("button", { name: "Increase Servings" }).click();
   await page.getByRole("button", { name: "Save" }).click();
-  await expect(card(page, "Chicken curry")).toContainText("1556 kcal");
+  await expect(card(page, "Chicken curry")).toContainText(
+    `${new Intl.NumberFormat("fr-FR").format(1556)} kcal`,
+  );
 });
 
 test("SPEC-003 AC-5: moving a meal to Thu dinner empties the old slot", async ({

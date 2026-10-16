@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 import { Pill } from "../../atoms/Pill/index.ts";
 import { PhotoOrPlaceholder } from "../PhotoOrPlaceholder/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./MealMiniCard.module.css";
 
 type Props = Pick<
@@ -24,6 +25,7 @@ export function MealMiniCard({
   mealType,
   onOpen,
 }: Props) {
+  const n = useNumber();
   return (
     <button type="button" className={styles.card} onClick={onOpen}>
       <PhotoOrPlaceholder
@@ -36,7 +38,7 @@ export function MealMiniCard({
         {name}
       </span>
       <span className={styles.kcal}>
-        {Math.round(kcalPerServing * servings)} kcal
+        {n(Math.round(kcalPerServing * servings))} kcal
         {servings !== 1 && <Pill variant="outline">{servings} servings</Pill>}
       </span>
     </button>

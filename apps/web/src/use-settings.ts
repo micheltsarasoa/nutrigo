@@ -1,6 +1,6 @@
 // SPEC-008 §4: the Settings dialog's state, loaded on open and saved with PUT.
 import { Settings, type SettingsInput } from "@nutrigo/shared";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const LOAD_ERROR =
   "Couldn't load your settings. Check the connection and try again.";
@@ -24,6 +24,11 @@ export function useSettings() {
       setLoadError(LOAD_ERROR);
     }
   }
+
+  // The locale drives every number on screen, so settings load with the app, not on open.
+  useEffect(() => {
+    void load();
+  }, []);
 
   function onSettings() {
     setOpen(true);
@@ -51,6 +56,7 @@ export function useSettings() {
   }
 
   return {
+    locale: settings?.locale,
     shellProps: { onSettings, settingsOpen: open },
     dialogProps: {
       open,

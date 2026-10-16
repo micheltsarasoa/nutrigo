@@ -39,6 +39,8 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | Segmented | #90 | #118 | `done` |
 | FilterTabs | #91 | #119 | `done` |
 | IconButton | #92 | #124 | `done` |
+| MoneyField | #248 | #277 | `draft` |
+| Checkbox | #247 | #279 | `draft` |
 
 ## Molecules
 
@@ -58,9 +60,14 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | DayHead | #196 | #203 | `done` |
 | MealMiniCard | #197 | #203 | `done` |
 | MealAddSlot | #198 | #203 | `done` |
+| GroceryRow | #249 | #280 | `draft` |
+| CheckRow | #250 | #281 | `draft` |
 | MacroBar | #212 | #223 | `done` |
 | MealItem | #213 | #228 | `done` |
 | ServingsPrompt | #214 | #227 | `done` |
+| KpiCard | #251 | #282 | `draft` |
+| OfflineBanner | #252 | #283 | `draft` |
+| Legend | #253 | #284 | `draft` |
 
 ## Organisms
 
@@ -71,7 +78,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | RecipeList | #103 | #143 | `done` |
 | RecipeDetail | #104, #175 | #146; #176 makes it 3 columns | `done` |
 | RecipeEditor | #105 | #147 | `done` |
-| IngredientEditor | #106, #156 | #148 (44 px Delete hit area since #157) | `done` |
+| IngredientEditor | #106, #156, #246 | #148 (44 px Delete hit area since #157); #278 adds the price per pack | `done` |
 | IngredientList | #169 | #170 | `done` |
 | SettingsDialog | #107 | #149, #150 | `done` |
 | MealPlanGrid | #199 | #203 | `done` |
@@ -81,6 +88,12 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | ColumnChart | #217 | #229 | `done` |
 | CaloriesCard | #216 | #226 | `done` |
 | TargetsForm | #218 | #225 | `done` |
+| GroceryTable | #254 | #285 | `draft` |
+| GroceryList | #255 | #286 | `draft` |
+| Donut | #256 | #287 | `draft` |
+| StackedBar | #257 | #288 | `draft` |
+| ChartTable | #258 | #289 | `draft` |
+| SpendChart | #260 | #291 | `draft` |
 
 ## Pages
 

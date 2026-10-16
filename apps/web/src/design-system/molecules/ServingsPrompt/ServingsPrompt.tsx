@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Button } from "../../atoms/Button/index.ts";
 import { Card } from "../../atoms/Card/index.ts";
 import { Stepper } from "../../atoms/Stepper/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./ServingsPrompt.module.css";
 
 type Props = {
@@ -27,6 +28,7 @@ export function ServingsPrompt({
   onSave,
   onCancel,
 }: Props) {
+  const n = useNumber();
   const [value, setValue] = useState(initial);
   const root = useRef<HTMLDivElement>(null);
   useEffect(
@@ -71,7 +73,7 @@ export function ServingsPrompt({
           {!invalid && kcalPerServing !== undefined && value !== planned && (
             <p
               className={styles.hint}
-            >{`≈ ${Math.round(kcalPerServing * value)} kcal`}</p>
+            >{`≈ ${n(Math.round(kcalPerServing * value))} kcal`}</p>
           )}
           <div className={styles.actions}>
             <Button variant="ghost" onClick={onCancel}>

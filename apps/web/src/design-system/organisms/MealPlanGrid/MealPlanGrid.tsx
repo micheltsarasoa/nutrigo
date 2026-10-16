@@ -10,6 +10,7 @@ import { Pill } from "../../atoms/Pill/index.ts";
 import { DayHead } from "../../molecules/DayHead/index.ts";
 import { MealAddSlot } from "../../molecules/MealAddSlot/index.ts";
 import { MealMiniCard } from "../../molecules/MealMiniCard/index.ts";
+import { useNumber } from "../../../locale.tsx";
 import styles from "./MealPlanGrid.module.css";
 
 const SLOTS = [
@@ -52,6 +53,7 @@ export function MealPlanGrid({
   onOpenEntry,
   onRetry,
 }: Props) {
+  const n = useNumber();
   if (loading) {
     return (
       <p role="status" className={styles.status}>
@@ -90,7 +92,7 @@ export function MealPlanGrid({
             <div className={styles.slotCell}>
               <Pill variant={pill}>{label}</Pill>
               <span className={styles.slotKcal} data-slot-kcal>
-                {kcal(selected?.slots[slot] ?? [])} kcal
+                {n(kcal(selected?.slots[slot] ?? []))} kcal
               </span>
             </div>
             {plan.days.map((day) => {

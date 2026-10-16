@@ -1,0 +1,43 @@
+.kpi {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.label,
+.hint,
+.delta {
+  font-size: var(--font-size-caption);
+}
+
+.label,
+.hint {
+  color: var(--color-neutral-muted);
+}
+
+.value {
+  font-size: var(--font-size-figure);
+  font-weight: var(--font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.delta {
+  font-weight: var(--font-weight-semibold);
+}
+
+.up {
+  color: var(--color-orange-on-light);
+}
+
+.down {
+  color: var(--color-green-deep);
+}
+
+.sr {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
