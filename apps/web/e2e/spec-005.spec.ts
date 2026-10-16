@@ -11,7 +11,7 @@ const MONDAYS = (n: number) =>
     .toISOString()
     .slice(0, 10);
 
-test.beforeEach(async ({ page, request }) => {
+test.beforeEach(async ({ request }) => {
   await wipe(request);
 });
 test.afterEach(async ({ request }) => wipe(request));
