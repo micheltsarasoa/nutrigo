@@ -28,6 +28,9 @@ const oats: IngredientInput & { source: Source } = {
   sodiumMg100g: 2,
   defaultUnit: "g",
   gramsPerUnit: null,
+  priceCents: 120,
+  pricePackQty: 500,
+  pricePackUnit: "g",
   source: "manual",
 };
 
@@ -126,7 +129,62 @@ describe("IngredientEditor", () => {
       sodiumMg100g: null,
       defaultUnit: "piece",
       gramsPerUnit: 60,
+      priceCents: null,
+      pricePackQty: null,
+      pricePackUnit: null,
     });
+  });
+
+  it("AC-3: saves a price per pack in cents, with its pack size and unit", () => {
+    const { onSave } = setup();
+    type(box("Name"), "Oats");
+    type(select("Category"), "grains");
+    for (const [l, v] of [
+      ["Calories", "389"],
+      ["Carbs", "66"],
+      ["Protein", "17"],
+      ["Fat", "7"],
+    ] as const)
+      type(number(l), v);
+    type(box("Price per pack"), "1,20");
+    type(number("Pack size"), "500");
+    type(select("Pack unit"), "g");
+    save();
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        priceCents: 120,
+        pricePackQty: 500,
+        pricePackUnit: "g",
+      }),
+    );
+  });
+
+  it("shows a saved price, and clearing it saves no price (AC-4)", () => {
+    const { onSave } = setup({ ingredient: oats });
+    expect((box("Price per pack") as HTMLInputElement).value).toBe("1,20");
+    expect(number("Pack size").value).toBe("500");
+    expect(select("Pack unit").value).toBe("g");
+    type(box("Price per pack"), "");
+    type(number("Pack size"), "");
+    type(select("Pack unit"), "");
+    save();
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        priceCents: null,
+        pricePackQty: null,
+        pricePackUnit: null,
+      }),
+    );
+  });
+
+  it("a price without its pack shows an error and saves nothing", () => {
+    const { onSave } = setup({ ingredient: oats });
+    type(number("Pack size"), "");
+    save();
+    expect(onSave).not.toHaveBeenCalled();
+    expect(error(box("Price per pack"))).toBe(
+      "Add the pack size and unit, or clear the price.",
+    );
   });
 
   it("fills in an ingredient to edit, and saves it unchanged without its source", () => {

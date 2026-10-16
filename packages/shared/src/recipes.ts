@@ -24,7 +24,7 @@ const name = z.string().trim().min(1).max(100);
 const amount = z.number().min(0);
 const minutes = z.number().int().min(0);
 
-export const IngredientInput = z.object({
+const IngredientBase = z.object({
   name,
   category: Category,
   kcal100g: amount,
@@ -36,11 +36,33 @@ export const IngredientInput = z.object({
   sodiumMg100g: amount.nullish(),
   defaultUnit: Unit,
   gramsPerUnit: z.number().positive().nullish(),
+  // The price per pack (SPEC-005 §6): all three or none.
+  priceCents: z.number().int().min(0).nullish(),
+  pricePackQty: z.number().positive().nullish(),
+  pricePackUnit: Unit.nullish(),
 });
+
+const PRICE = ["priceCents", "pricePackQty", "pricePackUnit"] as const;
+const wholePrice = (v: Partial<Record<(typeof PRICE)[number], unknown>>) => {
+  const set = PRICE.filter((k) => v[k] != null).length;
+  return set === 0 || set === 3;
+};
+const priceRule = {
+  message: "A price needs its pack size and unit",
+  path: ["priceCents"],
+};
+
+export const IngredientInput = IngredientBase.refine(wholePrice, priceRule);
 export type IngredientInput = z.infer<typeof IngredientInput>;
-export const IngredientPatch = IngredientInput.partial();
+// A patch with any price field carries all three (or nulls them all).
+export const IngredientPatch = IngredientBase.partial().refine(
+  (v) =>
+    PRICE.every((k) => v[k] === undefined) ||
+    (PRICE.every((k) => v[k] !== undefined) && wholePrice(v)),
+  priceRule,
+);
 export type IngredientPatch = z.infer<typeof IngredientPatch>;
-export const Ingredient = IngredientInput.extend({
+export const Ingredient = IngredientBase.extend({
   id: z.number().int(),
   source: Source,
   updatedAt: z.string(),
