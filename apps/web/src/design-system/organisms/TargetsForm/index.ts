@@ -1,1 +1,1 @@
-export { TargetsForm, type Targets } from "./TargetsForm.tsx";
+export { TargetsForm } from "./TargetsForm.tsx";

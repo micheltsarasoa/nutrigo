@@ -1,0 +1,8 @@
+.page {
+  max-width: calc(2 * var(--size-aside));
+}
+
+.message {
+  margin-top: var(--space-4);
+  font-weight: var(--font-weight-semibold);
+}
