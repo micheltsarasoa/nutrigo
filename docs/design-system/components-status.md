@@ -88,6 +88,7 @@ Every component that has, or will have, a `/playground/<level>/<name>` page. **R
 | CaloriesCard | #216 | #226 | `done` |
 | TargetsForm | #218 | #225 | `done` |
 | GroceryTable | #254 | #285 | `draft` |
+| GroceryList | #255 | #TBD | `draft` |
 
 ## Pages
 
