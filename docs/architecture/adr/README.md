@@ -19,6 +19,7 @@ These use the Michael Nygard format. An ADR is **immutable once Accepted**: to c
 | [0012](0012-native-routing-and-vite-plugin-pwa.md) | Native routing (no React Router) and `vite-plugin-pwa` for the service worker | Accepted |
 | [0013](0013-desktop-first-mvp.md) | Desktop-first until v1.0.0; mobile works but isn't designed | Accepted |
 | [0014](0014-mvp-scope-s1-s4.md) | v1.0.0 after S4; Railway in S5, imports and AI in S6 | Accepted |
+| [0017](0017-delete-planned-recipe.md) | Deleting a planned recipe takes it off the plan; eaten meals keep it archived | Accepted |
 
 ```mermaid
 stateDiagram-v2

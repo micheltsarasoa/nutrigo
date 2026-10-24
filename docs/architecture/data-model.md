@@ -67,6 +67,7 @@ erDiagram
         integer rating "nullable, 1-5, own rating"
         text notes_md "nullable"
         text photo_path "nullable, own upload"
+        text archived_at "nullable, set when deleted but eaten (ADR-0017)"
         text updated_at
     }
     RECIPE_INGREDIENT {
@@ -182,7 +183,7 @@ erDiagram
 | Columns and tables arrive with the sprint that uses them | S1 creates `ingredient` (without `image_*` and `price_*`, added in S3 and S4), `recipe`, `recipe_ingredient`, `recipe_step`, `recipe_tool` and `settings` (all its columns) |
 | `tag` and `recipe_tag` are **not created yet** | S1 decision (SPEC-002 §10): the meal type covers the filters; the tables arrive with a tag filter |
 | `ON DELETE CASCADE` from recipe to its ingredients, steps, tools and tags | Their rows have no meaning without the recipe |
-| `ON DELETE RESTRICT` from meal_entry to recipe | You can't delete a recipe that's in a plan; archive or remove it from the plan first |
+| `ON DELETE RESTRICT` from meal_entry to recipe | The API takes meals not yet eaten off the plan first, then deletes the recipe, or archives it (`archived_at`) when eaten meals remain, so the diary keeps it (ADR-0017) |
 
 ## 3. Migrations
 
