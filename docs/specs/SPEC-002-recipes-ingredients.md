@@ -28,7 +28,7 @@ Your personal recipe library. You can browse, search and filter recipes and open
 | AC-5 | Recipes of several meal types | I pick the "Lunch" filter tab | Only lunch recipes are shown; "All" restores the full list |
 | AC-6 | A recipe for 2 servings with 200 g turkey | I press + on Total Servings | It shows 3; the quantity becomes 300 g; nutrition **per serving** is unchanged |
 | AC-7 | The recipe list | I switch between list and grid views | The layout changes and the choice is remembered on this device |
-| AC-8 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted. **Moved to SPEC-003 (S2)**: it needs the `meal_entry` table; in S1 a recipe deletes freely |
+| AC-8 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted. **Moved to SPEC-003 (S2)**: it needs the `meal_entry` table; in S1 a recipe deletes freely. **Changed by ADR-0017**: the meals not yet eaten leave the plan with it (SPEC-003 AC-12) |
 | AC-9 | An ingredient used in a recipe | I try to delete it | I get a message listing the recipes that use it (409) |
 | AC-10 | A 390 px wide screen | I open the list, the detail page and the editor | Everything fits in one column; no horizontal scroll; tap targets ≥ 44 px. The ingredient table scrolls sideways inside its own card, never the page |
 | AC-11 | Ingredients exist | I open `/ingredients` | A table lists them by name: category chip, kcal, carbs, protein and fat per 100 g |
@@ -92,7 +92,7 @@ stateDiagram-v2
 | POST | `/api/recipes` | `RecipeInput` (ingredients, steps and tools included) | 201 `Recipe` | 400 |
 | GET | `/api/recipes/:id` | n/a | `Recipe` + `nutritionPerServing` + `healthScore` | 404 |
 | PATCH | `/api/recipes/:id` | `RecipeInput` (full replace of lists, in one transaction) | `Recipe` | 400, 404 |
-| DELETE | `/api/recipes/:id` | n/a | 204 | 404, 409 (planned) |
+| DELETE | `/api/recipes/:id` | n/a | 204 | 404, 409 (planned; `?unplan=true` deletes anyway, SPEC-003 AC-12) |
 | POST | `/api/recipes/:id/photo` | `multipart/form-data` image ≤ 5 MB (jpeg/png/webp) | `{ photoPath }` | 400, 413 |
 
 ## 6. Data

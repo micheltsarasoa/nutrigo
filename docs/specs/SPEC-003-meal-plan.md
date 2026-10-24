@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Implemented in S2 (2026-10-15; desktop only, see Scope) |
+| Status | Implemented in S2 (2026-10-15; desktop only, see Scope). AC-12 changed by ADR-0017 (2026-10-24), not built yet |
 | Sprint | S2 → v0.3.0 |
 | PRD refs | P-1 … P-4 |
 | Design | `design/source/Meal Plan.dc.html` (desktop grid + mobile day view) |
@@ -31,7 +31,7 @@ Plan the week, Monday to Sunday, by putting recipes into four slots per day: bre
 | AC-9 | A slot with 2 recipes (e.g. a main and a side) | I view it | Both cards are stacked in `position` order; slot kcal = sum |
 | AC-10 | A 390 px screen | I open `/plan/2026-W40` | I see the week strip (Mon–Sun) and the selected day's 4 slot groups; tapping a day switches the view with no page reload |
 | AC-11 | The grid on desktop | I use only the keyboard | Every slot and card can be reached; Enter opens the add or actions sheet |
-| AC-12 | A recipe used in a meal plan | I try to delete it | I get a message that it's planned (409) and nothing is deleted (moved here from SPEC-002/AC-8) |
+| AC-12 | A recipe planned on Sat lunch, and eaten on Wed | I delete it and confirm | I see the planned meals and "1 meal already eaten stays in your history"; on "Delete anyway" the recipe leaves the library and Sat lunch shows "+"; Wed stays in the diary (ADR-0017; replaces the 409 rule moved here from SPEC-002/AC-8) |
 
 ## 4. UI
 | Route | Desktop ≥1200 px | Mobile <768 px |
@@ -78,8 +78,10 @@ sequenceDiagram
 | POST | `/api/plans/:isoWeek/entries` | `{ date, slot, recipeId, servings }` | 201 `MealEntry` | 400 (date outside week), 404 recipe |
 | PATCH | `/api/plans/:isoWeek/entries/:id` | `{ date?, slot?, servings?, position? }` | `MealEntry` | 400, 404 |
 | DELETE | `/api/plans/:isoWeek/entries/:id` | n/a | 204 | 404 |
-| DELETE | `/api/recipes/:id` (SPEC-002, extended here) | n/a | 204 | 404, **409 (planned, AC-12)** |
+| DELETE | `/api/recipes/:id[?unplan=true]` (SPEC-002, extended here) | n/a | 204 | 404, **409 without `unplan` when meals not yet eaten exist: `{ plannedMeals: [{ date, slot }], eatenCount }`** (AC-12, ADR-0017) |
 | POST | `/api/plans/:isoWeek/copy-from/:otherWeek` | `{ mode: "replace" \| "merge" }` | `Plan` | 400, 404 |
+
+With `unplan=true` the API deletes the recipe's meals not yet eaten, then the recipe, in one transaction. If eaten meals remain, it archives the recipe (`archived_at`) instead, so the diary keeps it (ADR-0017).
 
 Moving a meal to another week uses DELETE + POST. Duplicating uses a POST with the same data.
 
